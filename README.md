@@ -105,7 +105,7 @@ Recommended option: Option A: One-night balanced plan
 Estimated cost per traveler:
   Traveler A: $1120
   Traveler B: $1220
-Ticket timing recommendation: monitor
+Ticket timing recommendation: Monitor with wait bias
 ```
 
 ## MCP-Style Tools
@@ -215,6 +215,8 @@ Phase 3 extends the demo from a single mock market reading into a deterministic 
 
 Users can manually log ticket-market snapshots in CSV. Each snapshot can include ticket price, listings, Category 3 range, hotel availability proxy, flight price pressure, social buzz, days before event, source type, and notes. SnapshotAgent analyzes the time series and adds trend-based ticket timing to the final report.
 
+The final report fuses the single-day MarketAgent signal with the multi-snapshot trend signal. In the seed demo, that produces the overall ticket timing stance: Monitor with wait bias.
+
 Seed data lives at:
 
 ```text
@@ -236,6 +238,19 @@ python -m eventtrip.orchestrator --demo portugal_dr_congo_houston
 ```
 
 This avoids scraping, keeps the system deterministic, and prepares clean provider interfaces for future live integrations.
+
+## Manual Snapshot CLI
+
+Use the manual snapshot CLI to analyze or append local CSV snapshots without editing files by hand.
+
+```powershell
+conda activate eventtrip_mcp
+cd D:\others\Eventrip_agentos
+python -m eventtrip.snapshots_cli analyze --match portugal_dr_congo
+python -m eventtrip.snapshots_cli append --match portugal_dr_congo --snapshot-date 2026-05-22 --lowest-price 650 --listings 360 --category-3-low 400 --category-3-high 750 --hotel-availability-score 0.50 --flight-price-pressure 0.55 --social-buzz-score 0.86 --days-before-event 26 --source-type manual --notes "Manual check" --dry-run
+```
+
+Use `--dry-run` before writing. Use `--overwrite` only when intentionally replacing an existing snapshot for the same match/date. The CLI uses manual data only; it does not call live APIs, scrape websites, or require OhMyGPT.
 
 ## Skills
 
@@ -348,7 +363,7 @@ Generic travel agents generate itineraries. EventTrip-AgentOS reasons over ticke
 
 ## Future Roadmap
 
-- Phase 3.5: CLI workflow for appending manual market snapshots
+- Phase 3.6: demo walkthrough and portfolio packaging
 - Phase 4: Streamlit or FastAPI dashboard
 - Phase 5: time-series ticket price forecasting
 - Phase 6: generalized event travel planner for concerts, NBA, Olympics, F1, and other events

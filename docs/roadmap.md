@@ -13,6 +13,7 @@
 - Phase 3.2: trend-based ticket timing.
 - Phase 3.3: data provider interface.
 - Phase 3.4: optional live data integration skeleton.
+- Phase 3.5: manual snapshot CLI.
 
 ## Phase 3 Status
 
@@ -22,16 +23,17 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Trend analysis compares price and listing movement over time.
 - SnapshotAgent writes one Markdown memory file into each run directory.
 - MCP exposes snapshot listing and analysis tools.
+- The manual snapshot CLI supports analysis, dry-run append, validation, duplicate protection, and explicit overwrite.
 - Phase 3.4 adds live data provider interfaces and mock provider skeletons only; real live integrations remain deferred.
 
-## Recommended Next Step: Phase 3.5
+## Recommended Next Step: Phase 3.6
 
-Phase 3.5 should keep the workflow offline and deterministic while improving the manual tracker:
+Phase 3.6 should package the project for a portfolio walkthrough:
 
-- Add a small CLI command to append a manual market snapshot.
-- Validate snapshot fields before writing.
-- Support a `--dry-run` mode that prints the parsed snapshot without mutating CSV.
-- Add duplicate-date handling so a user can update a mistaken snapshot safely.
+- Add a concise demo script or walkthrough document.
+- Capture one representative run directory path and final report screenshot or excerpt.
+- Explain how the system differs from generic travel itinerary agents.
+- Keep the walkthrough offline and deterministic.
 
 ## Later Phase 3 Work
 

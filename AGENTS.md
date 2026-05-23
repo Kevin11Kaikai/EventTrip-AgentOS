@@ -32,6 +32,7 @@
 - Do not remove or destabilize the Python 3.9 guard/fallback behavior for core workflows.
 - Market snapshot tracking must remain deterministic and offline by default.
 - Manual market snapshots belong under `data/market_snapshots/`.
+- Snapshot CLI writes must support validation, dry-run behavior, duplicate protection, and explicit overwrite.
 - Future live data integrations must go behind provider adapters and MCP tool functions.
 - Phase 3.4 is skeleton-only; do not add real live API calls without a future explicit request.
 - MCP snapshot validation must not mutate committed seed snapshot data.

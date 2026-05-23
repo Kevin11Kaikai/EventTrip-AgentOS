@@ -21,6 +21,10 @@ class ReportAgent(BaseAgent):
         snapshot_trend = context.get("snapshot_trend")
         snapshots = context.get("market_snapshots", [])
         latest_snapshot_date = snapshots[-1]["snapshot_date"] if snapshots else "n/a"
+        combined_timing = combine_ticket_timing(timing, snapshot_trend)
+        combined_timing_explanation = "\n".join(
+            f"- {item}" for item in combined_timing["explanation"]
+        )
         option_a = next(
             option for option in context["budget"]["options"] if option["option_name"].startswith("Option A:")
         )
@@ -77,9 +81,9 @@ Estimated cost per traveler:
 
 {traveler_cost_lines}
 
-Ticket timing recommendation: {timing}. The current mock lowest ask is ${ticket["lowest_price"]:.0f}, with {ticket["listings"]} listings and a Scalper Stress Index of {stress["score"]}/100.
+Overall ticket timing recommendation: {combined_timing["label"]}.
 
-This is a disciplined monitoring signal. The mock market is not cheap enough to buy blindly, not weak enough for a hard wait, and not tight enough to justify panic buying.
+The single-day market signal says {timing}; the multi-snapshot trend signal says {snapshot_trend["recommendation"] if snapshot_trend else "insufficient_data"}. The current mock lowest ask is ${ticket["lowest_price"]:.0f}, while the latest manual snapshot is ${snapshot_trend["latest_price"] if snapshot_trend else ticket["lowest_price"]:.0f}. This supports disciplined monitoring with a wait bias, not a panic buy.
 
 ## Demo Assumptions
 
@@ -140,6 +144,14 @@ Portugal creates genuine demand, so the correct answer is not a hard wait. At th
 
 Do not let secondary ticket sellers force premature buying if hotel and flight pressure remain moderate.
 
+### Combined Ticket Timing
+
+- Single-day market signal: {timing}
+- Multi-snapshot trend signal: {snapshot_trend["recommendation"] if snapshot_trend else "insufficient_data"}
+- Overall stance: {combined_timing["label"]}
+
+{combined_timing_explanation}
+
 ## Market Snapshot Trend Analysis
 
 - Snapshot count: {snapshot_trend["snapshot_count"] if snapshot_trend else 0}
@@ -153,6 +165,8 @@ Do not let secondary ticket sellers force premature buying if hotel and flight p
 - Trigger status: {snapshot_trend["trigger_status"] if snapshot_trend else "insufficient_data"}
 
 {snapshot_explanation}
+
+The trend is more wait-biased because prices are falling while listings are rising. That does not mean ignoring the market; it means active monitoring with concrete trigger prices before committing cash.
 
 ## Budget Comparison Table
 
@@ -184,8 +198,12 @@ Use {recommended["option_name"]}. It keeps the trip budget-first while preservin
 
 ## Next Actions
 
+- Do not panic buy in the $680-$700 range.
 - Monitor verified official resale inventory.
-- Track whether listings rise while prices flatten or fall.
+- Continue tracking whether listings rise while prices flatten or fall.
+- Buy immediately if verified official resale appears at or below $550.
+- Strongly consider buying if the all-in ticket price falls below $600.
+- Re-evaluate earlier if listings fall sharply while flight and hotel pressure rises.
 - Re-check PIT and SEA flight prices before committing.
 - Hold or shortlist a refundable two-bed hotel near NRG Stadium or METRORail.
 - Avoid same-day arrival unless inbound schedules produce a strong match buffer.
@@ -216,8 +234,53 @@ The default demo uses deterministic mock agent outputs. When `--use-llm` is pass
             {
                 "summary": f"Final report recommends {recommended['option_name']}.",
                 "recommendation": recommended["option_name"],
+                "combined_ticket_timing_recommendation": combined_timing["code"],
                 "next_agent": None,
             },
             body,
         )
-        return {"final_report_path": output_path}
+        return {
+            "final_report_path": output_path,
+            "combined_ticket_timing_recommendation": combined_timing["code"],
+            "combined_ticket_timing_label": combined_timing["label"],
+        }
+
+
+def combine_ticket_timing(single_day_signal: str, snapshot_trend: dict[str, Any] | None) -> dict[str, Any]:
+    """Fuse single-day and multi-snapshot timing into one report stance."""
+    trend_signal = (snapshot_trend or {}).get("recommendation", "insufficient_data")
+
+    if single_day_signal == "monitor" and trend_signal == "wait":
+        code = "monitor_with_wait_bias"
+        label = "Monitor with wait bias"
+    elif trend_signal == "buy":
+        code = "buy"
+        label = "Buy"
+    elif trend_signal == "strongly_consider_buying":
+        code = "strongly_consider_buying"
+        label = "Strongly consider buying"
+    elif single_day_signal == "wait" or trend_signal == "wait":
+        code = "wait_with_active_monitoring"
+        label = "Wait with active monitoring"
+    elif single_day_signal == "buy/monitor":
+        code = "buy_or_monitor"
+        label = "Buy or monitor"
+    else:
+        code = "monitor"
+        label = "Monitor"
+
+    explanation = [
+        f"The single-day market signal says {single_day_signal}.",
+        f"The multi-snapshot trend signal says {trend_signal}.",
+    ]
+    if code == "monitor_with_wait_bias":
+        explanation.extend(
+            [
+                "Because the trend shows falling prices and rising listings, the overall stance is monitor with wait bias.",
+                "This is not a hard wait; it is disciplined monitoring with trigger prices.",
+            ]
+        )
+    else:
+        explanation.append("Use the ticket trigger policy to decide when monitoring becomes buying.")
+
+    return {"code": code, "label": label, "explanation": explanation}

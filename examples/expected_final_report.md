@@ -11,9 +11,9 @@ Estimated cost per traveler:
 - Traveler A: $1120
 - Traveler B: $1220
 
-Ticket timing recommendation: monitor. The current mock lowest ask is $700 with 300 listings and a Scalper Stress Index of 41.9/100.
+Overall ticket timing recommendation: Monitor with wait bias.
 
-This is a disciplined monitoring signal, not a panic-buy signal.
+The single-day market signal says monitor, while the multi-snapshot trend signal says wait. The current $680-$700 range supports disciplined monitoring with a wait bias, not a panic buy.
 
 ## Demo Assumptions
 
@@ -46,6 +46,14 @@ Scalper Stress Index: 41.9/100 (moderate scalper stress, monitor).
 
 Portugal creates genuine demand, but hotel and flight pressure are only moderate in the mock data. The market is not clearly collapsing, and it is also not tight enough to justify panic buying. The correct action is disciplined monitoring with a pre-defined trigger price.
 
+### Combined Ticket Timing
+
+- Single-day market signal: monitor
+- Multi-snapshot trend signal: wait
+- Overall stance: Monitor with wait bias
+
+Because the trend shows falling prices and rising listings, the overall stance is monitor with wait bias. This is not a hard wait; it is disciplined monitoring with trigger prices.
+
 ## Market Snapshot Trend Analysis
 
 - Snapshot count: 5
@@ -58,7 +66,7 @@ Portugal creates genuine demand, but hotel and flight pressure are only moderate
 - Trend-based recommendation: wait
 - Trigger status: monitor_high_listings_near_700
 
-The snapshot series shows falling prices with rising listings, which can indicate increasing reseller pressure. Because the latest price is still above the buy trigger, the trend-based layer recommends waiting rather than buying immediately.
+The snapshot series shows falling prices with rising listings, which can indicate increasing reseller pressure. Because the latest price is still above the buy trigger, the trend-based layer recommends waiting rather than buying immediately. That does not mean ignoring the market; it means active monitoring with concrete trigger prices before committing cash.
 
 ## Budget Comparison Table
 

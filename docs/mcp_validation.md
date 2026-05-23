@@ -31,7 +31,7 @@ EventTrip-AgentOS exposes deterministic mock travel-planning tools through an MC
 - `rank_budget_options`: ranks budget options with the existing scoring logic.
 - `get_market_snapshots`: returns manual market snapshots for one match.
 - `analyze_market_snapshots`: analyzes historical snapshots and returns a trend recommendation.
-- `append_market_snapshot`: appends one validated manual snapshot to the local CSV store.
+- `append_market_snapshot`: appends one validated manual snapshot to the local CSV store with duplicate protection.
 
 ## Validation Workflow
 

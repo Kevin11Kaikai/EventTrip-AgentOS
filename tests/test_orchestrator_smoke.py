@@ -8,7 +8,11 @@ def test_orchestrator_creates_final_report(tmp_path):
     assert final_report.exists()
     assert final_report.name == "08_final_report.md"
     assert result["recommended_option"] == "Option A: One-night balanced plan"
-    assert result["ticket_timing_recommendation"] == "monitor"
+    assert result["ticket_timing_recommendation"] == "monitor_with_wait_bias"
+    assert result["ticket_timing_label"] == "Monitor with wait bias"
+    assert "Overall ticket timing recommendation: Monitor with wait bias." in final_report.read_text(
+        encoding="utf-8"
+    )
     output_names = {path.name for path in result["run_dir"].glob("*.md")}
     assert output_names == {
         "00_user_request.md",

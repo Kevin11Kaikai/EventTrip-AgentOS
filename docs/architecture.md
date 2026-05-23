@@ -78,6 +78,9 @@ Expected files:
 Phase 3 adds a manual market snapshot tracker. Users can log point-in-time ticket and demand-proxy observations without scraping websites or calling live APIs.
 
 ```text
+Manual Snapshot CLI
+   |
+   v
 data/market_snapshots/*.csv
    |
    v
@@ -94,6 +97,8 @@ Final report trend section
 ```
 
 The seed file is `data/market_snapshots/portugal_dr_congo_snapshots.csv`. It records deterministic mock snapshots for lowest ticket price, listings, Category 3 range, hotel availability proxy, flight price pressure, social buzz, and days before event.
+
+`python -m eventtrip.snapshots_cli` provides safe manual commands to analyze snapshots, validate proposed rows, dry-run appends, and overwrite duplicate match/date rows only when explicitly requested. These manual snapshots feed the SnapshotAgent and final trend analysis.
 
 ## MCP Layer
 
@@ -157,6 +162,7 @@ Optional OhMyGPT integration is OpenAI-compatible and used only for prose polish
 - Scoring tests verify deterministic scalper-stress behavior.
 - Market snapshot tests verify CSV loading, append/save behavior, trend analysis, and snapshot scoring.
 - Snapshot Agent tests verify Markdown output and YAML frontmatter.
+- Snapshot CLI tests verify dry-run, append, duplicate handling, overwrite, and validation failures.
 - MCP server tests verify wrapper registration and direct mock outputs.
 - MCP client validation tests verify guard behavior and helper parsing.
 - Orchestrator smoke tests verify end-to-end report generation.

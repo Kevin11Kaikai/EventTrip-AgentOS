@@ -111,7 +111,11 @@ def run_demo(
         "final_report_path": context["final_report_path"],
         "recommended_option": recommended["option_name"],
         "estimated_cost_per_traveler": recommended["total_cost_per_traveler"],
-        "ticket_timing_recommendation": context["ticket_timing"],
+        "ticket_timing_recommendation": context.get(
+            "combined_ticket_timing_recommendation",
+            context["ticket_timing"],
+        ),
+        "ticket_timing_label": context.get("combined_ticket_timing_label", context["ticket_timing"]),
     }
 
 
@@ -136,7 +140,7 @@ def main(argv: list[str] | None = None) -> int:
     print("Estimated cost per traveler:")
     for traveler, total in result["estimated_cost_per_traveler"].items():
         print(f"  {traveler}: ${total:.0f}")
-    print(f"Ticket timing recommendation: {result['ticket_timing_recommendation']}")
+    print(f"Ticket timing recommendation: {result['ticket_timing_label']}")
     return 0
 
 

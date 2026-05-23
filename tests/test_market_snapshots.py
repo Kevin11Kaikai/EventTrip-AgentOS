@@ -49,9 +49,23 @@ def test_save_and_append_market_snapshots(tmp_path):
         source_type="test_manual",
         notes="test",
     )
+    second_snapshot = MarketSnapshot(
+        snapshot_date="2026-01-02",
+        match_id="portugal_dr_congo",
+        lowest_price=690,
+        listings=310,
+        category_3_low=400,
+        category_3_high=750,
+        hotel_availability_score=0.55,
+        flight_price_pressure=0.50,
+        social_buzz_score=0.85,
+        days_before_event=182,
+        source_type="test_manual",
+        notes="test",
+    )
 
     save_market_snapshots(path, [snapshot])
-    append_market_snapshot(path, snapshot)
+    append_market_snapshot(path, second_snapshot)
     loaded = load_market_snapshots(path, "portugal_dr_congo")
 
     assert len(loaded) == 2

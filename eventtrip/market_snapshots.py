@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -62,10 +63,107 @@ def save_market_snapshots(path: str | Path, snapshots: list[MarketSnapshot]) -> 
 
 
 def append_market_snapshot(path: str | Path, snapshot: MarketSnapshot) -> None:
-    """Append a snapshot by loading, adding, sorting, and rewriting the CSV."""
-    snapshots = load_market_snapshots(path)
-    snapshots.append(snapshot)
-    save_market_snapshots(path, snapshots)
+    """Append one new snapshot, failing when the same match/date already exists."""
+    result = upsert_market_snapshot(path, snapshot, overwrite=False)
+    if not result["saved"]:
+        raise ValueError("; ".join(result["errors"]))
+
+
+def validate_market_snapshot(snapshot: MarketSnapshot) -> list[str]:
+    """Return validation errors for a manual market snapshot."""
+    errors: list[str] = []
+
+    if not snapshot.match_id.strip():
+        errors.append("match_id must not be empty.")
+
+    try:
+        parsed_date = date.fromisoformat(snapshot.snapshot_date)
+        if parsed_date.isoformat() != snapshot.snapshot_date:
+            errors.append("snapshot_date must use YYYY-MM-DD format.")
+    except ValueError:
+        errors.append("snapshot_date must use YYYY-MM-DD format.")
+
+    if snapshot.lowest_price <= 0:
+        errors.append("lowest_price must be positive.")
+    if snapshot.listings < 0:
+        errors.append("listings must be non-negative.")
+    if snapshot.category_3_low > snapshot.category_3_high:
+        errors.append("category_3_low must be less than or equal to category_3_high.")
+
+    score_fields = {
+        "hotel_availability_score": snapshot.hotel_availability_score,
+        "flight_price_pressure": snapshot.flight_price_pressure,
+        "social_buzz_score": snapshot.social_buzz_score,
+    }
+    for field_name, value in score_fields.items():
+        if value < 0 or value > 1:
+            errors.append(f"{field_name} must be between 0 and 1.")
+
+    if snapshot.days_before_event < 0:
+        errors.append("days_before_event must be non-negative.")
+
+    return errors
+
+
+def find_snapshot_index(
+    snapshots: list[MarketSnapshot],
+    match_id: str,
+    snapshot_date: str,
+) -> int | None:
+    """Return the index of an existing match/date snapshot, if present."""
+    for index, snapshot in enumerate(snapshots):
+        if snapshot.match_id == match_id and snapshot.snapshot_date == snapshot_date:
+            return index
+    return None
+
+
+def upsert_market_snapshot(
+    path: str | Path,
+    snapshot: MarketSnapshot,
+    overwrite: bool = False,
+) -> dict[str, Any]:
+    """Append or replace a snapshot with validation and duplicate protection."""
+    errors = validate_market_snapshot(snapshot)
+    csv_path = Path(path)
+    if errors:
+        return {
+            "status": "validation_error",
+            "saved": False,
+            "errors": errors,
+            "path": str(csv_path),
+        }
+
+    snapshots = load_market_snapshots(csv_path)
+    existing_index = find_snapshot_index(snapshots, snapshot.match_id, snapshot.snapshot_date)
+    if existing_index is not None and not overwrite:
+        return {
+            "status": "duplicate",
+            "saved": False,
+            "errors": [
+                (
+                    "Snapshot already exists for "
+                    f"{snapshot.match_id} on {snapshot.snapshot_date}; use --overwrite to replace it."
+                )
+            ],
+            "path": str(csv_path),
+        }
+
+    if existing_index is not None:
+        snapshots[existing_index] = snapshot
+        status = "overwritten"
+    else:
+        snapshots.append(snapshot)
+        status = "appended"
+
+    save_market_snapshots(csv_path, snapshots)
+    return {
+        "status": status,
+        "saved": True,
+        "errors": [],
+        "path": str(csv_path),
+        "match_id": snapshot.match_id,
+        "snapshot_date": snapshot.snapshot_date,
+    }
 
 
 def analyze_market_trend(snapshots: list[MarketSnapshot]) -> TrendAnalysisResult:

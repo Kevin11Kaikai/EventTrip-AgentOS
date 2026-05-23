@@ -17,11 +17,11 @@ import yaml
 from eventtrip import scoring
 from eventtrip.market_snapshots import (
     analyze_market_trend,
-    append_market_snapshot as append_snapshot_to_csv,
     default_snapshot_path,
     load_market_snapshots,
     snapshot_to_dict,
     trend_result_to_dict,
+    upsert_market_snapshot,
 )
 from eventtrip.schemas import MarketSnapshot, to_plain_dict
 
@@ -144,10 +144,13 @@ def analyze_market_snapshots(match_id: str) -> dict:
 
 
 def append_market_snapshot(snapshot: dict) -> dict:
+    overwrite = bool(snapshot.pop("overwrite", False))
     validated = MarketSnapshot(**snapshot)
-    append_snapshot_to_csv(default_snapshot_path(validated.match_id), validated)
-    return {
-        "status": "success",
-        "match_id": validated.match_id,
-        "saved_snapshot": to_plain_dict(validated),
-    }
+    result = upsert_market_snapshot(
+        default_snapshot_path(validated.match_id),
+        validated,
+        overwrite=overwrite,
+    )
+    result["match_id"] = validated.match_id
+    result["saved_snapshot"] = to_plain_dict(validated) if result["saved"] else None
+    return result
