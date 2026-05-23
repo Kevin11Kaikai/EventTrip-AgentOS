@@ -27,3 +27,8 @@
 - Official MCP client validation should use a separate Python 3.10+/3.11 environment.
 - Validation artifacts must not contain secrets.
 - Do not mix MCP validation environment setup with the default `smiley_bot` workflow.
+- Detailed documentation belongs in `docs/`.
+- Keep README concise and link to deeper docs.
+- Preserve `docs/mcp_validation.md` when changing MCP server/client behavior.
+- Preserve `docs/architecture.md` when changing agents, tools, or file-memory design.
+- Preserve `docs/roadmap.md` when changing phase planning.

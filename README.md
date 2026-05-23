@@ -24,6 +24,13 @@ pytest
 - Conda recommended
 - Tested with the `smiley_bot` conda environment using Python 3.9.23
 
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [MCP Validation](docs/mcp_validation.md)
+- [Roadmap](docs/roadmap.md)
+- [Verified MCP client output](examples/mcp_client_validation_output.txt)
+
 ## Why This Project Exists
 
 Most travel-agent demos generate generic itineraries. Real event travel often depends on harder decisions: when to buy tickets, whether visible scarcity is real, how to split shared costs, and whether a cheap plan creates too much risk.
@@ -131,6 +138,8 @@ Example local MCP client config:
 ```text
 examples/mcp_client_config.example.json
 ```
+
+Detailed MCP validation notes are in `docs/mcp_validation.md`.
 
 ## Phase 2.1: MCP Client Validation
 
