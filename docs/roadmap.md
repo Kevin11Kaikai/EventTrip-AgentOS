@@ -14,6 +14,7 @@
 - Phase 3.3: data provider interface.
 - Phase 3.4: optional live data integration skeleton.
 - Phase 3.5: manual snapshot CLI.
+- Phase 3.6: demo walkthrough and portfolio packaging.
 
 ## Phase 3 Status
 
@@ -24,16 +25,25 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - SnapshotAgent writes one Markdown memory file into each run directory.
 - MCP exposes snapshot listing and analysis tools.
 - The manual snapshot CLI supports analysis, dry-run append, validation, duplicate protection, and explicit overwrite.
+- Portfolio documentation now includes a demo walkthrough and short project summary.
 - Phase 3.4 adds live data provider interfaces and mock provider skeletons only; real live integrations remain deferred.
 
-## Recommended Next Step: Phase 3.6
+## Recommended Next Step: Phase 4.0
 
-Phase 3.6 should package the project for a portfolio walkthrough:
+Phase 4.0 should add an optional OhMyGPT report-polishing layer:
 
-- Add a concise demo script or walkthrough document.
-- Capture one representative run directory path and final report screenshot or excerpt.
-- Explain how the system differs from generic travel itinerary agents.
-- Keep the walkthrough offline and deterministic.
+- Generate a separate polished report artifact from deterministic source-of-truth outputs.
+- Preserve all computed numbers, recommendations, dates, and option names.
+- Require explicit `--use-llm` or a dedicated polishing command.
+- Fail clearly when `OHMYGPT_API_KEY` is missing.
+- Do not call the OhMyGPT dashboard UI.
+
+## Phase 4.1: Release Preparation
+
+- Add a version tag such as `v0.1.0`.
+- Review README rendering and documentation links on GitHub.
+- Add a concise release note summarizing Phases 1-3.6.
+- Keep generated run directories and secrets out of Git.
 
 ## Later Phase 3 Work
 
@@ -41,6 +51,7 @@ Phase 3.6 should package the project for a portfolio walkthrough:
 - Add rolling-window trend analysis.
 - Add stronger trigger policy tests for buy, wait, and monitor paths.
 - Add provider adapter tests that verify live providers are not called by default.
+- Add optional report-polishing tests that mock LLM output.
 
 ## Deferred Ideas
 
@@ -50,6 +61,7 @@ Phase 3.6 should package the project for a portfolio walkthrough:
 - Real ticket price forecasting.
 - Optional live data integrations through official APIs or search APIs.
 - Multi-model LLM comparison through OhMyGPT.
+- Web scraping remains deferred and should be avoided when official or manual data paths are sufficient.
 
 ## Engineering Principles
 

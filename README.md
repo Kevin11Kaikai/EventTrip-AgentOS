@@ -2,9 +2,40 @@
 
 MCP-style, skill-based, file-memory multi-agent planning for collaborative event travel under market uncertainty.
 
+**Tagline:** collaborative event travel decision support with anti-scalper ticket timing, Markdown memory, and MCP-compatible tools.
+
 EventTrip-AgentOS is a deterministic prototype for budget-first event-trip decision support. It coordinates specialized agents through Markdown shared memory, uses mock MCP-style tools, tracks manual market snapshots, and produces a final Markdown report that explains ticket timing, flight tradeoffs, hotel value, market pressure, AA cost splitting, trend signals, and travel risk.
 
 The default demo is deterministic, offline, and does not call paid APIs. It does not require API keys and does not scrape websites.
+
+## Project Highlights
+
+- Multi-agent orchestration for ticket, flight, hotel, market, budget, risk, and report agents.
+- Markdown shared memory with YAML frontmatter for transparent agent handoffs.
+- MCP server wrapper with official MCP client validation.
+- Manual market snapshot tracker for price/listing trend analysis.
+- Combined ticket timing stance: single-day monitor + trend wait => Monitor with wait bias.
+- Safe snapshot CLI with `--dry-run` and explicit `--overwrite`.
+- Deterministic offline tests; no live APIs, scraping, or required API keys.
+
+## Quick Demo
+
+Run the main demo from Windows PowerShell:
+
+```powershell
+conda activate eventtrip_mcp
+cd D:\others\Eventrip_agentos
+python -m eventtrip.orchestrator --demo portugal_dr_congo_houston
+```
+
+Expected summary:
+
+```text
+Recommended option: Option A: One-night balanced plan
+Traveler A: $1120
+Traveler B: $1220
+Ticket timing recommendation: Monitor with wait bias
+```
 
 ## Quickstart
 
@@ -44,7 +75,13 @@ Phase 1 core demo remains compatible with Python 3.9+. Phase 3+ development and 
 - [Architecture](docs/architecture.md)
 - [MCP Validation](docs/mcp_validation.md)
 - [Roadmap](docs/roadmap.md)
+- [Demo Walkthrough](docs/demo_walkthrough.md)
+- [Project Summary](docs/project_summary.md)
 - [Verified MCP client output](examples/mcp_client_validation_output.txt)
+
+## Portfolio Summary
+
+This project demonstrates a practical agent architecture rather than a generic chatbot wrapper: deterministic tools, Markdown memory, MCP validation, trend-based ticket timing, and clear report generation are all visible in the repository.
 
 ## Why This Project Exists
 
@@ -252,6 +289,8 @@ python -m eventtrip.snapshots_cli append --match portugal_dr_congo --snapshot-da
 
 Use `--dry-run` before writing. Use `--overwrite` only when intentionally replacing an existing snapshot for the same match/date. The CLI uses manual data only; it does not call live APIs, scrape websites, or require OhMyGPT.
 
+Detailed walkthrough: [Demo Walkthrough](docs/demo_walkthrough.md).
+
 ## Skills
 
 Reusable skills live under `eventtrip/skills/*/SKILL.md`:
@@ -363,9 +402,8 @@ Generic travel agents generate itineraries. EventTrip-AgentOS reasons over ticke
 
 ## Future Roadmap
 
-- Phase 3.6: demo walkthrough and portfolio packaging
-- Phase 4: Streamlit or FastAPI dashboard
-- Phase 5: time-series ticket price forecasting
-- Phase 6: generalized event travel planner for concerts, NBA, Olympics, F1, and other events
+- Phase 4.0: optional OhMyGPT report polishing layer
+- Phase 4.1: release v0.1.0 preparation
+- Deferred: live APIs, scraping alternatives, dashboards, forecasting, and generalized event templates
 
 See [Roadmap](docs/roadmap.md) for completed phases and deferred live-integration ideas.

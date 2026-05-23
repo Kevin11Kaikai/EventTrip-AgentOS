@@ -100,6 +100,18 @@ The seed file is `data/market_snapshots/portugal_dr_congo_snapshots.csv`. It rec
 
 `python -m eventtrip.snapshots_cli` provides safe manual commands to analyze snapshots, validate proposed rows, dry-run appends, and overwrite duplicate match/date rows only when explicitly requested. These manual snapshots feed the SnapshotAgent and final trend analysis.
 
+## Ticket Timing Fusion
+
+The final report keeps the single-day MarketAgent signal and the multi-snapshot SnapshotAgent signal separate, then fuses them into one user-facing stance.
+
+In the seed demo:
+
+- MarketAgent single-day signal: `monitor`
+- SnapshotAgent trend signal: `wait`
+- Final report stance: `monitor_with_wait_bias` / "Monitor with wait bias"
+
+This means travelers should not panic buy in the current $680-$700 range, but should keep active trigger-based monitoring in place.
+
 ## MCP Layer
 
 - `eventtrip/mcp_server/tools.py` contains deterministic mock tool functions.
