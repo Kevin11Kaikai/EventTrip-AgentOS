@@ -10,6 +10,7 @@ from __future__ import annotations
 import asyncio
 import importlib.util
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any, Optional, Sequence
@@ -64,15 +65,23 @@ def extract_tool_payload(result: Any) -> Any:
     """Extract a JSON payload from an MCP call_tool result."""
     if isinstance(result, dict):
         if "structuredContent" in result:
-            return result["structuredContent"]
+            structured_content = result["structuredContent"]
+            if isinstance(structured_content, dict) and set(structured_content) == {"result"}:
+                return structured_content["result"]
+            return structured_content
         if "structured_content" in result:
-            return result["structured_content"]
+            structured_content = result["structured_content"]
+            if isinstance(structured_content, dict) and set(structured_content) == {"result"}:
+                return structured_content["result"]
+            return structured_content
         content = result.get("content")
     else:
         structured = getattr(result, "structured_content", None) or getattr(
             result, "structuredContent", None
         )
         if structured is not None:
+            if isinstance(structured, dict) and set(structured) == {"result"}:
+                return structured["result"]
             return structured
         content = getattr(result, "content", None)
 
@@ -101,6 +110,17 @@ def tool_names_from_list_result(result: Any) -> set[str]:
 
 def _assert_json_serializable(value: Any) -> None:
     json.dumps(value, sort_keys=True)
+
+
+def environment_label() -> str:
+    """Return a concise environment label for validation output."""
+    executable_parts = {part.lower() for part in Path(sys.executable).parts}
+    if "eventtrip_mcp" in executable_parts:
+        return "eventtrip_mcp"
+    conda_env = os.getenv("CONDA_DEFAULT_ENV")
+    if conda_env:
+        return conda_env
+    return Path(sys.executable).parent.name
 
 
 async def run_validation() -> int:
@@ -171,9 +191,22 @@ async def run_validation() -> int:
             assert hotels
             assert any(int(hotel["beds"]) >= 2 for hotel in hotels)
 
+    print(f"Python environment: {environment_label()} ({sys.version.split()[0]})")
+    print("Official MCP SDK validation path used: yes")
+    print("Listed MCP tools:")
+    for tool_name in sorted(EXPECTED_TOOL_NAMES):
+        print(f"- {tool_name}")
+    print("Sample get_ticket_market(portugal_dr_congo):")
+    print(f"- lowest_price = {ticket['lowest_price']}")
+    print(f"- listings = {ticket['listings']}")
+    print(f"- demand_level = {ticket['demand_level']}")
+    print("Sample compute_scalper_stress_index:")
+    print(f"- score = {stress['score']}")
+    print(f"- interpretation = {stress['interpretation']}")
+    print("Sample get_hotel_quotes:")
+    print(f"- hotel_options_returned = {len(hotels)}")
+    print(f"- first_hotel = {hotels[0]['name']}")
     print("MCP client validation passed.")
-    print(f"Tools listed: {', '.join(sorted(EXPECTED_TOOL_NAMES))}")
-    print("Validated calls: get_ticket_market, compute_scalper_stress_index, get_hotel_quotes")
     return 0
 
 

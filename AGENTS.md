@@ -24,3 +24,6 @@
 - MCP validation scripts must not require secrets or network access.
 - MCP validation should not be part of the Python 3.9 default demo path unless guarded.
 - Keep Python 3.9 compatibility for the core demo.
+- Official MCP client validation should use a separate Python 3.10+/3.11 environment.
+- Validation artifacts must not contain secrets.
+- Do not mix MCP validation environment setup with the default `smiley_bot` workflow.

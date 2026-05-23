@@ -45,3 +45,13 @@ def test_extract_tool_payload_from_text_content():
 
     assert payload["lowest_price"] == 700
     assert payload["listings"] == 300
+
+
+def test_extract_tool_payload_unwraps_structured_result():
+    class ToolResult:
+        structuredContent = {"result": [{"beds": 2}]}
+        content = []
+
+    payload = validate_mcp_client.extract_tool_payload(ToolResult())
+
+    assert payload == [{"beds": 2}]

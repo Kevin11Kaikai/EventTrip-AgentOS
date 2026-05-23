@@ -152,6 +152,30 @@ The validation script starts the local MCP server over stdio, lists tools, and c
 
 This validation does not use live APIs, paid APIs, web scraping, OhMyGPT, or secrets.
 
+## Verified MCP Client Validation
+
+The core demo remains compatible with Python 3.9+. Official MCP SDK validation was tested in a separate Python 3.11 environment named `eventtrip_mcp`.
+
+The validation script confirms that an MCP-compatible client can start the local server over stdio, list the deterministic mock tools, and call selected tools through MCP.
+
+Sample output:
+
+```text
+examples/mcp_client_validation_output.txt
+```
+
+Reproduce the validation:
+
+```powershell
+conda create -n eventtrip_mcp python=3.11 -y
+conda activate eventtrip_mcp
+cd D:\others\Eventrip_agentos
+pip install -r requirements.txt
+python scripts\validate_mcp_client.py
+```
+
+No live APIs are used. No OhMyGPT API key is required. No web scraping is used. The official MCP SDK path requires Python 3.10+.
+
 ## Skills
 
 Reusable skills live under `eventtrip/skills/*/SKILL.md`:

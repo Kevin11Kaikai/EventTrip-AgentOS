@@ -1,0 +1,21 @@
+Python environment: eventtrip_mcp (3.11.15)
+Official MCP SDK validation path used: yes
+Listed MCP tools:
+- compute_aa_split
+- compute_scalper_stress_index
+- get_flight_quotes
+- get_hotel_quotes
+- get_market_signals
+- get_ticket_market
+- rank_budget_options
+Sample get_ticket_market(portugal_dr_congo):
+- lowest_price = 700
+- listings = 300
+- demand_level = high
+Sample compute_scalper_stress_index:
+- score = 41.9
+- interpretation = moderate scalper stress, monitor
+Sample get_hotel_quotes:
+- hotel_options_returned = 4
+- first_hotel = Comfort Suites Houston near Medical Center - NRG Stadium
+MCP client validation passed.
