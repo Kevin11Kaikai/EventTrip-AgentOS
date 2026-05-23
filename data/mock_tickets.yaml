@@ -1,0 +1,10 @@
+portugal_dr_congo:
+  date: "2026-06-17"
+  venue: NRG Stadium
+  lowest_price: 700
+  listings: 300
+  category_3_range: [400, 750]
+  demand_level: high
+  price_trend_7d: 0.02
+  source_type: mock_secondary_market
+

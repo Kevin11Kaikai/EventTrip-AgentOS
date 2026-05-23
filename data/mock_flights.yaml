@@ -1,0 +1,55 @@
+PIT_same_day:
+  origin: PIT
+  destination: Houston
+  depart_date: "2026-06-17"
+  return_date: "2026-06-17"
+  estimated_roundtrip_cost: 360
+  trip_type: same_day_aggressive
+  risk_level: high
+  notes: Same-day arrival leaves little buffer for delays.
+SEA_same_day:
+  origin: SEA
+  destination: Houston
+  depart_date: "2026-06-17"
+  return_date: "2026-06-17"
+  estimated_roundtrip_cost: 460
+  trip_type: same_day_aggressive
+  risk_level: high
+  notes: Long-haul same-day routing has elevated fatigue and delay risk.
+PIT_one_night:
+  origin: PIT
+  destination: Houston
+  depart_date: "2026-06-16"
+  return_date: "2026-06-18"
+  estimated_roundtrip_cost: 300
+  trip_type: one_night_balanced
+  risk_level: medium_low
+  notes: Better arrival buffer without adding a second hotel night.
+SEA_one_night:
+  origin: SEA
+  destination: Houston
+  depart_date: "2026-06-16"
+  return_date: "2026-06-18"
+  estimated_roundtrip_cost: 400
+  trip_type: one_night_balanced
+  risk_level: medium_low
+  notes: Balanced cost and schedule buffer.
+PIT_two_night:
+  origin: PIT
+  destination: Houston
+  depart_date: "2026-06-16"
+  return_date: "2026-06-19"
+  estimated_roundtrip_cost: 320
+  trip_type: two_night_comfortable
+  risk_level: low
+  notes: More recovery time, but higher lodging cost.
+SEA_two_night:
+  origin: SEA
+  destination: Houston
+  depart_date: "2026-06-16"
+  return_date: "2026-06-19"
+  estimated_roundtrip_cost: 420
+  trip_type: two_night_comfortable
+  risk_level: low
+  notes: Lowest schedule risk for Seattle traveler, with extra hotel night.
+

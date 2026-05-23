@@ -1,0 +1,26 @@
+travelers:
+  - name: Traveler A
+    origin: PIT
+    description: Pittsburgh-based traveler
+    flexible_dates: true
+    budget_preference: budget_first
+  - name: Traveler B
+    origin: SEA
+    description: Seattle-based traveler
+    flexible_dates: true
+    budget_preference: budget_first
+destination_city: Houston
+venue: NRG Stadium
+match:
+  match_id: portugal_dr_congo
+  name: Portugal vs DR Congo
+  date: "2026-06-17"
+  venue: NRG Stadium
+  city: Houston
+constraints:
+  - budget_first
+  - shared_two_bed_hotel
+  - AA_shared_costs
+  - avoid_overpaying_secondary_market
+  - compare_same_day_vs_one_night_vs_two_night_options
+

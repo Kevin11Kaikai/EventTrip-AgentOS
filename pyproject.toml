@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "eventtrip-agentos"
+version = "0.1.0"
+description = "MCP-style, skill-based multi-agent event travel planner with Markdown shared memory."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "pyyaml",
+  "python-dotenv",
+  "openai",
+  "pydantic",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["eventtrip*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

@@ -1,0 +1,18 @@
+# Instructions For Future Coding Agents
+
+- Keep code simple and readable.
+- Do not add real paid APIs in Phase 1.
+- Preserve the Markdown shared memory format.
+- Preserve YAML frontmatter in every agent output.
+- Keep agent outputs deterministic where possible.
+- Use type hints.
+- Prefer small functions.
+- Do not commit secrets.
+- Do not scrape websites in Phase 1.
+- Put any future live API integration behind MCP-style tool functions.
+- Every new agent must produce one Markdown file in the run directory.
+- This Phase 1 demo focuses only on Portugal vs DR Congo. Do not reintroduce Germany vs Curacao unless a future scenario explicitly requests multiple matches.
+- Optional LLM usage must never change computed numbers.
+- Do not automate OhMyGPT dashboard login or scraping.
+- Use OhMyGPT only through the OpenAI-compatible API endpoint and environment variables.
+

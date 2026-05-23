@@ -1,0 +1,6 @@
+pyyaml
+pytest
+python-dotenv
+openai
+pydantic
+

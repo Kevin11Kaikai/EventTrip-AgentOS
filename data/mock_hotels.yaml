@@ -1,0 +1,42 @@
+comfort_suites_nrg:
+  name: Comfort Suites Houston near Medical Center - NRG Stadium
+  city: Houston
+  price_per_night: 160
+  beds: 2
+  walking_minutes_to_venue: 9
+  transit_minutes_to_venue:
+  rating: 4.0
+  cancellation_policy: refundable
+  notes: balanced value, close to venue
+quality_inn_nrg:
+  name: Quality Inn & Suites NRG Park
+  city: Houston
+  price_per_night: 150
+  beds: 2
+  walking_minutes_to_venue: 5
+  transit_minutes_to_venue:
+  rating: 3.0
+  cancellation_policy: semi_refundable
+  notes: cheapest walkable option but lower rating
+holiday_inn_express_medical:
+  name: Holiday Inn Express Medical Center Area
+  city: Houston
+  price_per_night: 210
+  beds: 2
+  walking_minutes_to_venue: 11
+  transit_minutes_to_venue:
+  rating: 4.0
+  cancellation_policy: refundable
+  breakfast: true
+  notes: better comfort, breakfast included
+midtown_metrorail_hotel:
+  name: Midtown METRORail Hotel
+  city: Houston
+  price_per_night: 140
+  beds: 2
+  walking_minutes_to_venue:
+  transit_minutes_to_venue: 25
+  rating: 4.1
+  cancellation_policy: refundable
+  notes: cheaper and connected by rail
+
