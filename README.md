@@ -132,6 +132,26 @@ Example local MCP client config:
 examples/mcp_client_config.example.json
 ```
 
+## Phase 2.1: MCP Client Validation
+
+The normal Phase 1 demo still works in Python 3.9. Full official MCP client validation requires Python 3.10+ because the official MCP Python SDK requires Python 3.10+.
+
+Recommended separate validation environment:
+
+```powershell
+conda create -n eventtrip_mcp python=3.11 -y
+conda activate eventtrip_mcp
+cd D:\others\Eventrip_agentos
+pip install -r requirements.txt
+python scripts\validate_mcp_client.py
+```
+
+`requirements.txt` includes `mcp; python_version >= "3.10"`, so Python 3.11 installs the official MCP SDK automatically.
+
+The validation script starts the local MCP server over stdio, lists tools, and calls deterministic mock tools including `get_ticket_market`, `compute_scalper_stress_index`, and `get_hotel_quotes`.
+
+This validation does not use live APIs, paid APIs, web scraping, OhMyGPT, or secrets.
+
 ## Skills
 
 Reusable skills live under `eventtrip/skills/*/SKILL.md`:

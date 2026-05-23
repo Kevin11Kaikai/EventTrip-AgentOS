@@ -20,3 +20,7 @@
 - MCP tools must remain deterministic in Phase 2.
 - MCP server must not call live APIs or scrape websites in Phase 2.
 - MCP server must not require secrets.
+- MCP client validation should remain deterministic.
+- MCP validation scripts must not require secrets or network access.
+- MCP validation should not be part of the Python 3.9 default demo path unless guarded.
+- Keep Python 3.9 compatibility for the core demo.
