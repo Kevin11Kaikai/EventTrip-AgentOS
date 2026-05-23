@@ -65,6 +65,34 @@ try:  # pragma: no cover - exercised when pydantic is installed
         days_before_event: int
         notes: str = ""
 
+    class MarketSnapshot(BaseModel):
+        snapshot_date: str
+        match_id: str
+        lowest_price: float
+        listings: int
+        category_3_low: float
+        category_3_high: float
+        hotel_availability_score: float
+        flight_price_pressure: float
+        social_buzz_score: float
+        days_before_event: int
+        source_type: str
+        notes: str = ""
+
+    class TrendAnalysisResult(BaseModel):
+        match_id: str
+        snapshot_count: int
+        latest_price: float
+        latest_listings: int
+        price_change_abs: float
+        price_change_pct: float
+        listings_change_abs: int
+        listings_change_pct: float
+        latest_scalper_stress_index: float
+        recommendation: str
+        trigger_status: str
+        explanation: list[str]
+
     class TripRequest(BaseModel):
         travelers: list[Traveler]
         match: EventMatch
@@ -151,6 +179,36 @@ except Exception:  # pragma: no cover - fallback path
         notes: str = ""
 
     @dataclass
+    class MarketSnapshot:
+        snapshot_date: str
+        match_id: str
+        lowest_price: float
+        listings: int
+        category_3_low: float
+        category_3_high: float
+        hotel_availability_score: float
+        flight_price_pressure: float
+        social_buzz_score: float
+        days_before_event: int
+        source_type: str
+        notes: str = ""
+
+    @dataclass
+    class TrendAnalysisResult:
+        match_id: str
+        snapshot_count: int
+        latest_price: float
+        latest_listings: int
+        price_change_abs: float
+        price_change_pct: float
+        listings_change_abs: int
+        listings_change_pct: float
+        latest_scalper_stress_index: float
+        recommendation: str
+        trigger_status: str
+        explanation: list[str]
+
+    @dataclass
     class TripRequest:
         travelers: list[Traveler]
         match: EventMatch
@@ -185,4 +243,3 @@ def to_plain_dict(value: Any) -> dict[str, Any]:
     if hasattr(value, "dict"):
         return value.dict()
     return dict(value.__dict__)
-

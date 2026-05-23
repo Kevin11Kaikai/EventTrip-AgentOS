@@ -57,7 +57,7 @@ This option is close to NRG Stadium, has two beds, stays refundable, and avoids 
             {
                 "summary": f"Selected {selected['name']} at ${selected['total_price']:.0f} one-night total.",
                 "recommendation": "Use refundable shared two-bed one-night hotel as baseline.",
-                "next_agent": "market_agent",
+                "next_agent": "snapshot_agent",
             },
             body,
         )
@@ -90,4 +90,3 @@ This option is close to NRG Stadium, has two beds, stays refundable, and avoids 
             f"${quote['total_price'] / 2:.0f} | {access} | {quote['rating']:.1f} | "
             f"{quote['cancellation_policy']} | {quote['value_score']:.1f} |"
         )
-

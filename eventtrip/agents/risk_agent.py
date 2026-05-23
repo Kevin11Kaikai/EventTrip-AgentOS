@@ -54,7 +54,7 @@ The one-night balanced plan is the best risk-adjusted baseline. It avoids the sa
         body = self.polish_if_enabled(body)
         self.write_output(
             run_dir,
-            "06_risk_agent.md",
+            "07_risk_agent.md",
             {
                 "summary": "Flagged ticket, lodging, delay, AA split, and secondary-market risks.",
                 "recommendation": "Use one-night plan with refundable hotel and explicit AA rules.",
@@ -63,4 +63,3 @@ The one-night balanced plan is the best risk-adjusted baseline. It avoids the sa
             body,
         )
         return {"risks": risks, "mitigations": mitigations}
-

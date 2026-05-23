@@ -18,6 +18,9 @@ class ReportAgent(BaseAgent):
         timing = context["ticket_timing"]
         selected_hotel = context["hotels"]["selected"]
         recommended = context["budget"]["recommended"]
+        snapshot_trend = context.get("snapshot_trend")
+        snapshots = context.get("market_snapshots", [])
+        latest_snapshot_date = snapshots[-1]["snapshot_date"] if snapshots else "n/a"
         option_a = next(
             option for option in context["budget"]["options"] if option["option_name"].startswith("Option A:")
         )
@@ -60,6 +63,9 @@ class ReportAgent(BaseAgent):
         )
         risk_lines = "\n".join(f"- {risk}" for risk in context["risks"])
         mitigation_lines = "\n".join(f"- {item}" for item in context["mitigations"])
+        snapshot_explanation = ""
+        if snapshot_trend:
+            snapshot_explanation = "\n".join(f"- {item}" for item in snapshot_trend["explanation"])
 
         body = f"""# EventTrip-AgentOS Final Report
 
@@ -77,7 +83,7 @@ This is a disciplined monitoring signal. The mock market is not cheap enough to 
 
 ## Demo Assumptions
 
-- Phase 1 uses deterministic mock data only.
+- Phase 1 and Phase 3 use deterministic mock and manual snapshot data only.
 - No web scraping, no browser automation, and no real paid travel APIs are used.
 - Default execution does not call any LLM API.
 - The scenario includes only {match["name"]} on {match["date"]} at {match["venue"]} in {match["city"]}.
@@ -89,10 +95,11 @@ This is a disciplined monitoring signal. The mock market is not cheap enough to 
 1. Ticket Agent reviewed the mock ticket market.
 2. Flight Agent compared same-day, one-night, and two-night flight windows.
 3. Hotel Agent ranked shared two-bed hotel options.
-4. Market Agent computed anti-scalper timing signals.
-5. Budget Agent ranked trip options by cost-effectiveness.
-6. Risk Agent flagged booking and coordination risks.
-7. Report Agent generated this Markdown report from shared memory and structured outputs.
+4. Snapshot Agent analyzed manual market snapshots.
+5. Market Agent computed anti-scalper timing signals.
+6. Budget Agent ranked trip options by cost-effectiveness.
+7. Risk Agent flagged booking and coordination risks.
+8. Report Agent generated this Markdown report from shared memory and structured outputs.
 
 ## Portugal vs DR Congo Ticket Analysis
 
@@ -132,6 +139,20 @@ Scalper Stress Index: {stress["score"]}/100 ({stress["interpretation"]}).
 Portugal creates genuine demand, so the correct answer is not a hard wait. At the same time, hotel and flight pressure are only moderate in the mock data, the market is not clearly collapsing, and it is also not tight enough to justify panic buying. The best response is disciplined monitoring with a pre-defined trigger price.
 
 Do not let secondary ticket sellers force premature buying if hotel and flight pressure remain moderate.
+
+## Market Snapshot Trend Analysis
+
+- Snapshot count: {snapshot_trend["snapshot_count"] if snapshot_trend else 0}
+- Latest snapshot date: {latest_snapshot_date}
+- Latest price: ${snapshot_trend["latest_price"] if snapshot_trend else 0:.0f}
+- Latest listings: {snapshot_trend["latest_listings"] if snapshot_trend else 0}
+- Price trend from first to latest: ${snapshot_trend["price_change_abs"] if snapshot_trend else 0:.0f} ({snapshot_trend["price_change_pct"] if snapshot_trend else 0:+.1f}%)
+- Listings trend from first to latest: {snapshot_trend["listings_change_abs"] if snapshot_trend else 0:+d} ({snapshot_trend["listings_change_pct"] if snapshot_trend else 0:+.1f}%)
+- Latest snapshot Scalper Stress Index: {snapshot_trend["latest_scalper_stress_index"] if snapshot_trend else 0:.1f}/100
+- Trend-based recommendation: {snapshot_trend["recommendation"] if snapshot_trend else "insufficient_data"}
+- Trigger status: {snapshot_trend["trigger_status"] if snapshot_trend else "insufficient_data"}
+
+{snapshot_explanation}
 
 ## Budget Comparison Table
 
@@ -191,7 +212,7 @@ The default demo uses deterministic mock agent outputs. When `--use-llm` is pass
         body = self.polish_if_enabled(body)
         output_path = self.write_output(
             run_dir,
-            "07_final_report.md",
+            "08_final_report.md",
             {
                 "summary": f"Final report recommends {recommended['option_name']}.",
                 "recommendation": recommended["option_name"],

@@ -72,7 +72,7 @@ Monitor official resale and verified secondary listings before buying. A budget-
         body = self.polish_if_enabled(body)
         self.write_output(
             run_dir,
-            "04_market_agent.md",
+            "05_market_agent.md",
             {
                 "summary": f"Scalper Stress Index {stress['score']}/100.",
                 "recommendation": timing,
@@ -81,4 +81,3 @@ Monitor official resale and verified secondary listings before buying. A budget-
             body,
         )
         return {"market": market, "scalper_stress": stress, "ticket_timing": timing}
-

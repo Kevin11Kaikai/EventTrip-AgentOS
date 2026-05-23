@@ -132,7 +132,7 @@ This option is the best cost-effectiveness tradeoff because it avoids the same-d
         body = self.polish_if_enabled(body)
         self.write_output(
             run_dir,
-            "05_budget_agent.md",
+            "06_budget_agent.md",
             {
                 "summary": f"Recommended {recommended['option_name']}.",
                 "recommendation": recommended["option_name"],
@@ -193,4 +193,3 @@ This option is the best cost-effectiveness tradeoff because it avoids the same-d
             "shared_cost_efficiency": shared_cost_efficiency,
             "risk_of_missing_match": risk_of_missing_match,
         }
-

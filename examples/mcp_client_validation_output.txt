@@ -1,11 +1,14 @@
 Python environment: eventtrip_mcp (3.11.15)
 Official MCP SDK validation path used: yes
 Listed MCP tools:
+- analyze_market_snapshots
+- append_market_snapshot
 - compute_aa_split
 - compute_scalper_stress_index
 - get_flight_quotes
 - get_hotel_quotes
 - get_market_signals
+- get_market_snapshots
 - get_ticket_market
 - rank_budget_options
 Sample get_ticket_market(portugal_dr_congo):
@@ -18,4 +21,9 @@ Sample compute_scalper_stress_index:
 Sample get_hotel_quotes:
 - hotel_options_returned = 4
 - first_hotel = Comfort Suites Houston near Medical Center - NRG Stadium
+Sample get_market_snapshots:
+- snapshots_returned = 5
+Sample analyze_market_snapshots:
+- recommendation = wait
+- trigger_status = monitor_high_listings_near_700
 MCP client validation passed.

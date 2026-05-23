@@ -2,13 +2,24 @@
 
 MCP-style, skill-based, file-memory multi-agent planning for collaborative event travel under market uncertainty.
 
-EventTrip-AgentOS is a Phase 1 prototype for budget-first event-trip decision support. It coordinates specialized agents through Markdown shared memory, uses mock MCP-style tools, and produces a final Markdown report that explains ticket timing, flight tradeoffs, hotel value, market pressure, AA cost splitting, and travel risk.
+EventTrip-AgentOS is a deterministic prototype for budget-first event-trip decision support. It coordinates specialized agents through Markdown shared memory, uses mock MCP-style tools, tracks manual market snapshots, and produces a final Markdown report that explains ticket timing, flight tradeoffs, hotel value, market pressure, AA cost splitting, trend signals, and travel risk.
 
 The default demo is deterministic, offline, and does not call paid APIs. It does not require API keys and does not scrape websites.
 
 ## Quickstart
 
-Run from Windows PowerShell in the repository root:
+Recommended Phase 3 workflow from Windows PowerShell:
+
+```powershell
+conda activate eventtrip_mcp
+cd D:\others\Eventrip_agentos
+pip install -r requirements.txt
+python -m eventtrip.orchestrator --demo portugal_dr_congo_houston
+python scripts\validate_mcp_client.py
+pytest
+```
+
+Legacy core-demo workflow:
 
 ```powershell
 conda activate smiley_bot
@@ -20,9 +31,13 @@ pytest
 
 ## Requirements
 
-- Python 3.9+
+- Python 3.9+ for the core Phase 1 demo where practical
+- Python 3.11 recommended for Phase 3+ development and official MCP workflows
 - Conda recommended
-- Tested with the `smiley_bot` conda environment using Python 3.9.23
+- Primary Phase 3 environment: `eventtrip_mcp` with Python 3.11.15
+- Legacy/core compatibility environment: `smiley_bot` with Python 3.9.23
+
+Phase 1 core demo remains compatible with Python 3.9+. Phase 3+ development and official MCP workflows are recommended on Python 3.11 using the `eventtrip_mcp` environment.
 
 ## Documentation
 
@@ -48,7 +63,7 @@ The first demo plans one match only:
 - Traveler A origin: Pittsburgh, PA (PIT)
 - Traveler B origin: Seattle, WA (SEA)
 
-Germany vs Curacao is intentionally excluded from Phase 1.
+Germany vs Curacao is intentionally excluded from this demo.
 
 ## Architecture
 
@@ -56,10 +71,13 @@ Germany vs Curacao is intentionally excluded from Phase 1.
 User Request
    |
    v
+Orchestrator
+   |
+   v
 Markdown Shared Memory / File Bus
    |
    v
-Ticket Agent -> Flight Agent -> Hotel Agent -> Market Agent -> Budget Agent -> Risk Agent -> Report Agent
+Ticket Agent -> Flight Agent -> Hotel Agent -> Snapshot Agent -> Market Agent -> Budget Agent -> Risk Agent -> Report Agent
    |
    v
 Final Markdown Report
@@ -76,13 +94,13 @@ runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\
 The final report is written to:
 
 ```text
-runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\07_final_report.md
+runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\08_final_report.md
 ```
 
 Example CLI summary:
 
 ```text
-Final report: runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\07_final_report.md
+Final report: runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\08_final_report.md
 Recommended option: Option A: One-night balanced plan
 Estimated cost per traveler:
   Traveler A: $1120
@@ -101,12 +119,15 @@ Phase 1 implements pure Python functions in `eventtrip/mcp_server/tools.py`. The
 - `compute_aa_split`
 - `compute_scalper_stress_index`
 - `rank_budget_options`
+- `get_market_snapshots`
+- `analyze_market_snapshots`
+- `append_market_snapshot`
 
-Phase 2 can expose these same functions through a real MCP server without changing the agent contract.
+Phase 2 exposes these same functions through a real MCP server without changing the agent contract. Phase 3 adds deterministic market snapshot tools backed by local CSV data.
 
 ## Phase 2: MCP Server
 
-Phase 2 exposes the existing mock tools through a real MCP server wrapper. The default multi-agent demo still runs offline without MCP, and the existing agents continue to call local Python functions directly.
+Phase 2 exposes the existing mock tools through a real MCP server wrapper. Phase 3 adds market snapshot tools to the same MCP surface. The default multi-agent demo still runs offline without MCP, and the existing agents continue to call local Python functions directly.
 
 The MCP server is local and stdio-based by default. It does not start a public network service, does not call live travel APIs, does not scrape websites, and does not require secrets. All tools are deterministic and backed by mock data.
 
@@ -115,7 +136,7 @@ The official MCP Python SDK currently requires Python 3.10+. The core EventTrip-
 Run the server from Windows PowerShell:
 
 ```powershell
-conda activate smiley_bot
+conda activate eventtrip_mcp
 cd D:\others\Eventrip_agentos
 pip install -r requirements.txt
 python -m eventtrip.mcp_server.server
@@ -132,6 +153,9 @@ Exposed MCP tools:
 - `compute_aa_split`
 - `compute_scalper_stress_index`
 - `rank_budget_options`
+- `get_market_snapshots`
+- `analyze_market_snapshots`
+- `append_market_snapshot`
 
 Example local MCP client config:
 
@@ -157,7 +181,7 @@ python scripts\validate_mcp_client.py
 
 `requirements.txt` includes `mcp; python_version >= "3.10"`, so Python 3.11 installs the official MCP SDK automatically.
 
-The validation script starts the local MCP server over stdio, lists tools, and calls deterministic mock tools including `get_ticket_market`, `compute_scalper_stress_index`, and `get_hotel_quotes`.
+The validation script starts the local MCP server over stdio, lists tools, and calls deterministic mock tools including `get_ticket_market`, `compute_scalper_stress_index`, `get_hotel_quotes`, `get_market_snapshots`, and `analyze_market_snapshots`.
 
 This validation does not use live APIs, paid APIs, web scraping, OhMyGPT, or secrets.
 
@@ -184,6 +208,34 @@ python scripts\validate_mcp_client.py
 ```
 
 No live APIs are used. No OhMyGPT API key is required. No web scraping is used. The official MCP SDK path requires Python 3.10+.
+
+## Phase 3: Market Snapshot Tracker
+
+Phase 3 extends the demo from a single mock market reading into a deterministic market snapshot workflow.
+
+Users can manually log ticket-market snapshots in CSV. Each snapshot can include ticket price, listings, Category 3 range, hotel availability proxy, flight price pressure, social buzz, days before event, source type, and notes. SnapshotAgent analyzes the time series and adds trend-based ticket timing to the final report.
+
+Seed data lives at:
+
+```text
+data\market_snapshots\portugal_dr_congo_snapshots.csv
+```
+
+Example CSV row:
+
+```csv
+2026-05-15,portugal_dr_congo,680,340,400,750,0.52,0.52,0.86,33,mock_manual,"Reseller pressure may be increasing."
+```
+
+Run the Phase 3 workflow:
+
+```powershell
+conda activate eventtrip_mcp
+cd D:\others\Eventrip_agentos
+python -m eventtrip.orchestrator --demo portugal_dr_congo_houston
+```
+
+This avoids scraping, keeps the system deterministic, and prepares clean provider interfaces for future live integrations.
 
 ## Skills
 
@@ -217,10 +269,11 @@ Deterministic filenames:
 - `01_ticket_agent.md`
 - `02_flight_agent.md`
 - `03_hotel_agent.md`
-- `04_market_agent.md`
-- `05_budget_agent.md`
-- `06_risk_agent.md`
-- `07_final_report.md`
+- `04_snapshot_agent.md`
+- `05_market_agent.md`
+- `06_budget_agent.md`
+- `07_risk_agent.md`
+- `08_final_report.md`
 
 ## Final Report Contents
 
@@ -231,6 +284,7 @@ Deterministic filenames:
 - Flight Analysis
 - Hotel Analysis
 - Market Timing / Anti-Scalper Analysis
+- Market Snapshot Trend Analysis
 - Budget Comparison Table
 - Recommended Plan
 - Practical Booking Rules
@@ -286,6 +340,7 @@ Generic travel agents generate itineraries. EventTrip-AgentOS reasons over ticke
 |   |-- mcp_server/
 |   `-- skills/
 |-- data/
+|   `-- market_snapshots/
 |-- runs/
 |-- examples/
 `-- tests/
@@ -293,8 +348,9 @@ Generic travel agents generate itineraries. EventTrip-AgentOS reasons over ticke
 
 ## Future Roadmap
 
-- Phase 2: real MCP server
-- Phase 3: live APIs, browser search, and web scraping
+- Phase 3.5: CLI workflow for appending manual market snapshots
 - Phase 4: Streamlit or FastAPI dashboard
 - Phase 5: time-series ticket price forecasting
 - Phase 6: generalized event travel planner for concerts, NBA, Olympics, F1, and other events
+
+See [Roadmap](docs/roadmap.md) for completed phases and deferred live-integration ideas.

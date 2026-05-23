@@ -1,8 +1,9 @@
 """Pure Python mock MCP-style tools.
 
-Phase 1 keeps these functions local and deterministic. In Phase 2, the same
-function signatures can be exposed through a real MCP server while preserving
-the agent-facing contract.
+Phase 1 keeps these functions local and deterministic. Phase 2 exposes the
+same function signatures through a real MCP server while preserving the
+agent-facing contract. Phase 3 adds deterministic market snapshot tools backed
+by local CSV data.
 """
 
 from __future__ import annotations
@@ -14,6 +15,15 @@ from typing import Any
 import yaml
 
 from eventtrip import scoring
+from eventtrip.market_snapshots import (
+    analyze_market_trend,
+    append_market_snapshot as append_snapshot_to_csv,
+    default_snapshot_path,
+    load_market_snapshots,
+    snapshot_to_dict,
+    trend_result_to_dict,
+)
+from eventtrip.schemas import MarketSnapshot, to_plain_dict
 
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "data"
@@ -122,3 +132,22 @@ def rank_budget_options(options: list[dict]) -> list[dict]:
         ranked.append(scored)
     return sorted(ranked, key=lambda item: item["recommendation_score"], reverse=True)
 
+
+def get_market_snapshots(match_id: str) -> list[dict]:
+    snapshots = load_market_snapshots(default_snapshot_path(match_id), match_id=match_id)
+    return [snapshot_to_dict(snapshot) for snapshot in snapshots]
+
+
+def analyze_market_snapshots(match_id: str) -> dict:
+    snapshots = load_market_snapshots(default_snapshot_path(match_id), match_id=match_id)
+    return trend_result_to_dict(analyze_market_trend(snapshots))
+
+
+def append_market_snapshot(snapshot: dict) -> dict:
+    validated = MarketSnapshot(**snapshot)
+    append_snapshot_to_csv(default_snapshot_path(validated.match_id), validated)
+    return {
+        "status": "success",
+        "match_id": validated.match_id,
+        "saved_snapshot": to_plain_dict(validated),
+    }

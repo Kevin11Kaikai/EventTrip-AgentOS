@@ -26,6 +26,9 @@ EXPECTED_TOOL_NAMES = {
     "compute_aa_split",
     "compute_scalper_stress_index",
     "rank_budget_options",
+    "get_market_snapshots",
+    "analyze_market_snapshots",
+    "append_market_snapshot",
 }
 PYTHON_39_MESSAGE = (
     "Full MCP client validation requires Python 3.10+ because the official MCP SDK "
@@ -191,6 +194,32 @@ async def run_validation() -> int:
             assert hotels
             assert any(int(hotel["beds"]) >= 2 for hotel in hotels)
 
+            snapshots = extract_tool_payload(
+                await session.call_tool(
+                    "get_market_snapshots",
+                    {"match_id": "portugal_dr_congo"},
+                )
+            )
+            _assert_json_serializable(snapshots)
+            assert isinstance(snapshots, list)
+            assert len(snapshots) >= 5
+
+            trend = extract_tool_payload(
+                await session.call_tool(
+                    "analyze_market_snapshots",
+                    {"match_id": "portugal_dr_congo"},
+                )
+            )
+            _assert_json_serializable(trend)
+            assert trend["snapshot_count"] >= 5
+            assert trend["recommendation"] in {
+                "buy",
+                "strongly_consider_buying",
+                "monitor",
+                "wait",
+                "insufficient_data",
+            }
+
     print(f"Python environment: {environment_label()} ({sys.version.split()[0]})")
     print("Official MCP SDK validation path used: yes")
     print("Listed MCP tools:")
@@ -206,6 +235,11 @@ async def run_validation() -> int:
     print("Sample get_hotel_quotes:")
     print(f"- hotel_options_returned = {len(hotels)}")
     print(f"- first_hotel = {hotels[0]['name']}")
+    print("Sample get_market_snapshots:")
+    print(f"- snapshots_returned = {len(snapshots)}")
+    print("Sample analyze_market_snapshots:")
+    print(f"- recommendation = {trend['recommendation']}")
+    print(f"- trigger_status = {trend['trigger_status']}")
     print("MCP client validation passed.")
     return 0
 

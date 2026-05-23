@@ -1,9 +1,10 @@
 """MCP server wrapper for EventTrip-AgentOS mock tools.
 
-Phase 2 exposes the existing deterministic mock tool functions through the
-official MCP Python SDK when it is available. The multi-agent demo still calls
-the local Python functions directly; this module is a separate MCP-compatible
-interface for local clients.
+Phase 2 exposes deterministic mock tool functions through the official MCP
+Python SDK when it is available. Phase 3 extends that MCP surface with manual
+market snapshot tools. The multi-agent demo still calls the local Python
+functions directly; this module is a separate MCP-compatible interface for
+local clients.
 """
 
 from __future__ import annotations
@@ -23,6 +24,9 @@ EXPECTED_TOOL_NAMES = [
     "compute_aa_split",
     "compute_scalper_stress_index",
     "rank_budget_options",
+    "get_market_snapshots",
+    "analyze_market_snapshots",
+    "append_market_snapshot",
 ]
 
 try:  # pragma: no cover - depends on optional SDK availability
@@ -86,6 +90,24 @@ def rank_budget_options(options: list[dict]) -> list[dict]:
     return mock_tools.rank_budget_options(options)
 
 
+@_register_tool
+def get_market_snapshots(match_id: str) -> list[dict]:
+    """Return deterministic manual market snapshots for one match ID."""
+    return mock_tools.get_market_snapshots(match_id)
+
+
+@_register_tool
+def analyze_market_snapshots(match_id: str) -> dict:
+    """Analyze manual market snapshots and return a deterministic trend recommendation."""
+    return mock_tools.analyze_market_snapshots(match_id)
+
+
+@_register_tool
+def append_market_snapshot(snapshot: dict) -> dict:
+    """Append a validated manual market snapshot to the local CSV store."""
+    return mock_tools.append_market_snapshot(snapshot)
+
+
 TOOL_REGISTRY = {
     "get_ticket_market": get_ticket_market,
     "get_flight_quotes": get_flight_quotes,
@@ -94,6 +116,9 @@ TOOL_REGISTRY = {
     "compute_aa_split": compute_aa_split,
     "compute_scalper_stress_index": compute_scalper_stress_index,
     "rank_budget_options": rank_budget_options,
+    "get_market_snapshots": get_market_snapshots,
+    "analyze_market_snapshots": analyze_market_snapshots,
+    "append_market_snapshot": append_market_snapshot,
 }
 
 
@@ -149,6 +174,21 @@ TOOL_SCHEMAS: dict[str, dict[str, Any]] = {
         "properties": {"options": {"type": "array", "items": {"type": "object"}}},
         "required": ["options"],
     },
+    "get_market_snapshots": {
+        "type": "object",
+        "properties": {"match_id": {"type": "string"}},
+        "required": ["match_id"],
+    },
+    "analyze_market_snapshots": {
+        "type": "object",
+        "properties": {"match_id": {"type": "string"}},
+        "required": ["match_id"],
+    },
+    "append_market_snapshot": {
+        "type": "object",
+        "properties": {"snapshot": {"type": "object"}},
+        "required": ["snapshot"],
+    },
 }
 
 
@@ -185,7 +225,7 @@ def _handle_jsonrpc_message(message: dict[str, Any]) -> dict[str, Any] | None:
             {
                 "protocolVersion": "2024-11-05",
                 "capabilities": {"tools": {}},
-                "serverInfo": {"name": SERVER_NAME, "version": "0.2.0"},
+                "serverInfo": {"name": SERVER_NAME, "version": "0.3.0"},
             },
         )
     if method == "notifications/initialized":

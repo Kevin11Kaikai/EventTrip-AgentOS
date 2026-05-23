@@ -9,6 +9,9 @@ EXPECTED_TOOLS = {
     "compute_aa_split",
     "compute_scalper_stress_index",
     "rank_budget_options",
+    "get_market_snapshots",
+    "analyze_market_snapshots",
+    "append_market_snapshot",
 }
 
 

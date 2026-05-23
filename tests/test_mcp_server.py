@@ -9,6 +9,9 @@ EXPECTED_TOOLS = {
     "compute_aa_split",
     "compute_scalper_stress_index",
     "rank_budget_options",
+    "get_market_snapshots",
+    "analyze_market_snapshots",
+    "append_market_snapshot",
 }
 
 
@@ -25,6 +28,8 @@ def test_mcp_wrappers_return_mock_data_directly():
     market = server.get_market_signals("portugal_dr_congo")
     split = server.compute_aa_split(160, people=2)
     stress = server.compute_scalper_stress_index(ticket, market)
+    snapshots = server.get_market_snapshots("portugal_dr_congo")
+    trend = server.analyze_market_snapshots("portugal_dr_congo")
 
     assert ticket["lowest_price"] == 700
     assert flights[0]["trip_type"] == "one_night_balanced"
@@ -32,3 +37,5 @@ def test_mcp_wrappers_return_mock_data_directly():
     assert market["match_id"] == "portugal_dr_congo"
     assert split["per_person"] == 80
     assert stress["score"] == 41.9
+    assert len(snapshots) >= 5
+    assert trend["match_id"] == "portugal_dr_congo"

@@ -23,6 +23,7 @@ from eventtrip.agents import (
     MarketAgent,
     ReportAgent,
     RiskAgent,
+    SnapshotAgent,
     TicketAgent,
 )
 from eventtrip.markdown_io import create_run_dir, write_markdown
@@ -34,7 +35,7 @@ DATA_PATH = PROJECT_ROOT / "data" / "worldcup_houston_demo.yaml"
 
 def load_demo_request(demo: str) -> dict[str, Any]:
     if demo != "portugal_dr_congo_houston":
-        raise ValueError("Only --demo portugal_dr_congo_houston is supported in Phase 1.")
+        raise ValueError("Only --demo portugal_dr_congo_houston is supported.")
     return yaml.safe_load(DATA_PATH.read_text(encoding="utf-8"))
 
 
@@ -95,6 +96,7 @@ def run_demo(
         TicketAgent(use_llm=use_llm),
         FlightAgent(use_llm=use_llm),
         HotelAgent(use_llm=use_llm),
+        SnapshotAgent(use_llm=use_llm),
         MarketAgent(use_llm=use_llm),
         BudgetAgent(use_llm=use_llm),
         RiskAgent(use_llm=use_llm),
@@ -114,7 +116,7 @@ def run_demo(
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Run the EventTrip-AgentOS Phase 1 demo.")
+    parser = argparse.ArgumentParser(description="Run the EventTrip-AgentOS demo.")
     parser.add_argument("--demo", required=True, help="Demo id. Use portugal_dr_congo_houston.")
     parser.add_argument("--use-llm", action="store_true", help="Enable optional OhMyGPT prose polishing.")
     return parser
@@ -140,4 +142,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

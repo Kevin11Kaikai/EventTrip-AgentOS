@@ -27,6 +27,14 @@
 - Official MCP client validation should use a separate Python 3.10+/3.11 environment.
 - Validation artifacts must not contain secrets.
 - Do not mix MCP validation environment setup with the default `smiley_bot` workflow.
+- Phase 1 core demo remains compatible with Python 3.9+ where practical.
+- Phase 3+ development and official MCP workflows should use `eventtrip_mcp` with Python 3.11.
+- Do not remove or destabilize the Python 3.9 guard/fallback behavior for core workflows.
+- Market snapshot tracking must remain deterministic and offline by default.
+- Manual market snapshots belong under `data/market_snapshots/`.
+- Future live data integrations must go behind provider adapters and MCP tool functions.
+- Phase 3.4 is skeleton-only; do not add real live API calls without a future explicit request.
+- MCP snapshot validation must not mutate committed seed snapshot data.
 - Detailed documentation belongs in `docs/`.
 - Keep README concise and link to deeper docs.
 - Preserve `docs/mcp_validation.md` when changing MCP server/client behavior.

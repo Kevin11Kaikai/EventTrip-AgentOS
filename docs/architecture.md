@@ -2,7 +2,16 @@
 
 ## System Goal
 
-EventTrip-AgentOS is a cost-aware collaborative event travel planning system under market uncertainty. It is designed to help travelers reason about ticket timing, travel options, shared costs, and practical risk before spending money.
+EventTrip-AgentOS is a cost-aware collaborative event travel planning system under market uncertainty. It helps travelers reason about ticket timing, flight windows, hotel value, shared costs, market trend signals, and practical booking risk before spending money.
+
+The system is intentionally transparent: agents exchange Markdown files with YAML frontmatter, deterministic tools expose mock data, and the final report shows how each recommendation was produced.
+
+## Environment Policy
+
+- Phase 1 core demo remains compatible with Python 3.9+ where practical.
+- `smiley_bot` with Python 3.9.23 remains the legacy/core compatibility environment.
+- Phase 3+ development and official MCP workflows are recommended on Python 3.11 using the `eventtrip_mcp` environment.
+- The official MCP SDK path requires Python 3.10+.
 
 ## Demo Scope
 
@@ -11,18 +20,23 @@ EventTrip-AgentOS is a cost-aware collaborative event travel planning system und
 - Venue: NRG Stadium / Houston Stadium.
 - Travelers: one from PIT and one from SEA.
 - Planning mode: budget-first, AA shared costs, and anti-scalper ticket timing.
+- Germany vs Curacao is intentionally excluded from this demo.
 
 ## High-Level Workflow
 
 ```text
 User Request
-   ↓
+   |
+   v
 Orchestrator
-   ↓
+   |
+   v
 Markdown Shared Memory / File Bus
-   ↓
-Ticket Agent → Flight Agent → Hotel Agent → Market Agent → Budget Agent → Risk Agent → Report Agent
-   ↓
+   |
+   v
+Ticket Agent -> Flight Agent -> Hotel Agent -> Snapshot Agent -> Market Agent -> Budget Agent -> Risk Agent -> Report Agent
+   |
+   v
 Final Markdown Report
 ```
 
@@ -33,6 +47,7 @@ Final Markdown Report
 | Ticket Agent | mock ticket data | ticket recommendation | Analyze ticket price/listings |
 | Flight Agent | mock flight data | flight window comparison | Compare same-day, one-night, two-night plans |
 | Hotel Agent | mock hotel data | ranked shared hotel options | Evaluate two-bed shared lodging |
+| Snapshot Agent | manual market snapshots | trend analysis | Track price/listing movement over time |
 | Market Agent | ticket + market signals | Scalper Stress Index | Anti-scalper timing analysis |
 | Budget Agent | ticket/flight/hotel estimates | ranked options | Cost-effectiveness ranking |
 | Risk Agent | plan candidates | risk register | Mitigation planning |
@@ -51,11 +66,34 @@ Expected files:
 01_ticket_agent.md
 02_flight_agent.md
 03_hotel_agent.md
-04_market_agent.md
-05_budget_agent.md
-06_risk_agent.md
-07_final_report.md
+04_snapshot_agent.md
+05_market_agent.md
+06_budget_agent.md
+07_risk_agent.md
+08_final_report.md
 ```
+
+## Market Snapshot Data Flow
+
+Phase 3 adds a manual market snapshot tracker. Users can log point-in-time ticket and demand-proxy observations without scraping websites or calling live APIs.
+
+```text
+data/market_snapshots/*.csv
+   |
+   v
+ManualSnapshotProvider
+   |
+   v
+eventtrip.market_snapshots
+   |
+   v
+Snapshot Agent and MCP snapshot tools
+   |
+   v
+Final report trend section
+```
+
+The seed file is `data/market_snapshots/portugal_dr_congo_snapshots.csv`. It records deterministic mock snapshots for lowest ticket price, listings, Category 3 range, hotel availability proxy, flight price pressure, social buzz, and days before event.
 
 ## MCP Layer
 
@@ -64,6 +102,29 @@ Expected files:
 - Python 3.10+/3.11 uses the official FastMCP path when available.
 - Python 3.9 uses fallback and guard behavior to preserve compatibility.
 - Existing agents still call local Python functions directly; MCP exposure is an additional interface.
+
+Current MCP tools:
+
+- `get_ticket_market`
+- `get_flight_quotes`
+- `get_hotel_quotes`
+- `get_market_signals`
+- `compute_aa_split`
+- `compute_scalper_stress_index`
+- `rank_budget_options`
+- `get_market_snapshots`
+- `analyze_market_snapshots`
+- `append_market_snapshot`
+
+## Data Provider Layer
+
+Phase 3 introduces a provider interface for market snapshots:
+
+- `MarketDataProvider`: protocol for reading and appending snapshots.
+- `ManualSnapshotProvider`: CSV-backed provider under `data/market_snapshots/`.
+- `MockLiveProvider`: deterministic placeholder for future provider adapters.
+
+Phase 3.4 is intentionally skeleton-only. It defines the interface for future live integrations but does not call real APIs, scrape websites, or require API keys.
 
 ## Skills Layer
 
@@ -88,14 +149,16 @@ Optional OhMyGPT integration is OpenAI-compatible and used only for prose polish
 - `data/mock_flights.yaml`: mock flight quotes for PIT and SEA.
 - `data/mock_hotels.yaml`: mock shared two-bed hotel options.
 - `data/mock_market_signals.yaml`: mock travel-demand and market-pressure signals.
+- `data/market_snapshots/portugal_dr_congo_snapshots.csv`: manual ticket market snapshot history.
 
 ## Testing Strategy
 
 - Markdown IO tests verify YAML frontmatter roundtrip behavior.
 - Scoring tests verify deterministic scalper-stress behavior.
+- Market snapshot tests verify CSV loading, append/save behavior, trend analysis, and snapshot scoring.
+- Snapshot Agent tests verify Markdown output and YAML frontmatter.
 - MCP server tests verify wrapper registration and direct mock outputs.
 - MCP client validation tests verify guard behavior and helper parsing.
 - Orchestrator smoke tests verify end-to-end report generation.
-- Python 3.9 core demo compatibility is preserved through `smiley_bot`.
+- Python 3.9 core demo compatibility is preserved where practical through `smiley_bot`.
 - Python 3.11 official MCP SDK validation is captured in `examples/mcp_client_validation_output.txt`.
-

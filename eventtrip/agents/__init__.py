@@ -6,6 +6,7 @@ from eventtrip.agents.hotel_agent import HotelAgent
 from eventtrip.agents.market_agent import MarketAgent
 from eventtrip.agents.report_agent import ReportAgent
 from eventtrip.agents.risk_agent import RiskAgent
+from eventtrip.agents.snapshot_agent import SnapshotAgent
 from eventtrip.agents.ticket_agent import TicketAgent
 
 __all__ = [
@@ -15,6 +16,6 @@ __all__ = [
     "MarketAgent",
     "BudgetAgent",
     "RiskAgent",
+    "SnapshotAgent",
     "ReportAgent",
 ]
-

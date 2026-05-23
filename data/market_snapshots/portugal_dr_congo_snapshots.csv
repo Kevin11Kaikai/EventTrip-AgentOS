@@ -1,0 +1,6 @@
+snapshot_date,match_id,lowest_price,listings,category_3_low,category_3_high,hotel_availability_score,flight_price_pressure,social_buzz_score,days_before_event,source_type,notes
+2026-01-15,portugal_dr_congo,760,240,400,750,0.62,0.45,0.80,153,mock_manual,"Early high demand, limited signal."
+2026-02-15,portugal_dr_congo,735,260,400,750,0.60,0.47,0.82,122,mock_manual,"Listings increased slightly."
+2026-03-15,portugal_dr_congo,720,280,400,750,0.58,0.48,0.84,94,mock_manual,"Price softening with more listings."
+2026-04-15,portugal_dr_congo,700,300,400,750,0.55,0.50,0.85,63,mock_manual,"Monitor, but do not panic buy."
+2026-05-15,portugal_dr_congo,680,340,400,750,0.52,0.52,0.86,33,mock_manual,"Reseller pressure may be increasing."
