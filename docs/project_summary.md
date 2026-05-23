@@ -18,12 +18,13 @@ EventTrip-AgentOS coordinates specialized Python agents through Markdown shared 
 - Trend-based ticket timing
 - Snapshot CLI
 - Deterministic offline tests
+- Optional LLM report polishing with invariant validation
 
 ## Resume Bullet Options
 
 - Built an MCP-enabled multi-agent travel decision system that coordinates ticket, flight, hotel, market, budget, and risk agents through Markdown shared memory.
 - Implemented deterministic anti-scalper ticket timing with manual market snapshots, trend analysis, and a safe CLI supporting dry-run and overwrite protection.
-- Validated an offline MCP server and client workflow with Python tests, mock data providers, YAML frontmatter memory, and reproducible final Markdown reports.
+- Validated an offline MCP server and client workflow with Python tests, mock data providers, YAML frontmatter memory, reproducible final Markdown reports, and guarded optional LLM polishing.
 
 ## Suggested GitHub Description
 

@@ -16,6 +16,11 @@ DEFAULT_BASE_URL = "https://api.ohmygpt.com/v1"
 DEFAULT_MODEL = "gpt-4o-mini"
 
 
+def configured_model() -> str:
+    """Return the configured model name without reading or exposing secrets."""
+    return os.getenv("OHMYGPT_MODEL", DEFAULT_MODEL)
+
+
 def generate_text(system_prompt: str, user_prompt: str) -> str:
     """Generate text through OhMyGPT when explicitly configured.
 
@@ -50,4 +55,3 @@ def generate_text(system_prompt: str, user_prompt: str) -> str:
         return response.choices[0].message.content or ""
     except Exception as exc:  # pragma: no cover - real API path
         return f"ERROR: LLM request failed: {exc}"
-

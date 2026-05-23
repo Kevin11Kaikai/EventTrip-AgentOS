@@ -155,7 +155,25 @@ Phase 3.4 is intentionally skeleton-only. It defines the interface for future li
 
 Default mode is deterministic and does not call any LLM.
 
-Optional OhMyGPT integration is OpenAI-compatible and used only for prose polishing. LLM usage must not change computed numbers, scores, option names, dates, or recommendations.
+Optional OhMyGPT integration is OpenAI-compatible and used only for a separate report-polishing artifact.
+
+```text
+08_final_report.md
+   |
+   v
+Invariant extraction and polishing prompt
+   |
+   v
+OhMyGPT OpenAI-compatible API, only when --use-llm is passed
+   |
+   v
+Invariant validation
+   |
+   v
+09_final_report_polished.md, only if validation passes
+```
+
+`08_final_report.md` is always the deterministic source of truth. `09_final_report_polished.md` is optional presentation output. LLM usage must not change computed numbers, scores, option names, dates, trigger thresholds, limitations, or recommendations. If validation fails, the deterministic report remains intact and the polished report is rejected or clearly marked as failed.
 
 `.env` is ignored by Git, and secrets are not committed.
 

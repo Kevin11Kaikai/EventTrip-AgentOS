@@ -227,7 +227,6 @@ The default demo uses deterministic mock agent outputs. When `--use-llm` is pass
 
 {mitigation_lines}
 """
-        body = self.polish_if_enabled(body)
         output_path = self.write_output(
             run_dir,
             "08_final_report.md",

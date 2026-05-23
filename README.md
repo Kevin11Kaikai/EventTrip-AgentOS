@@ -328,6 +328,7 @@ Deterministic filenames:
 - `06_budget_agent.md`
 - `07_risk_agent.md`
 - `08_final_report.md`
+- `09_final_report_polished.md` only when `--use-llm` succeeds
 
 ## Final Report Contents
 
@@ -346,13 +347,22 @@ Deterministic filenames:
 - Limitations
 - Optional LLM Backend Note
 
-## Optional OhMyGPT Integration
+## Optional LLM Report Polishing
 
-The default demo uses deterministic mock outputs. If `--use-llm` is not passed, no LLM API is called.
+The default demo uses deterministic mock outputs. If `--use-llm` is not passed, no LLM API is called and only `08_final_report.md` is generated.
 
-OhMyGPT can be used as an optional OpenAI-compatible LLM backend for prose polishing only. The project calls the API endpoint, not the OhMyGPT dashboard UI. The dashboard is only for human account management, balance checking, API key creation, and billing.
+OhMyGPT can be used as an optional OpenAI-compatible LLM backend for report polishing only. The deterministic `08_final_report.md` remains the source of truth. When `--use-llm` is passed and validation succeeds, the system writes a separate presentation artifact: `09_final_report_polished.md`.
+
+The polishing layer validates protected invariants so the LLM cannot silently change source-of-truth values such as costs, recommendations, dates, scores, trigger thresholds, match names, traveler names, and limitations. If validation fails, the deterministic report remains intact and the polished report is not accepted.
+
+The project calls the API endpoint, not the OhMyGPT dashboard UI. The dashboard is only for human account management, balance checking, API key creation, and billing.
 
 Copy `.env.example` to `.env` and fill it with `.env` content:
+
+```powershell
+Copy-Item .env.example .env
+# Edit .env and add OHMYGPT_API_KEY manually. Do not commit .env.
+```
 
 ```env
 OHMYGPT_API_KEY=your_ohmygpt_api_key_here
@@ -365,10 +375,12 @@ Do not commit `.env`. It is ignored by `.gitignore`.
 Then run:
 
 ```powershell
+conda activate eventtrip_mcp
+cd D:\others\Eventrip_agentos
 python -m eventtrip.orchestrator --demo portugal_dr_congo_houston --use-llm
 ```
 
-If `--use-llm` is passed without `OHMYGPT_API_KEY`, the program exits with a clear error message. LLM polishing must never change computed numbers, scores, option names, dates, or recommendations.
+If `--use-llm` is passed without `OHMYGPT_API_KEY`, the program still generates `08_final_report.md` and prints a clear LLM polishing error. LLM polishing must never change computed numbers, scores, option names, dates, trigger thresholds, limitations, or recommendations.
 
 ## How This Differs From Generic Travel Agents
 
@@ -402,7 +414,6 @@ Generic travel agents generate itineraries. EventTrip-AgentOS reasons over ticke
 
 ## Future Roadmap
 
-- Phase 4.0: optional OhMyGPT report polishing layer
 - Phase 4.1: release v0.1.0 preparation
 - Deferred: live APIs, scraping alternatives, dashboards, forecasting, and generalized event templates
 

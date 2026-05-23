@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import os
 from pathlib import Path
 from typing import Any
 
@@ -27,6 +26,7 @@ from eventtrip.agents import (
     TicketAgent,
 )
 from eventtrip.markdown_io import create_run_dir, write_markdown
+from eventtrip.report_polisher import polish_report
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -82,33 +82,35 @@ def run_demo(
     use_llm: bool = False,
     runs_root: Path | None = None,
 ) -> dict[str, Any]:
-    if use_llm and not os.getenv("OHMYGPT_API_KEY"):
-        raise RuntimeError(
-            "OHMYGPT_API_KEY is missing. Add it to the environment or .env before using --use-llm."
-        )
-
     trip_request = load_demo_request(demo)
     run_dir = create_run_dir("portugal_dr_congo_houston_demo", runs_root=runs_root)
     write_user_request(run_dir, trip_request)
 
     context: dict[str, Any] = {}
     agents = [
-        TicketAgent(use_llm=use_llm),
-        FlightAgent(use_llm=use_llm),
-        HotelAgent(use_llm=use_llm),
-        SnapshotAgent(use_llm=use_llm),
-        MarketAgent(use_llm=use_llm),
-        BudgetAgent(use_llm=use_llm),
-        RiskAgent(use_llm=use_llm),
-        ReportAgent(use_llm=use_llm),
+        TicketAgent(use_llm=False),
+        FlightAgent(use_llm=False),
+        HotelAgent(use_llm=False),
+        SnapshotAgent(use_llm=False),
+        MarketAgent(use_llm=False),
+        BudgetAgent(use_llm=False),
+        RiskAgent(use_llm=False),
+        ReportAgent(use_llm=False),
     ]
     for agent in agents:
         context.update(agent.run(trip_request, run_dir, context))
 
     recommended = context["budget"]["recommended"]
+    polish_result = None
+    if use_llm:
+        polish_result = polish_report(
+            context["final_report_path"],
+            run_dir / "09_final_report_polished.md",
+        )
     return {
         "run_dir": run_dir,
         "final_report_path": context["final_report_path"],
+        "polished_report": polish_result,
         "recommended_option": recommended["option_name"],
         "estimated_cost_per_traveler": recommended["total_cost_per_traveler"],
         "ticket_timing_recommendation": context.get(
@@ -141,6 +143,13 @@ def main(argv: list[str] | None = None) -> int:
     for traveler, total in result["estimated_cost_per_traveler"].items():
         print(f"  {traveler}: ${total:.0f}")
     print(f"Ticket timing recommendation: {result['ticket_timing_label']}")
+    if result["polished_report"]:
+        polish_result = result["polished_report"]
+        print(f"LLM polishing status: {polish_result['status']}")
+        if polish_result.get("output_path"):
+            print(f"Polished report: {polish_result['output_path']}")
+        for issue in polish_result.get("issues", []):
+            print(f"  - {issue}")
     return 0
 
 

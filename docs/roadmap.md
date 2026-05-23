@@ -15,6 +15,7 @@
 - Phase 3.4: optional live data integration skeleton.
 - Phase 3.5: manual snapshot CLI.
 - Phase 3.6: demo walkthrough and portfolio packaging.
+- Phase 4.0: optional OhMyGPT report-polishing layer.
 
 ## Phase 3 Status
 
@@ -28,21 +29,14 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Portfolio documentation now includes a demo walkthrough and short project summary.
 - Phase 3.4 adds live data provider interfaces and mock provider skeletons only; real live integrations remain deferred.
 
-## Recommended Next Step: Phase 4.0
+## Recommended Next Step: Phase 4.1
 
-Phase 4.0 should add an optional OhMyGPT report-polishing layer:
-
-- Generate a separate polished report artifact from deterministic source-of-truth outputs.
-- Preserve all computed numbers, recommendations, dates, and option names.
-- Require explicit `--use-llm` or a dedicated polishing command.
-- Fail clearly when `OHMYGPT_API_KEY` is missing.
-- Do not call the OhMyGPT dashboard UI.
-
-## Phase 4.1: Release Preparation
+Phase 4.1 should prepare the repository for a v0.1.0 release:
 
 - Add a version tag such as `v0.1.0`.
 - Review README rendering and documentation links on GitHub.
 - Add a concise release note summarizing Phases 1-3.6.
+- Include Phase 4.0 report polishing in the release note.
 - Keep generated run directories and secrets out of Git.
 
 ## Later Phase 3 Work
@@ -51,7 +45,7 @@ Phase 4.0 should add an optional OhMyGPT report-polishing layer:
 - Add rolling-window trend analysis.
 - Add stronger trigger policy tests for buy, wait, and monitor paths.
 - Add provider adapter tests that verify live providers are not called by default.
-- Add optional report-polishing tests that mock LLM output.
+- Add richer report-polishing fixtures that cover validation failure examples.
 
 ## Deferred Ideas
 

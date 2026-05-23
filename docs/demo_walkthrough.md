@@ -114,7 +114,7 @@ The final report appears in a timestamped `runs/` directory. Generated run direc
 - Trend-based ticket timing
 - Safe CLI with dry-run and overwrite protection
 - Deterministic offline tests
-- Optional OhMyGPT LLM backend reserved for future report polishing
+- Optional OhMyGPT report-polishing layer with invariant validation
 
 ## Limitations
 
@@ -124,6 +124,10 @@ The final report appears in a timestamped `runs/` directory. Generated run direc
 - Manual snapshots are mock/manual inputs.
 - Not financial, legal, or travel advice.
 
+## Optional Polished Report
+
+When `--use-llm` is passed and `OHMYGPT_API_KEY` is configured, EventTrip-AgentOS can generate `09_final_report_polished.md` as a presentation layer. The deterministic `08_final_report.md` remains the source of truth. Protected values are validated before the polished report is accepted.
+
 ## Next Step
 
-Next planned phase: optional OhMyGPT report-polishing layer that generates a separate polished report while preserving deterministic source-of-truth numbers.
+Next planned phase: release v0.1.0 preparation.

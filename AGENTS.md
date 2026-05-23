@@ -13,6 +13,8 @@
 - Every new agent must produce one Markdown file in the run directory.
 - This Phase 1 demo focuses only on Portugal vs DR Congo. Do not reintroduce Germany vs Curacao unless a future scenario explicitly requests multiple matches.
 - Optional LLM usage must never change computed numbers.
+- Optional report polishing must write a separate artifact and preserve `08_final_report.md` as source of truth.
+- LLM-polished reports must pass invariant validation before being accepted.
 - Do not automate OhMyGPT dashboard login or scraping.
 - Use OhMyGPT only through the OpenAI-compatible API endpoint and environment variables.
 - MCP server wrappers should call existing tool functions.
