@@ -6,6 +6,7 @@ import argparse
 from pathlib import Path
 from typing import Sequence
 
+from eventtrip.data_providers.import_provider import SnapshotImportProvider
 from eventtrip.market_snapshots import (
     analyze_market_trend,
     default_snapshot_path,
@@ -45,6 +46,24 @@ def build_parser() -> argparse.ArgumentParser:
         "--overwrite",
         action="store_true",
         help="Replace an existing snapshot with the same match/date.",
+    )
+
+    import_parser = subparsers.add_parser(
+        "import",
+        help="Import validated snapshots from a local CSV or JSON file.",
+    )
+    _add_match_argument(import_parser)
+    import_parser.add_argument("--input", required=True, type=Path, help="Local CSV or JSON file.")
+    import_parser.add_argument(
+        "--destination",
+        type=Path,
+        help="Optional destination CSV path. Defaults to the match snapshot CSV.",
+    )
+    import_parser.add_argument("--dry-run", action="store_true", help="Validate without writing.")
+    import_parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Replace existing snapshots with the same match/date.",
     )
 
     return parser
@@ -132,6 +151,50 @@ def run_append(args: argparse.Namespace) -> int:
     return 0
 
 
+def run_import(args: argparse.Namespace) -> int:
+    match_id = args.match_id
+    destination = _resolve_snapshot_path(match_id, args.destination)
+    try:
+        snapshots = SnapshotImportProvider(args.input).load_snapshots(match_id=match_id)
+    except Exception as exc:
+        print(f"Snapshot import failed: {exc}")
+        return 2
+
+    if not snapshots:
+        print(f"No snapshots found for match_id={match_id}.")
+        return 1
+
+    existing = load_market_snapshots(destination)
+    duplicates = [
+        snapshot
+        for snapshot in snapshots
+        if find_snapshot_index(existing, snapshot.match_id, snapshot.snapshot_date) is not None
+    ]
+    if duplicates and not args.overwrite:
+        print("Snapshot import found duplicate match/date rows; use --overwrite to replace them.")
+        for snapshot in duplicates:
+            print(f"- {snapshot.match_id} {snapshot.snapshot_date}")
+        return 1
+
+    action = "overwrite/import" if duplicates else "import"
+    if args.dry_run:
+        print(f"Dry run: validated {len(snapshots)} snapshots; would {action} into {destination}.")
+        for snapshot in snapshots:
+            print(f"- {snapshot.match_id} {snapshot.snapshot_date}: ${snapshot.lowest_price:.0f}, listings {snapshot.listings}")
+        return 0
+
+    for snapshot in snapshots:
+        result = upsert_market_snapshot(destination, snapshot, overwrite=args.overwrite)
+        if not result["saved"]:
+            print("Snapshot import stopped before completing:")
+            for error in result["errors"]:
+                print(f"- {error}")
+            return 1
+
+    print(f"Imported {len(snapshots)} snapshots into {destination}.")
+    return 0
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -139,6 +202,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return run_analyze(args)
     if args.command == "append":
         return run_append(args)
+    if args.command == "import":
+        return run_import(args)
     parser.error(f"Unsupported command: {args.command}")
     return 2
 

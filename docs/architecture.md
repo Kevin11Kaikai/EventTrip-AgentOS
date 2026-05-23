@@ -109,6 +109,26 @@ Snapshot Agent and MCP snapshot tools
 Final report trend section
 ```
 
+Phase 6 adds a safe local import path for external snapshot files:
+
+```text
+External CSV/JSON snapshot file
+   |
+   v
+SnapshotImportProvider
+   |
+   v
+snapshots_cli import --dry-run / import
+   |
+   v
+Manual snapshot CSV
+   |
+   v
+SnapshotAgent / dashboard / MCP snapshot tools
+```
+
+This prepares provider adapters without enabling live APIs by default. External imports read only local CSV/JSON files, validate every row, and preserve the deterministic manual snapshot store.
+
 The seed file is `data/market_snapshots/portugal_dr_congo_snapshots.csv`. It records deterministic mock snapshots for lowest ticket price, listings, Category 3 range, hotel availability proxy, flight price pressure, social buzz, and days before event.
 
 `python -m eventtrip.snapshots_cli` provides safe manual commands to analyze snapshots, validate proposed rows, dry-run appends, and overwrite duplicate match/date rows only when explicitly requested. These manual snapshots feed the SnapshotAgent and final trend analysis.
@@ -145,6 +165,7 @@ Current MCP tools:
 - `get_market_snapshots`
 - `analyze_market_snapshots`
 - `append_market_snapshot`
+- `preview_snapshot_import`
 
 ## Data Provider Layer
 
@@ -153,8 +174,10 @@ Phase 3 introduces a provider interface for market snapshots:
 - `MarketDataProvider`: protocol for reading and appending snapshots.
 - `ManualSnapshotProvider`: CSV-backed provider under `data/market_snapshots/`.
 - `MockLiveProvider`: deterministic placeholder for future provider adapters.
+- `SnapshotImportProvider`: local CSV/JSON import provider for validated external snapshots.
+- `get_provider`: deterministic provider registry for `manual_csv`, `mock_live`, and `import_file`.
 
-Phase 3.4 is intentionally skeleton-only. It defines the interface for future live integrations but does not call real APIs, scrape websites, or require API keys.
+Phase 6 keeps official API adapters deferred. `official_api` and `web_scraper` provider types raise clear errors instead of making network calls or scraping websites.
 
 ## Skills Layer
 

@@ -1,0 +1,3 @@
+snapshot_date,match_id,lowest_price,listings,category_3_low,category_3_high,hotel_availability_score,flight_price_pressure,social_buzz_score,days_before_event,source_type,notes
+2026-05-22,portugal_dr_congo,650,360,400,750,0.50,0.55,0.86,26,external_csv_sample,"Local import sample; not live data."
+2026-05-29,portugal_dr_congo,640,375,400,750,0.49,0.56,0.87,19,external_csv_sample,"Listings still rising in local sample."

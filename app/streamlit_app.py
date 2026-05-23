@@ -110,6 +110,7 @@ def main() -> None:
 
     st.set_page_config(page_title="EventTrip-AgentOS Dashboard", layout="wide")
     st.title("EventTrip-AgentOS Dashboard")
+    st.caption("Local portfolio view for deterministic event-trip decision support.")
     st.write(
         "Local deterministic dashboard for manual market snapshots, trend analysis, "
         "and portfolio demo recommendations. No live APIs, no web scraping, and no "
@@ -132,6 +133,10 @@ def main() -> None:
     metric_cols[1].metric("Ticket timing", TICKET_TIMING_LABEL)
     metric_cols[2].metric("Traveler A cost", "$1120")
     metric_cols[3].metric("Traveler B cost", "$1220")
+    st.caption(
+        "Monitor with wait bias means the single-day market says monitor, while "
+        "multi-snapshot trend data supports disciplined waiting with trigger prices."
+    )
 
     snapshot_cols = st.columns(3)
     snapshot_cols[0].metric("Latest snapshot price", f"${trend['latest_price']:.0f}")
@@ -177,6 +182,15 @@ def main() -> None:
         st.write(f"Polished report: `{report_paths['polished_report'] or 'not generated'}`")
     else:
         st.info("No generated run directories found yet.")
+
+    st.subheader("Project Links")
+    st.markdown(
+        "- `docs/demo_walkthrough.md`\n"
+        "- `docs/architecture.md`\n"
+        "- `docs/mcp_validation.md`\n"
+        "- `docs/dashboard_guide.md`\n"
+        "- `docs/release_v0_1_0.md`"
+    )
 
 
 def _render_charts(st: Any, snapshots: list[dict[str, Any]]) -> None:

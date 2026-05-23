@@ -29,6 +29,7 @@ EXPECTED_TOOL_NAMES = {
     "get_market_snapshots",
     "analyze_market_snapshots",
     "append_market_snapshot",
+    "preview_snapshot_import",
 }
 PYTHON_39_MESSAGE = (
     "Full MCP client validation requires Python 3.10+ because the official MCP SDK "
@@ -220,6 +221,19 @@ async def run_validation() -> int:
                 "insufficient_data",
             }
 
+            import_preview = extract_tool_payload(
+                await session.call_tool(
+                    "preview_snapshot_import",
+                    {
+                        "input_path": "examples/external_snapshot_import.csv",
+                        "match_id": "portugal_dr_congo",
+                    },
+                )
+            )
+            _assert_json_serializable(import_preview)
+            assert import_preview["validation_status"] == "valid"
+            assert import_preview["count"] >= 1
+
     print(f"Python environment: {environment_label()} ({sys.version.split()[0]})")
     print("Official MCP SDK validation path used: yes")
     print("Listed MCP tools:")
@@ -240,6 +254,9 @@ async def run_validation() -> int:
     print("Sample analyze_market_snapshots:")
     print(f"- recommendation = {trend['recommendation']}")
     print(f"- trigger_status = {trend['trigger_status']}")
+    print("Sample preview_snapshot_import:")
+    print(f"- validation_status = {import_preview['validation_status']}")
+    print(f"- snapshots_returned = {import_preview['count']}")
     print("MCP client validation passed.")
     return 0
 

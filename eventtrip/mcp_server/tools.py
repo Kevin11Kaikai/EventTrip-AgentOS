@@ -14,6 +14,7 @@ from typing import Any
 
 import yaml
 
+from eventtrip.data_providers.import_provider import SnapshotImportProvider
 from eventtrip import scoring
 from eventtrip.market_snapshots import (
     analyze_market_trend,
@@ -27,6 +28,7 @@ from eventtrip.schemas import MarketSnapshot, to_plain_dict
 
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "data"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 def _load_yaml(name: str) -> dict[str, Any]:
@@ -154,3 +156,37 @@ def append_market_snapshot(snapshot: dict) -> dict:
     result["match_id"] = validated.match_id
     result["saved_snapshot"] = to_plain_dict(validated) if result["saved"] else None
     return result
+
+
+def preview_snapshot_import(input_path: str, match_id: str | None = None) -> dict:
+    """Preview local CSV/JSON snapshot imports without writing to the snapshot store."""
+    try:
+        safe_path = _resolve_safe_local_import_path(input_path)
+        snapshots = SnapshotImportProvider(safe_path).load_snapshots(match_id=match_id)
+    except Exception as exc:
+        return {
+            "validation_status": "error",
+            "error": str(exc),
+            "count": 0,
+            "snapshots": [],
+        }
+    return {
+        "validation_status": "valid",
+        "error": None,
+        "input_path": str(safe_path),
+        "count": len(snapshots),
+        "snapshots": [snapshot_to_dict(snapshot) for snapshot in snapshots],
+    }
+
+
+def _resolve_safe_local_import_path(input_path: str) -> Path:
+    if "://" in input_path or input_path.startswith("\\\\"):
+        raise ValueError("Only local project files are supported for snapshot import preview.")
+    raw_path = Path(input_path)
+    candidate = raw_path if raw_path.is_absolute() else PROJECT_ROOT / raw_path
+    resolved = candidate.resolve(strict=False)
+    try:
+        resolved.relative_to(PROJECT_ROOT)
+    except ValueError as exc:
+        raise ValueError("Snapshot import preview paths must stay inside the project root.") from exc
+    return resolved

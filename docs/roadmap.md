@@ -19,6 +19,8 @@
 - Phase 4.1: release v0.1.0 preparation.
 - Phase 4.2: OhMyGPT real polishing success hardening with protected metadata repair.
 - Phase 5.0: lightweight local Streamlit dashboard.
+- Phase 5.1: dashboard guide and release-page draft.
+- Phase 6.0: safe local snapshot import/provider adapter foundation.
 
 ## Phase 3 Status
 
@@ -41,9 +43,9 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Keep the CLI and deterministic report workflow as the primary path.
 - Do not require the dashboard for tests or core demo execution.
 
-### Phase 6: Data Provider Adapters
+### Phase 6.1: Optional Official API Provider Adapters
 
-- Add provider adapters behind existing interfaces and MCP tools.
+- Add optional official API provider adapters behind existing interfaces and MCP tools.
 - Prefer official APIs or safe search APIs.
 - Keep web scraping deferred.
 - Preserve manual snapshot mode as the default fallback.
@@ -57,6 +59,18 @@ Phase 5.0 adds a local Streamlit dashboard for deterministic portfolio demos.
 - Finds latest generated report paths under `runs/`.
 - Does not call live APIs, scrape websites, or require OhMyGPT.
 - Presentation-only: source-of-truth calculations remain in the CLI, agents, and deterministic report.
+
+Phase 5.1 adds `docs/dashboard_guide.md`, `docs/assets/.gitkeep`, and a GitHub release-page draft at `docs/release_v0_1_0.md`.
+
+## Phase 6 Status
+
+Phase 6.0 adds a safe provider-adapter foundation without live API calls.
+
+- `SnapshotImportProvider` imports local CSV/JSON snapshot files.
+- `snapshots_cli import` supports dry-run, validation, duplicate protection, and overwrite.
+- `get_provider` registers `manual_csv`, `mock_live`, and `import_file`.
+- `official_api` and `web_scraper` remain intentionally unimplemented.
+- MCP exposes `preview_snapshot_import` as read-only preview behavior.
 
 ## Later Phase 3 Work
 

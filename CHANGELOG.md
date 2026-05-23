@@ -6,6 +6,9 @@
 
 - Hardened OhMyGPT polished-report validation with protected metadata repair.
 - Added local Streamlit dashboard for deterministic snapshot and recommendation viewing.
+- Added local dashboard guide and release-page draft.
+- Added CSV/JSON snapshot import provider and CLI import command.
+- Added safe provider registry for manual, mock, and import-file data providers.
 
 ## v0.1.0 - 2026-05-23
 

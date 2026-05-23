@@ -10,6 +10,7 @@ Listed MCP tools:
 - get_market_signals
 - get_market_snapshots
 - get_ticket_market
+- preview_snapshot_import
 - rank_budget_options
 Sample get_ticket_market(portugal_dr_congo):
 - lowest_price = 700
@@ -26,4 +27,7 @@ Sample get_market_snapshots:
 Sample analyze_market_snapshots:
 - recommendation = wait
 - trigger_status = monitor_high_listings_near_700
+Sample preview_snapshot_import:
+- validation_status = valid
+- snapshots_returned = 2
 MCP client validation passed.

@@ -32,6 +32,7 @@ EventTrip-AgentOS exposes deterministic mock travel-planning tools through an MC
 - `get_market_snapshots`: returns manual market snapshots for one match.
 - `analyze_market_snapshots`: analyzes historical snapshots and returns a trend recommendation.
 - `append_market_snapshot`: appends one validated manual snapshot to the local CSV store with duplicate protection.
+- `preview_snapshot_import`: previews a local CSV/JSON snapshot import without writing data.
 
 ## Validation Workflow
 
@@ -58,13 +59,14 @@ In Python 3.9, the validation script should exit cleanly with a message that ful
 ## Verified Results
 
 - The MCP client launched the local server through stdio.
-- The client listed 10 tools.
+- The client listed 11 tools.
 - The client called:
   - `get_ticket_market`
   - `compute_scalper_stress_index`
   - `get_hotel_quotes`
   - `get_market_snapshots`
   - `analyze_market_snapshots`
+  - `preview_snapshot_import`
 - Outputs matched deterministic mock data.
 - Sample output is stored at `examples/mcp_client_validation_output.txt`.
 

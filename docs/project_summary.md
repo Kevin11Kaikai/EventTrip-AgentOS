@@ -18,6 +18,7 @@ EventTrip-AgentOS coordinates specialized Python agents through Markdown shared 
 - Trend-based ticket timing
 - Snapshot CLI
 - Local Streamlit dashboard
+- CSV/JSON snapshot import provider
 - Deterministic offline tests
 - Optional LLM report polishing with invariant validation
 
@@ -45,7 +46,7 @@ MCP-enabled multi-agent event travel planner with Markdown memory, market snapsh
 
 ## v0.1.0 Release Summary
 
-v0.1.0 includes the deterministic multi-agent workflow, Markdown shared memory, MCP server and client validation, manual market snapshot tracker, snapshot CLI, trend-based ticket timing, optional guarded OhMyGPT report polishing, and full portfolio documentation.
+v0.1.0 includes the deterministic multi-agent workflow, Markdown shared memory, MCP server and client validation, manual market snapshot tracker, snapshot CLI, trend-based ticket timing, optional guarded OhMyGPT report polishing, local dashboard documentation, CSV/JSON snapshot import examples, and full portfolio documentation.
 
 It intentionally excludes live travel APIs, web scraping, dashboard UI, committed secrets, and any required paid API dependency for the default demo.
 

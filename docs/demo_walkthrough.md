@@ -144,6 +144,18 @@ streamlit run app\streamlit_app.py
 
 The dashboard is local-only. It does not call live APIs, scrape websites, or require OhMyGPT.
 
+## Importing External Snapshot Files
+
+Phase 6 adds a safe local import path for CSV/JSON snapshot files. Use dry-run first to validate rows without modifying the committed seed data.
+
+```powershell
+conda activate eventtrip_mcp
+cd D:\others\Eventrip_agentos
+python -m eventtrip.snapshots_cli import --input examples\external_snapshot_import.csv --match portugal_dr_congo --dry-run
+```
+
+This import workflow uses local files only. It does not call live APIs, scrape websites, or require credentials.
+
 ## Next Step
 
-Next planned phase: dashboard polish/screenshots or optional data provider adapters behind the existing interfaces.
+Next planned phase: dashboard screenshots/GitHub media polish or optional official API adapters behind the existing interfaces.

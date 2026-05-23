@@ -27,6 +27,7 @@ EXPECTED_TOOL_NAMES = [
     "get_market_snapshots",
     "analyze_market_snapshots",
     "append_market_snapshot",
+    "preview_snapshot_import",
 ]
 
 try:  # pragma: no cover - depends on optional SDK availability
@@ -108,6 +109,12 @@ def append_market_snapshot(snapshot: dict) -> dict:
     return mock_tools.append_market_snapshot(snapshot)
 
 
+@_register_tool
+def preview_snapshot_import(input_path: str, match_id: str | None = None) -> dict:
+    """Preview a local CSV/JSON snapshot import without writing data."""
+    return mock_tools.preview_snapshot_import(input_path, match_id)
+
+
 TOOL_REGISTRY = {
     "get_ticket_market": get_ticket_market,
     "get_flight_quotes": get_flight_quotes,
@@ -119,6 +126,7 @@ TOOL_REGISTRY = {
     "get_market_snapshots": get_market_snapshots,
     "analyze_market_snapshots": analyze_market_snapshots,
     "append_market_snapshot": append_market_snapshot,
+    "preview_snapshot_import": preview_snapshot_import,
 }
 
 
@@ -188,6 +196,14 @@ TOOL_SCHEMAS: dict[str, dict[str, Any]] = {
         "type": "object",
         "properties": {"snapshot": {"type": "object"}},
         "required": ["snapshot"],
+    },
+    "preview_snapshot_import": {
+        "type": "object",
+        "properties": {
+            "input_path": {"type": "string"},
+            "match_id": {"type": ["string", "null"], "default": None},
+        },
+        "required": ["input_path"],
     },
 }
 

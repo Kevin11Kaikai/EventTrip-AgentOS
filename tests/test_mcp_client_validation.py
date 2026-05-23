@@ -12,6 +12,7 @@ EXPECTED_TOOLS = {
     "get_market_snapshots",
     "analyze_market_snapshots",
     "append_market_snapshot",
+    "preview_snapshot_import",
 }
 
 

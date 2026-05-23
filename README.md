@@ -82,6 +82,8 @@ Phase 1 core demo remains compatible with Python 3.9+. Phase 3+ development and 
 - [Roadmap](docs/roadmap.md)
 - [Demo Walkthrough](docs/demo_walkthrough.md)
 - [Project Summary](docs/project_summary.md)
+- [Dashboard Guide](docs/dashboard_guide.md)
+- [Release v0.1.0 Draft](docs/release_v0_1_0.md)
 - [Verified MCP client output](examples/mcp_client_validation_output.txt)
 - [Changelog](CHANGELOG.md)
 - [License](LICENSE)
@@ -166,6 +168,7 @@ Phase 1 implements pure Python functions in `eventtrip/mcp_server/tools.py`. The
 - `get_market_snapshots`
 - `analyze_market_snapshots`
 - `append_market_snapshot`
+- `preview_snapshot_import`
 
 Phase 2 exposes these same functions through a real MCP server without changing the agent contract. Phase 3 adds deterministic market snapshot tools backed by local CSV data.
 
@@ -200,6 +203,7 @@ Exposed MCP tools:
 - `get_market_snapshots`
 - `analyze_market_snapshots`
 - `append_market_snapshot`
+- `preview_snapshot_import`
 
 Example local MCP client config:
 
@@ -310,6 +314,27 @@ streamlit run app\streamlit_app.py
 ```
 
 The dashboard is presentation-only. The CLI and deterministic Markdown report remain the source-of-truth workflow.
+
+See [Dashboard Guide](docs/dashboard_guide.md) for screenshot instructions and review notes.
+
+## Snapshot Import
+
+Phase 6 adds a safe local import workflow for external snapshot files. It supports CSV and JSON files with the existing market snapshot schema. This does not call live APIs, does not scrape websites, and does not require secrets.
+
+Use `--dry-run` first:
+
+```powershell
+conda activate eventtrip_mcp
+cd D:\others\Eventrip_agentos
+python -m eventtrip.snapshots_cli import --input examples\external_snapshot_import.csv --match portugal_dr_congo --dry-run
+```
+
+To write validated rows into the manual snapshot CSV, run the same command without `--dry-run`. Use `--overwrite` only when intentionally replacing the same match/date rows.
+
+## Release Notes
+
+- [Release v0.1.0 Draft](docs/release_v0_1_0.md)
+- [Changelog](CHANGELOG.md)
 
 ## Skills
 
@@ -436,8 +461,8 @@ Generic travel agents generate itineraries. EventTrip-AgentOS reasons over ticke
 
 ## Future Roadmap
 
-- Phase 5.1: dashboard polish and screenshots
-- Phase 6: live data provider adapters through official APIs or safe search APIs
-- Deferred: live APIs, web scraping, production dashboard features, forecasting, and generalized event templates
+- Phase 5.2: dashboard screenshots and GitHub media polish
+- Phase 6.1: optional official API provider adapters behind the existing interfaces
+- Deferred: live APIs by default, web scraping, production dashboard features, forecasting, and generalized event templates
 
 See [Roadmap](docs/roadmap.md) for completed phases and deferred live-integration ideas.

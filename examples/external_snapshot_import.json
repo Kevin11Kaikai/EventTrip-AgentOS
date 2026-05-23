@@ -1,0 +1,30 @@
+[
+  {
+    "snapshot_date": "2026-05-22",
+    "match_id": "portugal_dr_congo",
+    "lowest_price": 650,
+    "listings": 360,
+    "category_3_low": 400,
+    "category_3_high": 750,
+    "hotel_availability_score": 0.50,
+    "flight_price_pressure": 0.55,
+    "social_buzz_score": 0.86,
+    "days_before_event": 26,
+    "source_type": "external_json_sample",
+    "notes": "Local import sample; not live data."
+  },
+  {
+    "snapshot_date": "2026-05-29",
+    "match_id": "portugal_dr_congo",
+    "lowest_price": 640,
+    "listings": 375,
+    "category_3_low": 400,
+    "category_3_high": 750,
+    "hotel_availability_score": 0.49,
+    "flight_price_pressure": 0.56,
+    "social_buzz_score": 0.87,
+    "days_before_event": 19,
+    "source_type": "external_json_sample",
+    "notes": "Listings still rising in local sample."
+  }
+]
