@@ -1,5 +1,6 @@
 from eventtrip.orchestrator import run_demo
 from eventtrip.report_polisher import (
+    ensure_protected_metadata,
     ensure_required_limitations,
     extract_report_invariants,
     polish_report,
@@ -15,6 +16,8 @@ Recommended plan: Option A: One-night balanced plan.
 - Traveler B: $1220
 
 Overall ticket timing recommendation: Monitor with wait bias.
+
+ticket_timing_code: monitor_with_wait_bias
 
 The scenario includes only Portugal vs DR Congo on 2026-06-17 at NRG Stadium in Houston.
 
@@ -42,6 +45,7 @@ def test_extract_report_invariants_finds_protected_values():
     assert "$1120" in protected
     assert "$1220" in protected
     assert "Monitor with wait bias" in protected
+    assert "monitor_with_wait_bias" in protected
     assert "41.9/100" in protected
     assert "71.4/100" in protected
 
@@ -135,6 +139,44 @@ def test_ensure_required_limitations_does_not_hide_changed_recommendation():
     assert any("Option A: One-night balanced plan" in issue for issue in issues)
 
 
+def test_ensure_protected_metadata_restores_ticket_timing_code():
+    invariants = extract_report_invariants(SAMPLE_REPORT)
+    without_code = SAMPLE_REPORT.replace("ticket_timing_code: monitor_with_wait_bias\n\n", "")
+
+    before_ok, before_issues = validate_polished_report(SAMPLE_REPORT, without_code, invariants)
+    restored = ensure_protected_metadata(without_code, invariants)
+    after_ok, after_issues = validate_polished_report(SAMPLE_REPORT, restored, invariants)
+
+    assert not before_ok
+    assert any("monitor_with_wait_bias" in issue for issue in before_issues)
+    assert after_ok
+    assert after_issues == []
+    assert "## Protected Decision Metadata" in restored
+    assert "- ticket_timing_code: monitor_with_wait_bias" in restored
+
+
+def test_metadata_repair_does_not_hide_changed_cost():
+    invariants = extract_report_invariants(SAMPLE_REPORT)
+    changed = SAMPLE_REPORT.replace("$1120", "$999")
+    repaired = ensure_protected_metadata(changed, invariants)
+
+    ok, issues = validate_polished_report(SAMPLE_REPORT, repaired, invariants)
+
+    assert not ok
+    assert any("$999" in issue for issue in issues)
+
+
+def test_metadata_repair_does_not_hide_changed_recommendation():
+    invariants = extract_report_invariants(SAMPLE_REPORT)
+    changed = SAMPLE_REPORT.replace("Recommended plan: Option A", "Recommended plan: Option B")
+    repaired = ensure_protected_metadata(changed, invariants)
+
+    ok, issues = validate_polished_report(SAMPLE_REPORT, repaired, invariants)
+
+    assert not ok
+    assert any("Option A: One-night balanced plan" in issue or "Option B" in issue for issue in issues)
+
+
 def test_polish_report_with_mocked_llm_writes_safe_output(tmp_path, monkeypatch):
     original_path = tmp_path / "08_final_report.md"
     output_path = tmp_path / "09_final_report_polished.md"
@@ -151,6 +193,7 @@ def test_polish_report_with_mocked_llm_writes_safe_output(tmp_path, monkeypatch)
     assert result["status"] == "completed"
     assert result["output_path"] == output_path
     assert output_path.exists()
+    assert original_path.read_text(encoding="utf-8") == SAMPLE_REPORT
 
 
 def test_polish_report_restores_missing_limitations_from_mocked_llm(tmp_path, monkeypatch):
@@ -176,6 +219,25 @@ def test_polish_report_restores_missing_limitations_from_mocked_llm(tmp_path, mo
     assert result["status"] == "completed"
     assert "No real paid travel APIs are used." in polished
     assert "No web scraping is used." in polished
+
+
+def test_polish_report_restores_missing_metadata_from_mocked_llm(tmp_path, monkeypatch):
+    original_path = tmp_path / "08_final_report.md"
+    output_path = tmp_path / "09_final_report_polished.md"
+    original_path.write_text(SAMPLE_REPORT, encoding="utf-8")
+    llm_output = SAMPLE_REPORT.replace("ticket_timing_code: monitor_with_wait_bias\n\n", "")
+
+    monkeypatch.setattr(
+        "eventtrip.report_polisher.llm_client.generate_text",
+        lambda system_prompt, user_prompt: llm_output,
+    )
+
+    result = polish_report(original_path, output_path)
+    polished = output_path.read_text(encoding="utf-8")
+
+    assert result["status"] == "completed"
+    assert "## Protected Decision Metadata" in polished
+    assert "- ticket_timing_code: monitor_with_wait_bias" in polished
 
 
 def test_orchestrator_use_llm_missing_key_keeps_deterministic_report(tmp_path, monkeypatch):

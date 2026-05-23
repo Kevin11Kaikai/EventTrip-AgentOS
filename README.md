@@ -19,6 +19,8 @@ The default demo is deterministic, offline, and does not call paid APIs. It does
 - Manual market snapshot tracker for price/listing trend analysis.
 - Combined ticket timing stance: single-day monitor + trend wait => Monitor with wait bias.
 - Safe snapshot CLI with `--dry-run` and explicit `--overwrite`.
+- Optional OhMyGPT polishing with deterministic protected metadata repair.
+- Local Streamlit dashboard for snapshot and recommendation review.
 - Deterministic offline tests; no live APIs, scraping, or required API keys.
 
 ## Quick Demo
@@ -296,6 +298,19 @@ Use `--dry-run` before writing. Use `--overwrite` only when intentionally replac
 
 Detailed walkthrough: [Demo Walkthrough](docs/demo_walkthrough.md).
 
+## Phase 5: Local Dashboard
+
+Phase 5 adds a local-only Streamlit dashboard for portfolio demos. It visualizes manual snapshot history, trend analysis, deterministic budget recommendations, and latest generated report paths. It does not call live APIs, scrape websites, or require OhMyGPT.
+
+```powershell
+conda activate eventtrip_mcp
+cd D:\others\Eventrip_agentos
+pip install -r requirements.txt
+streamlit run app\streamlit_app.py
+```
+
+The dashboard is presentation-only. The CLI and deterministic Markdown report remain the source-of-truth workflow.
+
 ## Skills
 
 Reusable skills live under `eventtrip/skills/*/SKILL.md`:
@@ -360,6 +375,8 @@ OhMyGPT can be used as an optional OpenAI-compatible LLM backend for report poli
 
 The polishing layer validates protected invariants so the LLM cannot silently change source-of-truth values such as costs, recommendations, dates, scores, trigger thresholds, match names, traveler names, and limitations. If validation fails, the deterministic report remains intact and the polished report is not accepted.
 
+Phase 4.2 adds deterministic repair blocks for required limitations and protected decision metadata. This lets polished prose stay user-friendly while preserving machine-readable values such as `monitor_with_wait_bias`.
+
 The project calls the API endpoint, not the OhMyGPT dashboard UI. The dashboard is only for human account management, balance checking, API key creation, and billing.
 
 Copy `.env.example` to `.env` and fill it with `.env` content:
@@ -419,8 +436,8 @@ Generic travel agents generate itineraries. EventTrip-AgentOS reasons over ticke
 
 ## Future Roadmap
 
-- Phase 5: optional lightweight dashboard
+- Phase 5.1: dashboard polish and screenshots
 - Phase 6: live data provider adapters through official APIs or safe search APIs
-- Deferred: live APIs, scraping alternatives, dashboards, forecasting, and generalized event templates
+- Deferred: live APIs, web scraping, production dashboard features, forecasting, and generalized event templates
 
 See [Roadmap](docs/roadmap.md) for completed phases and deferred live-integration ideas.

@@ -17,6 +17,8 @@
 - Phase 3.6: demo walkthrough and portfolio packaging.
 - Phase 4.0: optional OhMyGPT report-polishing layer.
 - Phase 4.1: release v0.1.0 preparation.
+- Phase 4.2: OhMyGPT real polishing success hardening with protected metadata repair.
+- Phase 5.0: lightweight local Streamlit dashboard.
 
 ## Phase 3 Status
 
@@ -32,9 +34,10 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 
 ## Recommended Future Work
 
-### Phase 5: Optional Lightweight Dashboard
+### Phase 5.1: Dashboard Polish and Screenshots
 
-- Add a small Streamlit or FastAPI interface for browsing run reports and snapshot trends.
+- Add dashboard screenshots for GitHub.
+- Improve layout polish while keeping dashboard local-only.
 - Keep the CLI and deterministic report workflow as the primary path.
 - Do not require the dashboard for tests or core demo execution.
 
@@ -44,6 +47,16 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Prefer official APIs or safe search APIs.
 - Keep web scraping deferred.
 - Preserve manual snapshot mode as the default fallback.
+
+## Phase 5 Status
+
+Phase 5.0 adds a local Streamlit dashboard for deterministic portfolio demos.
+
+- Reads manual snapshot CSV data.
+- Displays trend analysis and deterministic budget recommendations.
+- Finds latest generated report paths under `runs/`.
+- Does not call live APIs, scrape websites, or require OhMyGPT.
+- Presentation-only: source-of-truth calculations remain in the CLI, agents, and deterministic report.
 
 ## Later Phase 3 Work
 

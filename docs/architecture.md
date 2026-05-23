@@ -40,6 +40,19 @@ Ticket Agent -> Flight Agent -> Hotel Agent -> Snapshot Agent -> Market Agent ->
 Final Markdown Report
 ```
 
+## Local Dashboard Layer
+
+Phase 5 adds a local Streamlit dashboard as a presentation layer only.
+
+```text
+Local Dashboard
+   |
+   v
+Snapshot CSV + trend analysis + deterministic report outputs
+```
+
+The dashboard reads local CSV snapshots, deterministic helper outputs, and latest generated report paths. It does not change source-of-truth calculations, does not call live APIs, does not scrape websites, and does not require OhMyGPT.
+
 ## Agent Responsibilities
 
 | Agent | Input | Output | Purpose |
@@ -167,13 +180,16 @@ Invariant extraction and polishing prompt
 OhMyGPT OpenAI-compatible API, only when --use-llm is passed
    |
    v
+Required limitations and protected decision metadata repair
+   |
+   v
 Invariant validation
    |
    v
 09_final_report_polished.md, only if validation passes
 ```
 
-`08_final_report.md` is always the deterministic source of truth. `09_final_report_polished.md` is optional presentation output. LLM usage must not change computed numbers, scores, option names, dates, trigger thresholds, limitations, or recommendations. If validation fails, the deterministic report remains intact and the polished report is rejected or clearly marked as failed.
+`08_final_report.md` is always the deterministic source of truth. `09_final_report_polished.md` is optional presentation output. LLM usage must not change computed numbers, scores, option names, dates, trigger thresholds, limitations, or recommendations. Phase 4.2 adds a deterministic `Protected Decision Metadata` block so polished reports can remain readable while preserving machine-readable invariants such as `monitor_with_wait_bias`. If validation fails, the deterministic report remains intact and the polished report is rejected or clearly marked as failed.
 
 `.env` is ignored by Git, and secrets are not committed.
 
@@ -193,6 +209,7 @@ Invariant validation
 - Market snapshot tests verify CSV loading, append/save behavior, trend analysis, and snapshot scoring.
 - Snapshot Agent tests verify Markdown output and YAML frontmatter.
 - Snapshot CLI tests verify dry-run, append, duplicate handling, overwrite, and validation failures.
+- Dashboard tests verify import-safe helpers, deterministic snapshot summaries, budget rows, and latest-run path detection.
 - MCP server tests verify wrapper registration and direct mock outputs.
 - MCP client validation tests verify guard behavior and helper parsing.
 - Orchestrator smoke tests verify end-to-end report generation.

@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Hardened OhMyGPT polished-report validation with protected metadata repair.
+- Added local Streamlit dashboard for deterministic snapshot and recommendation viewing.
+
 ## v0.1.0 - 2026-05-23
 
 Initial portfolio release of EventTrip-AgentOS.

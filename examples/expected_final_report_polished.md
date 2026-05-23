@@ -30,3 +30,19 @@ Option A remains the best risk-adjusted travel plan because it keeps one night o
 - No real paid travel APIs are used.
 - No web scraping is used.
 - This demo is decision support, not financial, legal, or travel advice.
+
+## Protected Decision Metadata
+
+- match_name: Portugal vs DR Congo
+- match_date: 2026-06-17
+- venue: NRG Stadium
+- recommended_plan: Option A: One-night balanced plan
+- ticket_timing_code: monitor_with_wait_bias
+- ticket_timing_label: Monitor with wait bias
+- traveler_a_cost: $1120
+- traveler_b_cost: $1220
+- single_day_scalper_stress_index: 41.9/100
+- snapshot_scalper_stress_index: 71.4/100
+- buy_trigger_official_resale: $550
+- strong_consider_trigger: $600
+- monitor_range: $680-$700

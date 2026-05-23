@@ -14,6 +14,7 @@ dependencies = [
   "openai",
   "pydantic",
   "mcp; python_version >= '3.10'",
+  "streamlit; python_version >= '3.10'",
 ]
 
 [tool.setuptools.packages.find]

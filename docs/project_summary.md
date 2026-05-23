@@ -17,6 +17,7 @@ EventTrip-AgentOS coordinates specialized Python agents through Markdown shared 
 - Market snapshot tracker
 - Trend-based ticket timing
 - Snapshot CLI
+- Local Streamlit dashboard
 - Deterministic offline tests
 - Optional LLM report polishing with invariant validation
 

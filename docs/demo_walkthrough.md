@@ -25,13 +25,17 @@ It combines travel planning with anti-scalper market reasoning, tracks price/lis
 
 ```text
 User Request
-   ↓
+   |
+   v
 Orchestrator
-   ↓
+   |
+   v
 Markdown Shared Memory / File Bus
-   ↓
-Ticket → Flight → Hotel → Snapshot → Market → Budget → Risk → Report
-   ↓
+   |
+   v
+Ticket -> Flight -> Hotel -> Snapshot -> Market -> Budget -> Risk -> Report
+   |
+   v
 Final Report
 ```
 
@@ -126,8 +130,20 @@ The final report appears in a timestamped `runs/` directory. Generated run direc
 
 ## Optional Polished Report
 
-When `--use-llm` is passed and `OHMYGPT_API_KEY` is configured, EventTrip-AgentOS can generate `09_final_report_polished.md` as a presentation layer. The deterministic `08_final_report.md` remains the source of truth. Protected values are validated before the polished report is accepted.
+When `--use-llm` is passed and `OHMYGPT_API_KEY` is configured, EventTrip-AgentOS can generate `09_final_report_polished.md` as a presentation layer. The deterministic `08_final_report.md` remains the source of truth. Protected values are validated before the polished report is accepted. Phase 4.2 adds a deterministic `Protected Decision Metadata` block so user-friendly prose still preserves machine-readable values such as `monitor_with_wait_bias`.
+
+## Local Dashboard
+
+Phase 5 adds a local Streamlit dashboard for inspecting manual snapshots, trend analysis, deterministic budget recommendations, and latest generated report paths.
+
+```powershell
+conda activate eventtrip_mcp
+cd D:\others\Eventrip_agentos
+streamlit run app\streamlit_app.py
+```
+
+The dashboard is local-only. It does not call live APIs, scrape websites, or require OhMyGPT.
 
 ## Next Step
 
-Next planned phase: release v0.1.0 preparation.
+Next planned phase: dashboard polish/screenshots or optional data provider adapters behind the existing interfaces.

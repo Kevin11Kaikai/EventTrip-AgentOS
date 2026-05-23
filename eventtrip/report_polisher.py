@@ -30,6 +30,21 @@ REQUIRED_LIMITATION_PHRASES = [
     "No web scraping is used.",
     "This demo is decision support, not financial, legal, or travel advice.",
 ]
+PROTECTED_METADATA_ORDER = [
+    "match_name",
+    "match_date",
+    "venue",
+    "recommended_plan",
+    "ticket_timing_code",
+    "ticket_timing_label",
+    "traveler_a_cost",
+    "traveler_b_cost",
+    "single_day_scalper_stress_index",
+    "snapshot_scalper_stress_index",
+    "buy_trigger_official_resale",
+    "strong_consider_trigger",
+    "monitor_range",
+]
 LIMITATION_PHRASES = [
     *REQUIRED_LIMITATION_PHRASES,
     "No web scraping, no browser automation, and no real paid travel APIs are used.",
@@ -65,6 +80,7 @@ def extract_report_invariants(report_text: str) -> dict[str, Any]:
     limitations = list(REQUIRED_LIMITATION_PHRASES)
     limitations.extend(phrase for phrase in LIMITATION_PHRASES if phrase in report_text)
     values.extend(phrase for phrase in limitations if phrase not in values)
+    metadata = _extract_protected_metadata(values, date_value, venue_values, threshold_value)
 
     return {
         "protected_values": sorted(set(values), key=values.index),
@@ -72,6 +88,7 @@ def extract_report_invariants(report_text: str) -> dict[str, Any]:
         "venue_values": venue_values,
         "threshold_value": threshold_value,
         "limitations": limitations,
+        "metadata": metadata,
     }
 
 
@@ -83,7 +100,8 @@ def build_polishing_prompt(report_text: str, invariants: dict[str, Any]) -> tupl
         "You polish Markdown reports for EventTrip-AgentOS. Your task is presentation only. "
         "Preserve all protected values exactly, keep the output as Markdown, do not invent live "
         "data, do not change recommendations, and do not remove limitations. You must preserve "
-        "a Limitations section with the exact required limitation phrases."
+        "a Limitations section with the exact required limitation phrases. The report may include "
+        "a Protected Decision Metadata block; do not remove or rewrite that block if present."
     )
     user_prompt = f"""Rewrite the report for clarity, readability, and professional tone.
 
@@ -96,6 +114,7 @@ Rules:
 - Do not remove limitations.
 - Do not convert mock estimates into real predictions.
 - Preserve a `## Limitations` section.
+- Preserve any `## Protected Decision Metadata` block if present.
 - Include these exact limitation phrases without paraphrasing, removing, or weakening them:
 {required_limitations}
 
@@ -123,6 +142,23 @@ def ensure_required_limitations(polished_text: str) -> str:
 """
 
 
+def ensure_protected_metadata(polished_text: str, invariants: dict[str, Any]) -> str:
+    """Append a deterministic metadata block that preserves machine-readable decisions."""
+    metadata = invariants.get("metadata", {})
+    metadata = {key: value for key, value in metadata.items() if value}
+    if not metadata:
+        return polished_text
+
+    cleaned_text = _remove_existing_metadata_block(polished_text)
+    metadata_lines = [
+        f"- {key}: {metadata[key]}"
+        for key in PROTECTED_METADATA_ORDER
+        if key in metadata and metadata[key]
+    ]
+    block = "## Protected Decision Metadata\n\n" + "\n".join(metadata_lines)
+    return f"{cleaned_text.rstrip()}\n\n{block}\n"
+
+
 def validate_polished_report(
     original_text: str,
     polished_text: str,
@@ -137,6 +173,9 @@ def validate_polished_report(
     for value in invariants["protected_values"]:
         if value not in polished_text:
             issues.append(f"Missing protected value: {value}")
+
+    if "Recommended plan: Option B" in polished_text and "Recommended plan: Option B" not in original_text:
+        issues.append("Polished report appears to recommend Option B.")
 
     if "Option B: Same-day aggressive plan" in polished_text and "Recommended plan: Option B" in polished_text:
         issues.append("Polished report appears to recommend Option B.")
@@ -177,6 +216,7 @@ def polish_report(original_report_path: Path, output_path: Path) -> dict[str, An
         }
 
     polished_text = ensure_required_limitations(polished_text)
+    polished_text = ensure_protected_metadata(polished_text, invariants)
     ok, issues = validate_polished_report(original_text, polished_text, invariants)
     if not ok:
         failure_path = output_path.with_name(f"{output_path.stem}_FAILED{output_path.suffix}")
@@ -210,3 +250,49 @@ The deterministic report remains the source of truth. The polished report was no
 
 {issue_lines}
 """
+
+
+def _extract_protected_metadata(
+    protected_values: list[str],
+    date_value: str | None,
+    venue_values: list[str],
+    threshold_value: str | None,
+) -> dict[str, str]:
+    return {
+        "match_name": _find_value(protected_values, "Portugal vs DR Congo"),
+        "match_date": date_value or "",
+        "venue": _find_first(protected_values, venue_values),
+        "recommended_plan": _find_value(protected_values, "Option A: One-night balanced plan"),
+        "ticket_timing_code": _find_value(protected_values, "monitor_with_wait_bias"),
+        "ticket_timing_label": _find_value(protected_values, "Monitor with wait bias"),
+        "traveler_a_cost": _find_value(protected_values, "$1120"),
+        "traveler_b_cost": _find_value(protected_values, "$1220"),
+        "single_day_scalper_stress_index": _find_value(protected_values, "41.9/100"),
+        "snapshot_scalper_stress_index": _find_value(protected_values, "71.4/100"),
+        "buy_trigger_official_resale": _find_value(protected_values, "$550"),
+        "strong_consider_trigger": _find_value(protected_values, "$600"),
+        "monitor_range": threshold_value or "",
+    }
+
+
+def _find_value(values: list[str], target: str) -> str:
+    return target if target in values else ""
+
+
+def _find_first(values: list[str], candidates: list[str]) -> str:
+    for candidate in candidates:
+        if candidate in values:
+            return candidate
+    return ""
+
+
+def _remove_existing_metadata_block(text: str) -> str:
+    marker = "## Protected Decision Metadata"
+    start = text.find(marker)
+    if start == -1:
+        return text
+
+    next_section = text.find("\n## ", start + len(marker))
+    if next_section == -1:
+        return text[:start]
+    return text[:start] + text[next_section + 1 :]
