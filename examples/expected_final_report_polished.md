@@ -26,6 +26,7 @@ Option A remains the best risk-adjusted travel plan because it keeps one night o
 
 ## Limitations
 
-- No web scraping, no browser automation, and no real paid travel APIs are used.
 - No live market, flight, hotel, or ticket APIs are used.
-- The demo is decision support, not financial, legal, or travel advice.
+- No real paid travel APIs are used.
+- No web scraping is used.
+- This demo is decision support, not financial, legal, or travel advice.

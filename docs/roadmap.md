@@ -16,6 +16,7 @@
 - Phase 3.5: manual snapshot CLI.
 - Phase 3.6: demo walkthrough and portfolio packaging.
 - Phase 4.0: optional OhMyGPT report-polishing layer.
+- Phase 4.1: release v0.1.0 preparation.
 
 ## Phase 3 Status
 
@@ -29,15 +30,20 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Portfolio documentation now includes a demo walkthrough and short project summary.
 - Phase 3.4 adds live data provider interfaces and mock provider skeletons only; real live integrations remain deferred.
 
-## Recommended Next Step: Phase 4.1
+## Recommended Future Work
 
-Phase 4.1 should prepare the repository for a v0.1.0 release:
+### Phase 5: Optional Lightweight Dashboard
 
-- Add a version tag such as `v0.1.0`.
-- Review README rendering and documentation links on GitHub.
-- Add a concise release note summarizing Phases 1-3.6.
-- Include Phase 4.0 report polishing in the release note.
-- Keep generated run directories and secrets out of Git.
+- Add a small Streamlit or FastAPI interface for browsing run reports and snapshot trends.
+- Keep the CLI and deterministic report workflow as the primary path.
+- Do not require the dashboard for tests or core demo execution.
+
+### Phase 6: Data Provider Adapters
+
+- Add provider adapters behind existing interfaces and MCP tools.
+- Prefer official APIs or safe search APIs.
+- Keep web scraping deferred.
+- Preserve manual snapshot mode as the default fallback.
 
 ## Later Phase 3 Work
 
@@ -49,7 +55,6 @@ Phase 4.1 should prepare the repository for a v0.1.0 release:
 
 ## Deferred Ideas
 
-- Streamlit/FastAPI dashboard.
 - Multi-event support.
 - Concert/NBA/Olympics/F1 templates.
 - Real ticket price forecasting.

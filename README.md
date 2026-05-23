@@ -4,6 +4,9 @@ MCP-style, skill-based, file-memory multi-agent planning for collaborative event
 
 **Tagline:** collaborative event travel decision support with anti-scalper ticket timing, Markdown memory, and MCP-compatible tools.
 
+**Version:** v0.1.0
+**Status:** Portfolio prototype / deterministic demo
+
 EventTrip-AgentOS is a deterministic prototype for budget-first event-trip decision support. It coordinates specialized agents through Markdown shared memory, uses mock MCP-style tools, tracks manual market snapshots, and produces a final Markdown report that explains ticket timing, flight tradeoffs, hotel value, market pressure, AA cost splitting, trend signals, and travel risk.
 
 The default demo is deterministic, offline, and does not call paid APIs. It does not require API keys and does not scrape websites.
@@ -78,6 +81,8 @@ Phase 1 core demo remains compatible with Python 3.9+. Phase 3+ development and 
 - [Demo Walkthrough](docs/demo_walkthrough.md)
 - [Project Summary](docs/project_summary.md)
 - [Verified MCP client output](examples/mcp_client_validation_output.txt)
+- [Changelog](CHANGELOG.md)
+- [License](LICENSE)
 
 ## Portfolio Summary
 
@@ -414,7 +419,8 @@ Generic travel agents generate itineraries. EventTrip-AgentOS reasons over ticke
 
 ## Future Roadmap
 
-- Phase 4.1: release v0.1.0 preparation
+- Phase 5: optional lightweight dashboard
+- Phase 6: live data provider adapters through official APIs or safe search APIs
 - Deferred: live APIs, scraping alternatives, dashboards, forecasting, and generalized event templates
 
 See [Roadmap](docs/roadmap.md) for completed phases and deferred live-integration ideas.

@@ -1,5 +1,6 @@
 from eventtrip.orchestrator import run_demo
 from eventtrip.report_polisher import (
+    ensure_required_limitations,
     extract_report_invariants,
     polish_report,
     validate_polished_report,
@@ -23,9 +24,10 @@ Latest snapshot Scalper Stress Index: 71.4/100.
 
 Buy immediately at $550. Strongly consider buying below $600. Do not panic buy in the $680-$700 range.
 
-- No web scraping, no browser automation, and no real paid travel APIs are used.
 - No live market, flight, hotel, or ticket APIs are used.
-- The demo is decision support, not financial, legal, or travel advice.
+- No real paid travel APIs are used.
+- No web scraping is used.
+- This demo is decision support, not financial, legal, or travel advice.
 """
 
 
@@ -86,6 +88,53 @@ def test_validate_polished_report_fails_when_limitations_removed():
     assert any("No live market" in issue for issue in issues)
 
 
+def test_ensure_required_limitations_restores_missing_phrases():
+    without_limitations = SAMPLE_REPORT.replace(
+        "- No live market, flight, hotel, or ticket APIs are used.\n"
+        "- No real paid travel APIs are used.\n"
+        "- No web scraping is used.\n"
+        "- This demo is decision support, not financial, legal, or travel advice.\n",
+        "",
+    )
+    invariants = extract_report_invariants(SAMPLE_REPORT)
+
+    before_ok, before_issues = validate_polished_report(
+        SAMPLE_REPORT,
+        without_limitations,
+        invariants,
+    )
+    restored = ensure_required_limitations(without_limitations)
+    after_ok, after_issues = validate_polished_report(SAMPLE_REPORT, restored, invariants)
+
+    assert not before_ok
+    assert any("Missing required limitation phrase" in issue for issue in before_issues)
+    assert after_ok
+    assert after_issues == []
+    assert "## Limitations" in restored
+
+
+def test_ensure_required_limitations_does_not_hide_changed_cost():
+    changed = ensure_required_limitations(SAMPLE_REPORT.replace("$1120", "$999"))
+    invariants = extract_report_invariants(SAMPLE_REPORT)
+
+    ok, issues = validate_polished_report(SAMPLE_REPORT, changed, invariants)
+
+    assert not ok
+    assert any("$1120" in issue or "$999" in issue for issue in issues)
+
+
+def test_ensure_required_limitations_does_not_hide_changed_recommendation():
+    changed = ensure_required_limitations(
+        SAMPLE_REPORT.replace("Option A: One-night balanced plan", "Option B: Same-day aggressive plan")
+    )
+    invariants = extract_report_invariants(SAMPLE_REPORT)
+
+    ok, issues = validate_polished_report(SAMPLE_REPORT, changed, invariants)
+
+    assert not ok
+    assert any("Option A: One-night balanced plan" in issue for issue in issues)
+
+
 def test_polish_report_with_mocked_llm_writes_safe_output(tmp_path, monkeypatch):
     original_path = tmp_path / "08_final_report.md"
     output_path = tmp_path / "09_final_report_polished.md"
@@ -102,6 +151,31 @@ def test_polish_report_with_mocked_llm_writes_safe_output(tmp_path, monkeypatch)
     assert result["status"] == "completed"
     assert result["output_path"] == output_path
     assert output_path.exists()
+
+
+def test_polish_report_restores_missing_limitations_from_mocked_llm(tmp_path, monkeypatch):
+    original_path = tmp_path / "08_final_report.md"
+    output_path = tmp_path / "09_final_report_polished.md"
+    original_path.write_text(SAMPLE_REPORT, encoding="utf-8")
+    llm_output = SAMPLE_REPORT.replace(
+        "- No live market, flight, hotel, or ticket APIs are used.\n"
+        "- No real paid travel APIs are used.\n"
+        "- No web scraping is used.\n"
+        "- This demo is decision support, not financial, legal, or travel advice.\n",
+        "",
+    )
+
+    monkeypatch.setattr(
+        "eventtrip.report_polisher.llm_client.generate_text",
+        lambda system_prompt, user_prompt: llm_output,
+    )
+
+    result = polish_report(original_path, output_path)
+    polished = output_path.read_text(encoding="utf-8")
+
+    assert result["status"] == "completed"
+    assert "No real paid travel APIs are used." in polished
+    assert "No web scraping is used." in polished
 
 
 def test_orchestrator_use_llm_missing_key_keeps_deterministic_report(tmp_path, monkeypatch):

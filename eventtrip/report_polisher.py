@@ -21,15 +21,19 @@ PROTECTED_VALUES = [
     "$550",
     "$600",
 ]
-OPTIONAL_THRESHOLD_FORMS = ["$680-$700", "$680–$700"]
+OPTIONAL_THRESHOLD_FORMS = ["$680-$700", "$680\u2013$700"]
 DATE_FORMS = ["2026-06-17", "June 17, 2026"]
 VENUE_FORMS = ["NRG Stadium", "Houston Stadium"]
-LIMITATION_PHRASES = [
-    "No web scraping",
-    "no web scraping",
-    "no real paid travel APIs",
+REQUIRED_LIMITATION_PHRASES = [
     "No live market, flight, hotel, or ticket APIs are used.",
-    "not financial, legal, or travel advice",
+    "No real paid travel APIs are used.",
+    "No web scraping is used.",
+    "This demo is decision support, not financial, legal, or travel advice.",
+]
+LIMITATION_PHRASES = [
+    *REQUIRED_LIMITATION_PHRASES,
+    "No web scraping, no browser automation, and no real paid travel APIs are used.",
+    "The demo is decision support, not financial, legal, or travel advice.",
 ]
 FORBIDDEN_POLISHED_CLAIMS = [
     "real-time API",
@@ -58,7 +62,8 @@ def extract_report_invariants(report_text: str) -> dict[str, Any]:
     if threshold_value:
         values.append(threshold_value)
 
-    limitations = [phrase for phrase in LIMITATION_PHRASES if phrase in report_text]
+    limitations = list(REQUIRED_LIMITATION_PHRASES)
+    limitations.extend(phrase for phrase in LIMITATION_PHRASES if phrase in report_text)
     values.extend(phrase for phrase in limitations if phrase not in values)
 
     return {
@@ -73,10 +78,12 @@ def extract_report_invariants(report_text: str) -> dict[str, Any]:
 def build_polishing_prompt(report_text: str, invariants: dict[str, Any]) -> tuple[str, str]:
     """Build system and user prompts for presentation-only report polishing."""
     protected = "\n".join(f"- {value}" for value in invariants["protected_values"])
+    required_limitations = "\n".join(f"- {phrase}" for phrase in REQUIRED_LIMITATION_PHRASES)
     system_prompt = (
         "You polish Markdown reports for EventTrip-AgentOS. Your task is presentation only. "
         "Preserve all protected values exactly, keep the output as Markdown, do not invent live "
-        "data, do not change recommendations, and do not remove limitations."
+        "data, do not change recommendations, and do not remove limitations. You must preserve "
+        "a Limitations section with the exact required limitation phrases."
     )
     user_prompt = f"""Rewrite the report for clarity, readability, and professional tone.
 
@@ -84,10 +91,13 @@ Rules:
 - Preserve all headings or use equivalent headings.
 - Preserve every protected value exactly where possible.
 - Do not change computed numbers, option names, dates, scores, trigger thresholds, match names, traveler names, or recommendations.
-- Do not invent live data, real prices, or predictions.
+- Do not invent live data, real prices, external API results, real predictions, or purchase advice.
 - Do not add unsupported claims.
 - Do not remove limitations.
 - Do not convert mock estimates into real predictions.
+- Preserve a `## Limitations` section.
+- Include these exact limitation phrases without paraphrasing, removing, or weakening them:
+{required_limitations}
 
 Protected values:
 {protected}
@@ -96,6 +106,21 @@ Source report:
 {report_text}
 """
     return system_prompt, user_prompt
+
+
+def ensure_required_limitations(polished_text: str) -> str:
+    """Append a deterministic Limitations section when required phrases are missing."""
+    missing = [phrase for phrase in REQUIRED_LIMITATION_PHRASES if phrase not in polished_text]
+    if not missing:
+        return polished_text
+
+    limitation_lines = "\n".join(f"- {phrase}" for phrase in REQUIRED_LIMITATION_PHRASES)
+    return f"""{polished_text.rstrip()}
+
+## Limitations
+
+{limitation_lines}
+"""
 
 
 def validate_polished_report(
@@ -124,6 +149,10 @@ def validate_polished_report(
         if forbidden.lower() in lowered:
             issues.append(f"Polished report contains unsupported claim: {forbidden}")
 
+    for phrase in REQUIRED_LIMITATION_PHRASES:
+        if phrase not in polished_text:
+            issues.append(f"Missing required limitation phrase: {phrase}")
+
     for phrase in invariants.get("limitations", []):
         if phrase not in polished_text:
             issues.append(f"Missing limitation phrase: {phrase}")
@@ -147,6 +176,7 @@ def polish_report(original_report_path: Path, output_path: Path) -> dict[str, An
             "model": model,
         }
 
+    polished_text = ensure_required_limitations(polished_text)
     ok, issues = validate_polished_report(original_text, polished_text, invariants)
     if not ok:
         failure_path = output_path.with_name(f"{output_path.stem}_FAILED{output_path.suffix}")

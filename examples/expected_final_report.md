@@ -92,3 +92,10 @@ Use the one-night balanced plan. It protects the match-day arrival buffer withou
 ## Optional LLM Backend Note
 
 The default demo is deterministic. OhMyGPT can optionally polish prose through the OpenAI-compatible API when `--use-llm` is passed and `OHMYGPT_API_KEY` is configured.
+
+## Limitations
+
+- No live market, flight, hotel, or ticket APIs are used.
+- No real paid travel APIs are used.
+- No web scraping is used.
+- This demo is decision support, not financial, legal, or travel advice.

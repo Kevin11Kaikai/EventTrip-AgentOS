@@ -41,3 +41,11 @@ MCP-enabled multi-agent event travel planner with Markdown memory, market snapsh
 - markdown-memory
 - event-planning
 - ticket-pricing
+
+## v0.1.0 Release Summary
+
+v0.1.0 includes the deterministic multi-agent workflow, Markdown shared memory, MCP server and client validation, manual market snapshot tracker, snapshot CLI, trend-based ticket timing, optional guarded OhMyGPT report polishing, and full portfolio documentation.
+
+It intentionally excludes live travel APIs, web scraping, dashboard UI, committed secrets, and any required paid API dependency for the default demo.
+
+This is portfolio-ready because the architecture, validation artifacts, tests, docs, and deterministic demo can be reviewed and run without external credentials.

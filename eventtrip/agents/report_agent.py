@@ -212,8 +212,10 @@ Use {recommended["option_name"]}. It keeps the trip budget-first while preservin
 
 - All values are mock estimates.
 - No live market, flight, hotel, or ticket APIs are used.
+- No real paid travel APIs are used.
+- No web scraping is used.
 - The model does not predict real 2026 prices.
-- The demo is decision support, not financial, legal, or travel advice.
+- This demo is decision support, not financial, legal, or travel advice.
 
 ## Optional LLM Backend Note
 
