@@ -97,6 +97,41 @@ Phase 1 implements pure Python functions in `eventtrip/mcp_server/tools.py`. The
 
 Phase 2 can expose these same functions through a real MCP server without changing the agent contract.
 
+## Phase 2: MCP Server
+
+Phase 2 exposes the existing mock tools through a real MCP server wrapper. The default multi-agent demo still runs offline without MCP, and the existing agents continue to call local Python functions directly.
+
+The MCP server is local and stdio-based by default. It does not start a public network service, does not call live travel APIs, does not scrape websites, and does not require secrets. All tools are deterministic and backed by mock data.
+
+The official MCP Python SDK currently requires Python 3.10+. The core EventTrip-AgentOS demo remains Python 3.9+ and is tested in `smiley_bot` with Python 3.9.23. In Python 3.10+ with the `mcp` package installed, the server uses FastMCP. In Python 3.9, the same command starts a minimal stdio JSON-RPC fallback so local tool metadata and calls remain testable.
+
+Run the server from Windows PowerShell:
+
+```powershell
+conda activate smiley_bot
+cd D:\others\Eventrip_agentos
+pip install -r requirements.txt
+python -m eventtrip.mcp_server.server
+```
+
+Use a Python 3.10+ environment for full official SDK-based MCP client integration.
+
+Exposed MCP tools:
+
+- `get_ticket_market`
+- `get_flight_quotes`
+- `get_hotel_quotes`
+- `get_market_signals`
+- `compute_aa_split`
+- `compute_scalper_stress_index`
+- `rank_budget_options`
+
+Example local MCP client config:
+
+```text
+examples/mcp_client_config.example.json
+```
+
 ## Skills
 
 Reusable skills live under `eventtrip/skills/*/SKILL.md`:

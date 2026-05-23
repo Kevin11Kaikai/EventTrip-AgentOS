@@ -15,4 +15,8 @@
 - Optional LLM usage must never change computed numbers.
 - Do not automate OhMyGPT dashboard login or scraping.
 - Use OhMyGPT only through the OpenAI-compatible API endpoint and environment variables.
-
+- MCP server wrappers should call existing tool functions.
+- Do not duplicate business logic in MCP wrappers.
+- MCP tools must remain deterministic in Phase 2.
+- MCP server must not call live APIs or scrape websites in Phase 2.
+- MCP server must not require secrets.
