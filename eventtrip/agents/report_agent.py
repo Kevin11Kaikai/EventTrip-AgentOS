@@ -95,9 +95,13 @@ Estimated cost per traveler:
 
 {traveler_cost_lines}
 
+Traceability: [`claim-recommended-plan`](#claim-recommended-plan), [`claim-traveler-costs`](#claim-traveler-costs).
+
 Overall ticket timing recommendation: {combined_timing["label"]}.
 
 The single-day market signal says {timing}; the multi-snapshot trend signal says {snapshot_trend["recommendation"] if snapshot_trend else "insufficient_data"}. The current mock lowest ask is ${ticket["lowest_price"]:.0f}, while the latest manual snapshot is ${snapshot_trend["latest_price"] if snapshot_trend else ticket["lowest_price"]:.0f}. This supports disciplined monitoring with a wait bias, not a panic buy.
+
+Traceability: [`claim-ticket-timing`](#claim-ticket-timing).
 
 ## Demo Assumptions
 
@@ -131,6 +135,8 @@ The single-day market signal says {timing}; the multi-snapshot trend signal says
 
 The ticket price is high enough to require discipline. The system recommends monitoring rather than panic buying unless verified official resale inventory appears or prices move closer to the planned trigger range.
 
+Traceability: [`claim-ticket-timing`](#claim-ticket-timing), [`claim-unknown-exact-prices`](#claim-unknown-exact-prices).
+
 ## Ticket Trigger Policy
 
 - Buy immediately if verified official resale appears at or below $550.
@@ -141,6 +147,8 @@ The ticket price is high enough to require discipline. The system recommends mon
 ## Recommended Ticket Links
 
 These links are manual navigation recommendations only. EventTrip-AgentOS does not log in, bypass access controls, automate checkout, or purchase tickets.
+
+Traceability: [`claim-official-ticket-paths`](#claim-official-ticket-paths).
 
 ### Official First
 

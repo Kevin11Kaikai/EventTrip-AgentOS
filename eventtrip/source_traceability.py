@@ -12,6 +12,7 @@ from eventtrip.source_evidence import citation_label, grouped_citations
 class EvidenceTraceabilityItem:
     """One report claim mapped to its evidence status."""
 
+    claim_id: str
     claim: str
     status: str
     evidence_group: str
@@ -20,6 +21,7 @@ class EvidenceTraceabilityItem:
 
     def to_dict(self) -> dict[str, Any]:
         return {
+            "claim_id": self.claim_id,
             "claim": self.claim,
             "status": self.status,
             "evidence_group": self.evidence_group,
@@ -42,6 +44,7 @@ def build_evidence_traceability(match_sources: dict[str, Any]) -> list[EvidenceT
 
     return [
         EvidenceTraceabilityItem(
+            claim_id="claim-match-facts",
             claim="Portugal vs DR Congo is scheduled for June 17, 2026 in Houston.",
             status="source_backed",
             evidence_group="Match facts",
@@ -49,6 +52,7 @@ def build_evidence_traceability(match_sources: dict[str, Any]) -> list[EvidenceT
             note="Backed by registered official/news sources.",
         ),
         EvidenceTraceabilityItem(
+            claim_id="claim-official-ticket-paths",
             claim="Manual ticket purchase should start with FIFA official ticketing or official resale/exchange paths.",
             status="source_backed",
             evidence_group="Ticket safety",
@@ -56,6 +60,7 @@ def build_evidence_traceability(match_sources: dict[str, Any]) -> list[EvidenceT
             note="Backed by FIFA ticketing/support references and public ticket-safety reporting.",
         ),
         EvidenceTraceabilityItem(
+            claim_id="claim-houston-logistics",
             claim="Houston logistics and venue context should be monitored before travel.",
             status="source_backed",
             evidence_group="Houston logistics",
@@ -63,6 +68,7 @@ def build_evidence_traceability(match_sources: dict[str, Any]) -> list[EvidenceT
             note="Backed by registered Houston public reporting.",
         ),
         EvidenceTraceabilityItem(
+            claim_id="claim-recommended-plan",
             claim="Option A: One-night balanced plan is the recommended travel plan.",
             status="internal_estimate_not_source_backed",
             evidence_group="Internal deterministic planning",
@@ -70,6 +76,7 @@ def build_evidence_traceability(match_sources: dict[str, Any]) -> list[EvidenceT
             note="This is a model recommendation from local deterministic planning logic, not a public-source fact.",
         ),
         EvidenceTraceabilityItem(
+            claim_id="claim-traveler-costs",
             claim="Traveler A estimated cost is $1120 and Traveler B estimated cost is $1220.",
             status="internal_estimate_not_source_backed",
             evidence_group="Internal deterministic planning",
@@ -77,6 +84,7 @@ def build_evidence_traceability(match_sources: dict[str, Any]) -> list[EvidenceT
             note="These are local planning estimates. No source-backed public airfare, hotel, ticket, or total-budget quote is registered.",
         ),
         EvidenceTraceabilityItem(
+            claim_id="claim-ticket-timing",
             claim="The current ticket timing stance is Monitor with wait bias.",
             status="internal_estimate_not_source_backed",
             evidence_group="Internal deterministic planning",
@@ -84,6 +92,7 @@ def build_evidence_traceability(match_sources: dict[str, Any]) -> list[EvidenceT
             note="This combines local market-signal logic and manual snapshots; it is not a sourced live-market recommendation.",
         ),
         EvidenceTraceabilityItem(
+            claim_id="claim-unknown-exact-prices",
             claim="Exact all-in Portugal vs DR Congo ticket price, sourced flight prices, sourced hotel quote, and sourced total trip budget.",
             status="no_source_backed_data_found",
             evidence_group="Unknown or not source-backed yet",
@@ -96,13 +105,14 @@ def build_evidence_traceability(match_sources: dict[str, Any]) -> list[EvidenceT
 def format_traceability_markdown(items: list[EvidenceTraceabilityItem]) -> str:
     """Format traceability items as a compact Markdown table."""
     rows = [
-        "| Claim | Evidence status | Source group | Evidence / note |",
-        "|---|---|---|---|",
+        "| Claim ID | Claim | Evidence status | Source group | Evidence / note |",
+        "|---|---|---|---|---|",
     ]
     for item in items:
         evidence_text = _evidence_text(item)
         rows.append(
-            f"| {item.claim} | {item.status} | {item.evidence_group} | {evidence_text} |"
+            f"| <a id=\"{item.claim_id}\"></a>`{item.claim_id}` | {item.claim} | "
+            f"{item.status} | {item.evidence_group} | {evidence_text} |"
         )
     return "\n".join(rows)
 

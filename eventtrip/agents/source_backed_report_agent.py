@@ -6,12 +6,14 @@ from pathlib import Path
 from typing import Any
 
 from eventtrip.agents.base_agent import BaseAgent
+from eventtrip.html_report import build_source_backed_html_report
 from eventtrip.source_evidence import (
     SOURCE_CITATION_GROUPS,
     citation_label,
     get_match_sources,
     grouped_citations,
 )
+from eventtrip.source_traceability import build_evidence_traceability
 
 
 class SourceBackedReportAgent(BaseAgent):
@@ -34,6 +36,7 @@ class SourceBackedReportAgent(BaseAgent):
             f"- {item}" for item in ticket_links.get("manual_purchase_checklist", [])
         )
         citation_groups = grouped_citations(source_data)
+        traceability_items = build_evidence_traceability(source_data)
 
         body = f"""# Source-Backed Final Report
 
@@ -122,7 +125,22 @@ The following values are not source-backed yet. If they cannot be verified from 
             },
             body,
         )
-        return {"source_backed_report_path": output_path, "source_evidence": source_data}
+        html_path = run_dir / "11_source_backed_final_report.html"
+        html_path.write_text(
+            build_source_backed_html_report(
+                match=match,
+                ticket_links=ticket_links,
+                citation_groups=citation_groups,
+                source_data=source_data,
+                traceability_items=traceability_items,
+            ),
+            encoding="utf-8",
+        )
+        return {
+            "source_backed_report_path": output_path,
+            "source_backed_html_report_path": html_path,
+            "source_evidence": source_data,
+        }
 
 
 def _source_row(source: dict[str, Any]) -> str:

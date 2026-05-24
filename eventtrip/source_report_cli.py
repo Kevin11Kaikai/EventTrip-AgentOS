@@ -12,6 +12,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RUNS_ROOT = PROJECT_ROOT / "runs"
 SOURCE_BACKED_REPORT_NAME = "10_source_backed_final_report.md"
+SOURCE_BACKED_HTML_REPORT_NAME = "11_source_backed_final_report.html"
 RUN_DIR_PREFIX = "portugal_dr_congo_houston_demo_"
 
 
@@ -31,6 +32,15 @@ def find_latest_source_backed_report(
     if not candidates:
         return None
     return sorted(candidates, key=lambda path: (path.parent.name, path.stat().st_mtime))[-1]
+
+
+def report_name_for_format(report_format: str) -> str:
+    """Return the source-backed report filename for a supported format."""
+    if report_format == "md":
+        return SOURCE_BACKED_REPORT_NAME
+    if report_format == "html":
+        return SOURCE_BACKED_HTML_REPORT_NAME
+    raise ValueError(f"Unsupported report format: {report_format}")
 
 
 def open_report_path(path: str | Path) -> None:
@@ -53,10 +63,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     latest = subparsers.add_parser("latest", help="Print the latest source-backed report path.")
     latest.add_argument("--runs-root", default=str(DEFAULT_RUNS_ROOT), help="Runs directory to scan.")
+    latest.add_argument("--format", choices=["md", "html"], default="md", help="Report format.")
     latest.add_argument("--open", action="store_true", help="Also open the latest report.")
 
     open_cmd = subparsers.add_parser("open", help="Open the latest source-backed report.")
     open_cmd.add_argument("--runs-root", default=str(DEFAULT_RUNS_ROOT), help="Runs directory to scan.")
+    open_cmd.add_argument("--format", choices=["md", "html"], default="html", help="Report format.")
 
     return parser
 
@@ -64,9 +76,10 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    report = find_latest_source_backed_report(args.runs_root)
+    report_name = report_name_for_format(args.format)
+    report = find_latest_source_backed_report(args.runs_root, report_name=report_name)
     if report is None:
-        print(f"No {SOURCE_BACKED_REPORT_NAME} found under {Path(args.runs_root)}.")
+        print(f"No {report_name} found under {Path(args.runs_root)}.")
         print("Run: python -m eventtrip.orchestrator --demo portugal_dr_congo_houston")
         return 1
 

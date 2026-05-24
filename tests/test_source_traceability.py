@@ -12,6 +12,7 @@ def test_traceability_matrix_marks_source_backed_and_unsourced_claims():
     assert "source_backed" in statuses
     assert "internal_estimate_not_source_backed" in statuses
     assert "no_source_backed_data_found" in statuses
+    assert any(item.claim_id == "claim-match-facts" for item in items)
     assert any("Traveler A estimated cost is $1120" in item.claim for item in items)
     assert any("No registered public source" in item.note for item in items)
 
@@ -21,7 +22,8 @@ def test_traceability_markdown_contains_statuses_and_sources():
         build_evidence_traceability(get_match_sources("portugal_dr_congo"))
     )
 
-    assert "| Claim | Evidence status | Source group | Evidence / note |" in markdown
+    assert "| Claim ID | Claim | Evidence status | Source group | Evidence / note |" in markdown
+    assert "`claim-match-facts`" in markdown
     assert "source_backed" in markdown
     assert "internal_estimate_not_source_backed" in markdown
     assert "no_source_backed_data_found" in markdown

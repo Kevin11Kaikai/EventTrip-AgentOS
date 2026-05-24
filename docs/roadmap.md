@@ -31,6 +31,7 @@
 - Phase 7.5: optional source-backed citation summary in the internal deterministic report.
 - Phase 7.6: claim-level evidence traceability matrix in the internal report.
 - Phase 7.7: source-backed public report usability polish.
+- Phase 7.8: static HTML source-backed report and claim anchors.
 
 ## Phase 3 Status
 
@@ -61,13 +62,13 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Keep web scraping deferred.
 - Preserve manual snapshot mode as the default fallback.
 
-### Phase 7.8: Evidence Citation Traceability Polish
+### Phase 7.9: Evidence Citation Traceability Polish
 
-- Add optional anchors from individual report paragraphs to traceability rows.
+- Add optional deeper cross-links from individual report paragraphs to traceability rows.
 - Keep deterministic source-of-truth numbers separate from unverified evidence candidates.
 - Preserve `10_source_backed_final_report.md` as the public source-backed artifact.
 
-### Phase 7.9: Official/Search API Provider Adapters
+### Phase 7.10: Official/Search API Provider Adapters
 
 - Add provider adapters only behind explicit opt-in configuration.
 - Prefer official APIs or safe search APIs.
@@ -116,6 +117,7 @@ Phase 7.0 adds a safe web evidence layer without changing default demo behavior.
 - Phase 7.5 adds a `Source-Backed Citation Summary` to `08_final_report.md` while preserving deterministic costs and recommendations.
 - Phase 7.6 adds an `Evidence Traceability Matrix` so unsupported values are explicitly marked as internal estimates or not source-backed.
 - Phase 7.7 adds public-report usability sections: What To Do Next, Recommended Official Purchase Paths, and What Is Still Unknown.
+- Phase 7.8 adds claim IDs/anchors and `11_source_backed_final_report.html` for client-facing presentation.
 
 ## Later Phase 3 Work
 

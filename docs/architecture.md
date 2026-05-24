@@ -194,6 +194,7 @@ SourceBackedReportAgent
    |
    v
 10_source_backed_final_report.md
+11_source_backed_final_report.html
 ```
 
 The deterministic `08_final_report.md` remains useful for regression and internal planning logic. The shareable source-backed report uses only registered public web, official, and news sources. If airfare, hotel, ticket price, or total trip budget data is not source-backed, the report explicitly omits those claims.
@@ -209,7 +210,8 @@ The helper CLI can print or open the newest generated source-backed report:
 
 ```powershell
 python -m eventtrip.source_report_cli latest
-python -m eventtrip.source_report_cli latest --open
+python -m eventtrip.source_report_cli latest --format html
+python -m eventtrip.source_report_cli latest --format html --open
 ```
 
 Phase 7.7 improves the public report's reading path:
@@ -221,6 +223,20 @@ Phase 7.7 improves the public report's reading path:
 - Source Registry
 
 The usability sections are still source-backed only. They do not introduce unsupported ticket, flight, hotel, or budget prices.
+
+Phase 7.8 adds a static HTML renderer:
+
+```text
+SourceBackedReportAgent
+   |
+   v
+eventtrip/html_report.py
+   |
+   v
+11_source_backed_final_report.html
+```
+
+The HTML report is a presentation artifact for client demos. It is generated from local structured evidence, uses inline CSS, and performs no live network calls.
 
 Phase 7.5 adds a citation-summary bridge back into the internal deterministic report:
 

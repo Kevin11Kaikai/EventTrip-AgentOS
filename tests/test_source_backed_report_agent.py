@@ -18,9 +18,12 @@ def test_source_backed_report_agent_writes_no_mock_report(tmp_path):
 
     result = SourceBackedReportAgent().run(trip_request, tmp_path, context)
     output = result["source_backed_report_path"]
+    html_output = result["source_backed_html_report_path"]
     text = output.read_text(encoding="utf-8")
+    html = html_output.read_text(encoding="utf-8")
 
     assert output.name == "10_source_backed_final_report.md"
+    assert html_output.name == "11_source_backed_final_report.html"
     assert "Source-Backed Final Report" in text
     assert "## What To Do Next" in text
     assert "## Recommended Official Purchase Paths" in text
@@ -35,3 +38,7 @@ def test_source_backed_report_agent_writes_no_mock_report(tmp_path):
     assert "Axios" in text
     assert "FIFA" in text
     assert "mock" not in text.lower()
+    assert "EventTrip-AgentOS Source-Backed Report" in html
+    assert "What Is Still Unknown" in html
+    assert "claim-match-facts" in html
+    assert "mock" not in html.lower()

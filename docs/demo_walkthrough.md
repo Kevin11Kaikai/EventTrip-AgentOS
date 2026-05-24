@@ -95,7 +95,10 @@ For public sharing without local placeholder estimates, use:
 
 ```text
 10_source_backed_final_report.md
+11_source_backed_final_report.html
 ```
+
+Use the HTML report for client-facing presentation. It is static, local, and generated from the same registered official/news evidence as the source-backed Markdown report.
 
 This report is built from official/news source evidence and omits unsourced flight, hotel, ticket price, and total budget claims.
 

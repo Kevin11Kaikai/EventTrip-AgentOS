@@ -85,13 +85,13 @@ This section adds public-source context to the internal planning report. It does
 
 This matrix separates public-source facts from internal estimates. If no real public source is registered for a value, the report says so directly instead of pretending the value is source-backed.
 
-| Claim | Evidence status | Source group | Evidence / note |
-|---|---|---|---|
-| Portugal vs DR Congo is scheduled for June 17, 2026 in Houston. | source_backed | Match facts | FIFA / Axios public sources |
-| Manual ticket purchase should start with FIFA official ticketing or official resale/exchange paths. | source_backed | Ticket safety | FIFA ticketing/support and public ticket-safety reporting |
-| Option A: One-night balanced plan is the recommended travel plan. | internal_estimate_not_source_backed | Internal deterministic planning | Model recommendation from local deterministic planning logic |
-| Traveler A estimated cost is $1120 and Traveler B estimated cost is $1220. | internal_estimate_not_source_backed | Internal deterministic planning | Local planning estimates, not sourced public airfare/hotel/ticket quotes |
-| Exact all-in ticket price, sourced flight prices, sourced hotel quote, and sourced total trip budget. | no_source_backed_data_found | Unknown or not source-backed yet | No registered public source currently supports these exact values |
+| Claim ID | Claim | Evidence status | Source group | Evidence / note |
+|---|---|---|---|---|
+| `claim-match-facts` | Portugal vs DR Congo is scheduled for June 17, 2026 in Houston. | source_backed | Match facts | FIFA / Axios public sources |
+| `claim-official-ticket-paths` | Manual ticket purchase should start with FIFA official ticketing or official resale/exchange paths. | source_backed | Ticket safety | FIFA ticketing/support and public ticket-safety reporting |
+| `claim-recommended-plan` | Option A: One-night balanced plan is the recommended travel plan. | internal_estimate_not_source_backed | Internal deterministic planning | Model recommendation from local deterministic planning logic |
+| `claim-traveler-costs` | Traveler A estimated cost is $1120 and Traveler B estimated cost is $1220. | internal_estimate_not_source_backed | Internal deterministic planning | Local planning estimates, not sourced public airfare/hotel/ticket quotes |
+| `claim-unknown-exact-prices` | Exact all-in ticket price, sourced flight prices, sourced hotel quote, and sourced total trip budget. | no_source_backed_data_found | Unknown or not source-backed yet | No registered public source currently supports these exact values |
 
 ## Market Timing / Anti-Scalper Analysis
 

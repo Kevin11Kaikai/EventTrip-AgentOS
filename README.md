@@ -155,6 +155,12 @@ The source-backed public report is written to:
 runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\10_source_backed_final_report.md
 ```
 
+The client-facing HTML version is written to:
+
+```text
+runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\11_source_backed_final_report.html
+```
+
 Use `10_source_backed_final_report.md` for public sharing when you want only official/news/web-backed statements. It intentionally excludes unsourced flight, hotel, ticket, and total budget estimates.
 
 The source-backed report includes `What To Do Next`, `Recommended Official Purchase Paths`, and `What Is Still Unknown` sections so users can act on official links while seeing exactly which values are not publicly sourced yet.
@@ -163,13 +169,15 @@ Print or open the latest source-backed report:
 
 ```powershell
 python -m eventtrip.source_report_cli latest
-python -m eventtrip.source_report_cli latest --open
+python -m eventtrip.source_report_cli latest --format html
+python -m eventtrip.source_report_cli latest --format html --open
 ```
 
 Example CLI summary:
 
 ```text
 Final report: runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\08_final_report.md
+Source-backed HTML report: runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\11_source_backed_final_report.html
 Recommended option: Option A: One-night balanced plan
 Estimated cost per traveler:
   Traveler A: $1120

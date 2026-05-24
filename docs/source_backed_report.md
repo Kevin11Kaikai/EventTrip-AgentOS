@@ -10,9 +10,10 @@ Each orchestrator run writes:
 
 ```text
 10_source_backed_final_report.md
+11_source_backed_final_report.html
 ```
 
-The deterministic `08_final_report.md` remains an internal planning and regression artifact. The source-backed report is the public-facing artifact.
+The deterministic `08_final_report.md` remains an internal planning and regression artifact. The source-backed Markdown and HTML reports are public-facing artifacts.
 
 Phase 7.5 also adds a short `Source-Backed Citation Summary` section to `08_final_report.md`. That internal section provides public-source context only. It does not turn deterministic ticket, flight, hotel, local transportation, or budget estimates into sourced claims.
 
@@ -57,18 +58,33 @@ Phase 7.7 adds reader-facing guidance at the top of the source-backed report:
 
 The report keeps these sections separate from internal deterministic estimates. If a real public source is not registered, the report says the value is still unknown.
 
+## HTML Report
+
+Phase 7.8 adds `11_source_backed_final_report.html`, a static client-facing page generated from the same source registry and ticket-link data as the Markdown source-backed report.
+
+The HTML report:
+
+- is local and static,
+- uses inline CSS only,
+- does not call external scripts,
+- does not fetch live APIs,
+- does not scrape websites,
+- includes evidence traceability claim IDs.
+
 ## Latest Report CLI
 
 Print the latest source-backed report path:
 
 ```powershell
 python -m eventtrip.source_report_cli latest
+python -m eventtrip.source_report_cli latest --format html
 ```
 
 Print and open the latest source-backed report with the local default application:
 
 ```powershell
-python -m eventtrip.source_report_cli latest --open
+python -m eventtrip.source_report_cli latest --format html --open
+python -m eventtrip.source_report_cli open --format html
 ```
 
 The CLI scans timestamped run directories under `runs/` and never generates or modifies report content.
