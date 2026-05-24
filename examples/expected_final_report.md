@@ -58,6 +58,29 @@ These links are manual navigation recommendations only. EventTrip-AgentOS does n
 - Confirm the venue is NRG Stadium / Houston Stadium in Houston.
 - Compare all-in price against the $550 buy trigger and $600 strong-consider trigger.
 
+## Source-Backed Citation Summary
+
+This section adds public-source context to the internal planning report. It does not convert deterministic planning estimates into sourced market prices. Use `10_source_backed_final_report.md` when you need a public-facing report that excludes local estimates.
+
+### Match facts
+
+- FIFA identifies Portugal vs Congo DR as a June 17 match at Houston Stadium.
+- Axios reported that DR Congo will use Houston as its World Cup base camp and play Portugal on June 17 in Houston.
+
+### Ticket safety
+
+- FIFA maintains the official World Cup 2026 ticketing entry point.
+- FIFA support lists the Resale/Exchange Marketplace as the official resale and exchange support area.
+- Kiplinger and MoneyWeek warn fans to avoid unofficial ticket paths and start with FIFA.
+
+### Houston logistics
+
+- Axios reporting gives Houston-specific context for the DR Congo base camp, NRG Stadium-area transportation, and Houston Stadium readiness.
+
+### Not source-backed in this internal estimate
+
+- Ticket price, flight costs, hotel costs, local transportation costs, and total traveler budgets remain deterministic planning estimates unless separately cited.
+
 ## Market Timing / Anti-Scalper Analysis
 
 Scalper Stress Index: 41.9/100 (moderate scalper stress, monitor).

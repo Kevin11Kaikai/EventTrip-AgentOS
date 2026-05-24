@@ -212,6 +212,20 @@ python -m eventtrip.source_report_cli latest
 python -m eventtrip.source_report_cli latest --open
 ```
 
+Phase 7.5 adds a citation-summary bridge back into the internal deterministic report:
+
+```text
+data/source_evidence.yaml
+   |
+   v
+ReportAgent
+   |
+   v
+08_final_report.md Source-Backed Citation Summary
+```
+
+This is context only. It does not change computed costs, scores, option rankings, or ticket timing.
+
 ## Ticket Link Recommendation Layer
 
 Phase 7.2 adds official-first ticket link recommendations without purchase automation.

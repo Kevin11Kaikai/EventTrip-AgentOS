@@ -14,6 +14,8 @@ Each orchestrator run writes:
 
 The deterministic `08_final_report.md` remains an internal planning and regression artifact. The source-backed report is the public-facing artifact.
 
+Phase 7.5 also adds a short `Source-Backed Citation Summary` section to `08_final_report.md`. That internal section provides public-source context only. It does not turn deterministic ticket, flight, hotel, local transportation, or budget estimates into sourced claims.
+
 ## Evidence Sources
 
 The registry currently includes:

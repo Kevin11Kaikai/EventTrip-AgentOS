@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from eventtrip.agents.base_agent import BaseAgent
+from eventtrip.source_evidence import citation_label, get_match_sources, grouped_citations
 
 
 class ReportAgent(BaseAgent):
@@ -74,6 +75,7 @@ class ReportAgent(BaseAgent):
         ticket_checklist_lines = "\n".join(
             f"- {item}" for item in ticket_links.get("manual_purchase_checklist", [])
         )
+        source_citation_summary = _source_citation_summary(get_match_sources(match["match_id"]))
         snapshot_explanation = ""
         if snapshot_trend:
             snapshot_explanation = "\n".join(f"- {item}" for item in snapshot_trend["explanation"])
@@ -150,6 +152,12 @@ These links are manual navigation recommendations only. EventTrip-AgentOS does n
 ### Manual Checklist Before Buying
 
 {ticket_checklist_lines}
+
+## Source-Backed Citation Summary
+
+This section adds public-source context to the internal planning report. It does not convert deterministic planning estimates into sourced market prices. Use `10_source_backed_final_report.md` when you need a public-facing report that excludes local estimates.
+
+{source_citation_summary}
 
 ## Flight Analysis
 
@@ -325,3 +333,29 @@ def _ticket_link_lines(links: list[dict[str, Any]]) -> str:
             f"({link['source_type']}, risk: {link['risk_level']}): {link['recommendation']}"
         )
     return "\n".join(rows)
+
+
+def _source_citation_summary(match_sources: dict[str, Any]) -> str:
+    groups = grouped_citations(match_sources)
+    sections = [
+        ("Match facts", groups.get("match_facts", [])),
+        ("Ticket safety", groups.get("ticket_safety", [])),
+        ("Houston logistics", groups.get("houston_logistics", [])),
+    ]
+    output: list[str] = []
+    for title, sources in sections:
+        output.append(f"### {title}\n")
+        if sources:
+            output.extend(f"- {source['summary']} Source: {citation_label(source)}." for source in sources)
+        else:
+            output.append("- No source-backed evidence registered for this area.")
+        output.append("")
+
+    output.append("### Not source-backed in this internal estimate\n")
+    output.extend(
+        [
+            "- The ticket price, flight costs, hotel costs, local transportation costs, and total traveler budgets in this internal report remain deterministic planning estimates unless separately cited.",
+            "- The public source-backed report intentionally omits these values when no public citation is registered.",
+        ]
+    )
+    return "\n".join(output).rstrip()
