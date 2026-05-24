@@ -163,6 +163,23 @@ SnapshotAgent / Report / Dashboard
 
 Local fixtures are the default path. Live HTTP requires explicit `--live-http`, uses one simple public GET, and does not execute JavaScript, manage sessions, bypass access controls, or automate purchases. MCP web evidence tools are preview-only and do not write evidence files or snapshot CSV rows.
 
+Phase 7.1 adds reviewed evidence conversion:
+
+```text
+WebEvidence JSON
+   |
+   v
+evidence_review_cli preview / convert --dry-run
+   |
+   v
+Explicit human confirmation of missing snapshot fields
+   |
+   v
+Optional --save to manual snapshot CSV
+```
+
+This keeps extracted web values as candidates until a human supplies the remaining demand-proxy fields and explicitly writes the reviewed snapshot.
+
 ## Ticket Timing Fusion
 
 The final report keeps the single-day MarketAgent signal and the multi-snapshot SnapshotAgent signal separate, then fuses them into one user-facing stance.
@@ -285,6 +302,7 @@ Invariant validation
 - Snapshot CLI tests verify dry-run, append, duplicate handling, overwrite, and validation failures.
 - Dashboard tests verify import-safe helpers, deterministic snapshot summaries, budget rows, and latest-run path detection.
 - Web collection tests verify local fixture collection, extraction heuristics, safety policy behavior, evidence store roundtrip, and CLI dry-run behavior.
+- Evidence review tests verify candidate snapshot construction, dry-run behavior, duplicate protection, overwrite, and safe writes to temporary CSV files.
 - MCP server tests verify wrapper registration and direct mock outputs.
 - MCP client validation tests verify guard behavior and helper parsing.
 - Orchestrator smoke tests verify end-to-end report generation.

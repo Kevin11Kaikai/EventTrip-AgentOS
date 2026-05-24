@@ -171,6 +171,15 @@ python -m eventtrip.web_collect_cli collect --target-id sample_fixture --local-p
 
 The collector is opt-in. Live HTTP is disabled by default, generated evidence requires `--save`, and extracted values remain heuristic candidates for human review.
 
+After review, evidence can be converted into a manual snapshot candidate without writing:
+
+```powershell
+python -m eventtrip.evidence_review_cli preview --evidence examples\sample_web_evidence.json
+python -m eventtrip.evidence_review_cli convert --evidence examples\sample_web_evidence.json --snapshot-date 2026-05-22 --category-3-low 400 --category-3-high 750 --hotel-availability-score 0.50 --flight-price-pressure 0.55 --social-buzz-score 0.86 --days-before-event 26 --dry-run
+```
+
+Use `--save` only after the candidate fields are manually checked.
+
 ## Next Step
 
 Next planned phase: dashboard screenshots/GitHub media polish or optional official API adapters behind the existing interfaces.

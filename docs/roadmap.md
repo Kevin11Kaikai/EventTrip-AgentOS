@@ -24,6 +24,7 @@
 - Phase 5.2: dashboard mockup asset and README media polish.
 - Phase 6.1: disabled-by-default official API adapter design and stubs.
 - Phase 7.0: safe web collection layer, local fixture extraction, and preview-only MCP evidence tools.
+- Phase 7.1: reviewed evidence to snapshot conversion with dry-run and duplicate protection.
 
 ## Phase 3 Status
 
@@ -53,12 +54,6 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Prefer official APIs or safe search APIs.
 - Keep web scraping deferred.
 - Preserve manual snapshot mode as the default fallback.
-
-### Phase 7.1: Reviewed Evidence to Snapshot Conversion
-
-- Convert reviewed web evidence candidates into manual snapshot rows.
-- Keep human approval in the loop.
-- Preserve `--dry-run` and duplicate protection.
 
 ### Phase 7.2: Source Citations in Final Report
 
@@ -107,6 +102,7 @@ Phase 7.0 adds a safe web evidence layer without changing default demo behavior.
 - Generated web evidence cache files are ignored by Git.
 - MCP exposes preview-only web evidence tools.
 - Dashboard previews the local fixture only and performs no live HTTP.
+- Phase 7.1 adds `evidence_review_cli` so reviewed evidence can become a manual snapshot only after explicit human-provided fields and `--save`.
 
 ## Later Phase 3 Work
 

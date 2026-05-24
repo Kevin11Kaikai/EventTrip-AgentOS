@@ -92,3 +92,40 @@ Extracted values are heuristic candidates and require human review before any sn
 - Live HTTP checks robots.txt before collection and fails closed if it cannot verify access.
 - The collector uses simple HTTP GET only; it does not execute JavaScript, use browser automation, manage sessions, or handle login cookies.
 - MCP web evidence tools are preview-only and do not write evidence or snapshots.
+
+## Reviewed Evidence to Snapshot Conversion
+
+Phase 7.1 adds a human-review step between extracted evidence and the source-of-truth snapshot CSV.
+
+```text
+Structured WebEvidence JSON
+   |
+   v
+Human review + explicit missing fields
+   |
+   v
+evidence_review_cli convert --dry-run
+   |
+   v
+Optional --save into manual snapshot CSV
+```
+
+Preview a curated evidence file:
+
+```powershell
+python -m eventtrip.evidence_review_cli preview --evidence examples\sample_web_evidence.json
+```
+
+Build a reviewed snapshot candidate without writing:
+
+```powershell
+python -m eventtrip.evidence_review_cli convert --evidence examples\sample_web_evidence.json --snapshot-date 2026-05-22 --category-3-low 400 --category-3-high 750 --hotel-availability-score 0.50 --flight-price-pressure 0.55 --social-buzz-score 0.86 --days-before-event 26 --dry-run
+```
+
+Write only after review:
+
+```powershell
+python -m eventtrip.evidence_review_cli convert --evidence examples\sample_web_evidence.json --snapshot-date 2026-05-22 --category-3-low 400 --category-3-high 750 --hotel-availability-score 0.50 --flight-price-pressure 0.55 --social-buzz-score 0.86 --days-before-event 26 --save
+```
+
+The conversion requires explicit human-provided fields that web evidence cannot reliably infer, including Category 3 range, hotel availability proxy, flight pressure, social buzz, and days before event. Duplicate match/date rows fail safely unless `--overwrite` is supplied.

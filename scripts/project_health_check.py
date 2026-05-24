@@ -31,6 +31,8 @@ IMPORTANT_FILES = [
     "data/web_evidence/.gitkeep",
     "data/web_evidence/raw/.gitkeep",
     "eventtrip/web_collect_cli.py",
+    "eventtrip/evidence_review.py",
+    "eventtrip/evidence_review_cli.py",
     "eventtrip/web_collection/collector.py",
     "eventtrip/web_collection/extractor.py",
 ]

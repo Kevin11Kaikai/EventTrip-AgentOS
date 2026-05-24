@@ -368,6 +368,15 @@ python -m eventtrip.web_collect_cli extract --local-path examples\sample_ticket_
 
 The collector does not bypass login, CAPTCHA, paywalls, or access controls. It does not automate purchases and does not write market snapshots directly. See [Web Collection Layer](docs/web_collection.md).
 
+Reviewed evidence can be converted into a manual market snapshot only after explicit human inputs are supplied:
+
+```powershell
+python -m eventtrip.evidence_review_cli preview --evidence examples\sample_web_evidence.json
+python -m eventtrip.evidence_review_cli convert --evidence examples\sample_web_evidence.json --snapshot-date 2026-05-22 --category-3-low 400 --category-3-high 750 --hotel-availability-score 0.50 --flight-price-pressure 0.55 --social-buzz-score 0.86 --days-before-event 26 --dry-run
+```
+
+Use `--save` only after reviewing the candidate values. Duplicate match/date rows still require explicit `--overwrite`.
+
 ## Project Health Check
 
 Run the local health check before pushing larger documentation or release changes:
