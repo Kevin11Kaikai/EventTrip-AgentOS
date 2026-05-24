@@ -22,9 +22,15 @@ def test_source_backed_html_report_is_static_and_client_readable():
 
     assert "<!doctype html>" in html
     assert "EventTrip-AgentOS Source-Backed Report" in html
+    assert "Static client report" in html
+    assert "Decision Summary" in html
     assert "What To Do Next" in html
     assert "Recommended Official Purchase Paths" in html
     assert "What Is Still Unknown" in html
+    assert "report-nav" in html
+    assert "@media print" in html
     assert "claim-match-facts" in html
+    assert "FIFA: Portugal v Congo DR" in html
+    assert "[FIFA: Portugal v Congo DR" not in html
     assert "No live purchase" in html
     assert "mock" not in html.lower()

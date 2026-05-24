@@ -165,6 +165,8 @@ Use `10_source_backed_final_report.md` for public sharing when you want only off
 
 The source-backed report includes `What To Do Next`, `Recommended Official Purchase Paths`, and `What Is Still Unknown` sections so users can act on official links while seeing exactly which values are not publicly sourced yet.
 
+The HTML report adds a client-facing layout with a decision summary, section navigation, color-coded traceability statuses, and print-friendly styling.
+
 Print or open the latest source-backed report:
 
 ```powershell

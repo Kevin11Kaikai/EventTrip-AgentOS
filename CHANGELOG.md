@@ -23,6 +23,7 @@
 - Added claim-level evidence traceability matrix that marks unsupported values as not source-backed.
 - Added source-backed public report usability sections for next actions, official purchase paths, and still-unknown values.
 - Added static HTML source-backed report output with claim anchors for client-facing presentation.
+- Polished HTML report with section navigation, decision summary cards, color-coded traceability, and print-friendly styling.
 
 ## v0.1.0 - 2026-05-23
 

@@ -71,6 +71,14 @@ The HTML report:
 - does not scrape websites,
 - includes evidence traceability claim IDs.
 
+Phase 7.9 polishes the HTML report for client-facing review:
+
+- cover-style summary header,
+- section navigation,
+- decision summary cards,
+- color-coded traceability statuses,
+- print-friendly CSS.
+
 ## Latest Report CLI
 
 Print the latest source-backed report path:

@@ -238,6 +238,8 @@ eventtrip/html_report.py
 
 The HTML report is a presentation artifact for client demos. It is generated from local structured evidence, uses inline CSS, and performs no live network calls.
 
+Phase 7.9 keeps the HTML layer presentation-only while improving client readability with section navigation, decision summary cards, color-coded traceability statuses, and print styles. It still reads only local generated evidence and does not call live APIs.
+
 Phase 7.5 adds a citation-summary bridge back into the internal deterministic report:
 
 ```text

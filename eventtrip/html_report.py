@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from html import escape
 from typing import Any
 
@@ -34,10 +35,14 @@ def build_source_backed_html_report(
       --muted: #5d6878;
       --line: #d8dee8;
       --panel: #f7f9fc;
+      --panel-strong: #eef6f5;
       --accent: #0f766e;
       --warn: #9a3412;
       --ok: #166534;
       --unknown: #6b21a8;
+      --danger-bg: #fff7ed;
+      --ok-bg: #eef8f1;
+      --unknown-bg: #f5f3ff;
     }}
     * {{ box-sizing: border-box; }}
     body {{
@@ -50,7 +55,7 @@ def build_source_backed_html_report(
     header {{
       padding: 32px clamp(20px, 5vw, 64px);
       border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
+      background: #f8fbfd;
     }}
     main {{ padding: 28px clamp(20px, 5vw, 64px) 56px; }}
     h1 {{ margin: 0 0 8px; font-size: clamp(28px, 4vw, 44px); }}
@@ -58,6 +63,30 @@ def build_source_backed_html_report(
     h3 {{ margin-bottom: 8px; }}
     a {{ color: #0b5cad; }}
     .subtitle {{ color: var(--muted); max-width: 900px; }}
+    .eyebrow {{
+      display: inline-block;
+      margin-bottom: 14px;
+      color: var(--accent);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: .04em;
+    }}
+    .report-nav {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 22px;
+    }}
+    .report-nav a {{
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #fff;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 13px;
+    }}
     .metrics {{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -72,6 +101,19 @@ def build_source_backed_html_report(
     }}
     .metric span {{ display: block; color: var(--muted); font-size: 13px; }}
     .metric strong {{ display: block; font-size: 20px; margin-top: 4px; }}
+    .status-strip {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 18px 0 8px;
+    }}
+    .status-card {{
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--panel);
+    }}
+    .status-card strong {{ display: block; margin-bottom: 4px; }}
     .grid {{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -85,8 +127,9 @@ def build_source_backed_html_report(
     }}
     .unknown {{
       border-left: 4px solid var(--warn);
-      background: #fff7ed;
+      background: var(--danger-bg);
     }}
+    .section-lead {{ max-width: 900px; color: var(--muted); }}
     ul {{ padding-left: 20px; }}
     table {{ width: 100%; border-collapse: collapse; margin-top: 12px; }}
     th, td {{ border: 1px solid var(--line); padding: 10px; text-align: left; vertical-align: top; }}
@@ -99,14 +142,32 @@ def build_source_backed_html_report(
       font-weight: 600;
       background: #eef2ff;
     }}
-    .source-backed {{ color: var(--ok); }}
-    .internal-estimate {{ color: var(--warn); }}
-    .not-found {{ color: var(--unknown); }}
+    .source-backed, .internal-estimate, .not-found {{
+      font-weight: 700;
+      border-radius: 6px;
+    }}
+    .source-backed {{ color: var(--ok); background: var(--ok-bg); }}
+    .internal-estimate {{ color: var(--warn); background: var(--danger-bg); }}
+    .not-found {{ color: var(--unknown); background: var(--unknown-bg); }}
+    .print-note {{
+      display: none;
+      color: var(--muted);
+      font-size: 12px;
+    }}
     footer {{ color: var(--muted); font-size: 13px; margin-top: 36px; }}
+    @media print {{
+      body {{ font-size: 11pt; }}
+      header, main {{ padding: 18px; }}
+      .report-nav {{ display: none; }}
+      .card, .metric, .status-card {{ break-inside: avoid; }}
+      a {{ color: var(--ink); text-decoration: none; }}
+      .print-note {{ display: block; }}
+    }}
   </style>
 </head>
 <body>
   <header>
+    <span class="eyebrow">Static client report</span>
     <h1>EventTrip-AgentOS Source-Backed Report</h1>
     <p class="subtitle">Client-facing HTML view built from curated public official/news evidence. It excludes local planning estimates for flight, hotel, ticket, and total budget values unless a public source is registered.</p>
     <div class="metrics">
@@ -115,10 +176,29 @@ def build_source_backed_html_report(
       <div class="metric"><span>Venue</span><strong>{escape(str(match["venue"]))} / Houston Stadium</strong></div>
       <div class="metric"><span>Purchase stance</span><strong>Official-first</strong></div>
     </div>
+    <nav class="report-nav" aria-label="Report sections">
+      <a href="#next-actions">Next actions</a>
+      <a href="#official-paths">Official paths</a>
+      <a href="#unknowns">Still unknown</a>
+      <a href="#citations">Citations</a>
+      <a href="#traceability">Traceability</a>
+      <a href="#registry">Sources</a>
+    </nav>
   </header>
   <main>
+    <section id="decision-summary">
+      <h2>Decision Summary</h2>
+      <p class="section-lead">This page is designed for client review: source-backed facts are separated from unknown values and internal estimates.</p>
+      <div class="status-strip">
+        <div class="status-card"><strong>Ticket path</strong>Use FIFA official ticketing or official FIFA resale/exchange first.</div>
+        <div class="status-card"><strong>Unknown prices</strong>Exact ticket, flight, hotel, transport, and total budget values are not source-backed yet.</div>
+        <div class="status-card"><strong>Automation policy</strong>No checkout automation, login bypass, CAPTCHA bypass, or payment action.</div>
+      </div>
+    </section>
+
     <section id="next-actions">
       <h2>What To Do Next</h2>
+      <p class="section-lead">Manual next steps based only on registered official/news evidence.</p>
       {_html_list(_next_actions())}
     </section>
 
@@ -156,6 +236,7 @@ def build_source_backed_html_report(
 
     <footer>
       Generated by EventTrip-AgentOS. No live purchase, checkout automation, login bypass, CAPTCHA bypass, or payment action is performed.
+      <p class="print-note">Printed from a static local HTML report. Links are shown as source references, not automated purchase actions.</p>
     </footer>
   </main>
 </body>
@@ -230,7 +311,7 @@ def _traceability_table(items: list[EvidenceTraceabilityItem]) -> str:
             "no_source_backed_data_found": "not-found",
         }.get(item.status, "")
         evidence = (
-            "<br>".join(escape(evidence_item) for evidence_item in item.evidence)
+            "<br>".join(_markdown_link_to_html(evidence_item) for evidence_item in item.evidence)
             if item.evidence
             else escape(item.note)
         )
@@ -270,3 +351,11 @@ def _source_registry_table(sources: list[dict[str, Any]]) -> str:
         + "".join(rows)
         + "</tbody></table>"
     )
+
+
+def _markdown_link_to_html(text: str) -> str:
+    match = re.fullmatch(r"\[([^\]]+)\]\(([^)]+)\)", text)
+    if not match:
+        return escape(text)
+    label, url = match.groups()
+    return f'<a href="{escape(url, quote=True)}">{escape(label)}</a>'
