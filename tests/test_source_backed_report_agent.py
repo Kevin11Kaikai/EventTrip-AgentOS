@@ -22,6 +22,11 @@ def test_source_backed_report_agent_writes_no_mock_report(tmp_path):
 
     assert output.name == "10_source_backed_final_report.md"
     assert "Source-Backed Final Report" in text
+    assert "## What To Do Next" in text
+    assert "## Recommended Official Purchase Paths" in text
+    assert "## What Is Still Unknown" in text
+    assert "Exact all-in ticket price for Portugal vs DR Congo." in text
+    assert "EventTrip-AgentOS does not log in" in text
     assert "## Citation Groups" in text
     assert "### Match facts" in text
     assert "### Ticket safety" in text

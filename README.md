@@ -157,6 +157,8 @@ runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\10_source_backed_final_repor
 
 Use `10_source_backed_final_report.md` for public sharing when you want only official/news/web-backed statements. It intentionally excludes unsourced flight, hotel, ticket, and total budget estimates.
 
+The source-backed report includes `What To Do Next`, `Recommended Official Purchase Paths`, and `What Is Still Unknown` sections so users can act on official links while seeing exactly which values are not publicly sourced yet.
+
 Print or open the latest source-backed report:
 
 ```powershell

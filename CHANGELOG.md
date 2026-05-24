@@ -21,6 +21,7 @@
 - Added grouped source-backed citation sections and a CLI for printing/opening the latest public source-backed report.
 - Added optional source-backed citation summary to the internal deterministic final report.
 - Added claim-level evidence traceability matrix that marks unsupported values as not source-backed.
+- Added source-backed public report usability sections for next actions, official purchase paths, and still-unknown values.
 
 ## v0.1.0 - 2026-05-23
 

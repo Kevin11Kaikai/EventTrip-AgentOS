@@ -212,6 +212,16 @@ python -m eventtrip.source_report_cli latest
 python -m eventtrip.source_report_cli latest --open
 ```
 
+Phase 7.7 improves the public report's reading path:
+
+- What To Do Next
+- Recommended Official Purchase Paths
+- What Is Still Unknown
+- Citation Groups
+- Source Registry
+
+The usability sections are still source-backed only. They do not introduce unsupported ticket, flight, hotel, or budget prices.
+
 Phase 7.5 adds a citation-summary bridge back into the internal deterministic report:
 
 ```text

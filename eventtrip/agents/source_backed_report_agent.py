@@ -27,6 +27,9 @@ class SourceBackedReportAgent(BaseAgent):
             _ticket_row(link) for link in ticket_links.get("primary_links", [])
         )
         info_ticket_rows = "\n".join(_ticket_row(link) for link in ticket_links.get("info_links", []))
+        official_purchase_path_rows = _official_purchase_path_rows(ticket_links)
+        still_unknown_rows = _still_unknown_rows()
+        next_action_rows = _next_action_rows()
         checklist_rows = "\n".join(
             f"- {item}" for item in ticket_links.get("manual_purchase_checklist", [])
         )
@@ -43,6 +46,22 @@ This report uses only curated public web, official, and news sources listed belo
 - Venue: {match["venue"]} / Houston Stadium, {match["city"]}
 - Ticket purchase stance: use official FIFA ticketing or official FIFA resale/exchange; do not use social-media or unofficial resale offers as a primary path.
 - Travel-cost stance: no source-backed flight, hotel, or local-transport price estimates are included yet, so this report does not claim a sourced total trip budget.
+
+## What To Do Next
+
+{next_action_rows}
+
+## Recommended Official Purchase Paths
+
+These are manual navigation links only. EventTrip-AgentOS does not log in, bypass access controls, automate checkout, or purchase tickets.
+
+{official_purchase_path_rows}
+
+## What Is Still Unknown
+
+The following values are not source-backed yet. If they cannot be verified from public sources, they should remain unknown rather than being filled with local estimates.
+
+{still_unknown_rows}
 
 ## Citation Groups
 
@@ -118,6 +137,43 @@ def _ticket_row(link: dict[str, Any]) -> str:
     return (
         f"- [{link['label']}]({link['url']}) "
         f"({link['source_type']}, risk: {link['risk_level']}): {link['recommendation']}"
+    )
+
+
+def _official_purchase_path_rows(ticket_links: dict[str, Any]) -> str:
+    rows: list[str] = []
+    for link in ticket_links.get("primary_links", []):
+        rows.append(_ticket_row(link))
+    for link in ticket_links.get("info_links", []):
+        rows.append(_ticket_row(link))
+    if not rows:
+        return "- No official purchase links are configured."
+    return "\n".join(rows)
+
+
+def _next_action_rows() -> str:
+    return "\n".join(
+        [
+            "- Start with FIFA official ticketing pages before considering any other ticket source.",
+            "- If resale is needed, use FIFA official resale/exchange information first.",
+            "- Verify match name, date, venue, seat category, quantity, transfer policy, refund policy, and all-in fees before paying.",
+            "- Treat social-media, messaging-app, and unofficial resale offers as high risk unless independently verified through official channels.",
+            "- Keep flight, hotel, and local-transport price claims out of this public report until a registered public source supports them.",
+        ]
+    )
+
+
+def _still_unknown_rows() -> str:
+    return "\n".join(
+        [
+            "- Exact all-in ticket price for Portugal vs DR Congo.",
+            "- Verified official resale inventory level for this exact match.",
+            "- Traveler A airfare from PIT.",
+            "- Traveler B airfare from SEA.",
+            "- Shared two-bed hotel quote near NRG Stadium / Houston Stadium.",
+            "- Local transportation price estimate for match day.",
+            "- Total source-backed trip budget per traveler.",
+        ]
     )
 
 

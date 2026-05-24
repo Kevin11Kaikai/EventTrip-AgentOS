@@ -37,12 +37,25 @@ The registry currently includes:
 
 `10_source_backed_final_report.md` groups citations into reader-facing sections:
 
+- What To Do Next
+- Recommended Official Purchase Paths
+- What Is Still Unknown
 - Match facts
 - Ticket safety
 - Houston logistics
 - Unknown or not source-backed yet
 
 The final group is deliberate. If a claim such as exact airfare, exact hotel quote, exact ticket price, local transportation price, or total trip budget does not have a registered public citation, the source-backed report lists it as not source-backed instead of filling the gap with local estimates.
+
+## Usability Sections
+
+Phase 7.7 adds reader-facing guidance at the top of the source-backed report:
+
+- `What To Do Next`: practical manual checks before any purchase decision.
+- `Recommended Official Purchase Paths`: FIFA official ticketing and FIFA resale/exchange references.
+- `What Is Still Unknown`: values that remain unavailable from registered public sources.
+
+The report keeps these sections separate from internal deterministic estimates. If a real public source is not registered, the report says the value is still unknown.
 
 ## Latest Report CLI
 
