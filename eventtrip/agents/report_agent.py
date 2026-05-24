@@ -7,6 +7,7 @@ from typing import Any
 
 from eventtrip.agents.base_agent import BaseAgent
 from eventtrip.source_evidence import citation_label, get_match_sources, grouped_citations
+from eventtrip.source_traceability import build_evidence_traceability, format_traceability_markdown
 
 
 class ReportAgent(BaseAgent):
@@ -75,7 +76,11 @@ class ReportAgent(BaseAgent):
         ticket_checklist_lines = "\n".join(
             f"- {item}" for item in ticket_links.get("manual_purchase_checklist", [])
         )
-        source_citation_summary = _source_citation_summary(get_match_sources(match["match_id"]))
+        match_sources = get_match_sources(match["match_id"])
+        source_citation_summary = _source_citation_summary(match_sources)
+        evidence_traceability = format_traceability_markdown(
+            build_evidence_traceability(match_sources)
+        )
         snapshot_explanation = ""
         if snapshot_trend:
             snapshot_explanation = "\n".join(f"- {item}" for item in snapshot_trend["explanation"])
@@ -158,6 +163,12 @@ These links are manual navigation recommendations only. EventTrip-AgentOS does n
 This section adds public-source context to the internal planning report. It does not convert deterministic planning estimates into sourced market prices. Use `10_source_backed_final_report.md` when you need a public-facing report that excludes local estimates.
 
 {source_citation_summary}
+
+## Evidence Traceability Matrix
+
+This matrix separates public-source facts from internal estimates. If no real public source is registered for a value, the report says so directly instead of pretending the value is source-backed.
+
+{evidence_traceability}
 
 ## Flight Analysis
 

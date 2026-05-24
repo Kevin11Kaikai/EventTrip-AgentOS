@@ -19,6 +19,8 @@ def test_orchestrator_creates_final_report(tmp_path):
     assert "## Recommended Ticket Links" in final_report.read_text(encoding="utf-8")
     assert "## Source-Backed Citation Summary" in final_report.read_text(encoding="utf-8")
     assert "Use `10_source_backed_final_report.md`" in final_report.read_text(encoding="utf-8")
+    assert "## Evidence Traceability Matrix" in final_report.read_text(encoding="utf-8")
+    assert "no_source_backed_data_found" in final_report.read_text(encoding="utf-8")
     assert "mock" not in source_report.read_text(encoding="utf-8").lower()
     output_names = {path.name for path in result["run_dir"].glob("*.md")}
     assert output_names == {

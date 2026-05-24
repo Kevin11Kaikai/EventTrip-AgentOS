@@ -147,7 +147,7 @@ The final report is written to:
 runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\08_final_report.md
 ```
 
-This internal planning report includes deterministic estimates plus a clearly labeled source-backed citation summary for public context.
+This internal planning report includes deterministic estimates plus a clearly labeled source-backed citation summary and evidence traceability matrix for public context. Claims without registered public sources are marked directly as not source-backed instead of being filled with unsupported numbers.
 
 The source-backed public report is written to:
 

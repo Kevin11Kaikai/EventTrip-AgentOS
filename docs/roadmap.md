@@ -29,6 +29,7 @@
 - Phase 7.3: source-backed public report with official/news evidence registry.
 - Phase 7.4: grouped source-backed citations and latest source-backed report CLI.
 - Phase 7.5: optional source-backed citation summary in the internal deterministic report.
+- Phase 7.6: claim-level evidence traceability matrix in the internal report.
 
 ## Phase 3 Status
 
@@ -59,13 +60,13 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Keep web scraping deferred.
 - Preserve manual snapshot mode as the default fallback.
 
-### Phase 7.6: Evidence Citation Traceability
+### Phase 7.7: Evidence Citation Traceability Polish
 
-- Add deeper citation traceability from individual internal report claims back to source groups.
+- Add optional anchors from individual report paragraphs to traceability rows.
 - Keep deterministic source-of-truth numbers separate from unverified evidence candidates.
 - Preserve `10_source_backed_final_report.md` as the public source-backed artifact.
 
-### Phase 7.7: Official/Search API Provider Adapters
+### Phase 7.8: Official/Search API Provider Adapters
 
 - Add provider adapters only behind explicit opt-in configuration.
 - Prefer official APIs or safe search APIs.
@@ -112,6 +113,7 @@ Phase 7.0 adds a safe web evidence layer without changing default demo behavior.
 - Phase 7.3 adds `data/source_evidence.yaml` and `SourceBackedReportAgent`, producing `10_source_backed_final_report.md` without local planning estimates.
 - Phase 7.4 groups source-backed citations into Match facts, Ticket safety, Houston logistics, and Unknown/not source-backed sections, and adds `source_report_cli` for locating the latest public report.
 - Phase 7.5 adds a `Source-Backed Citation Summary` to `08_final_report.md` while preserving deterministic costs and recommendations.
+- Phase 7.6 adds an `Evidence Traceability Matrix` so unsupported values are explicitly marked as internal estimates or not source-backed.
 
 ## Later Phase 3 Work
 

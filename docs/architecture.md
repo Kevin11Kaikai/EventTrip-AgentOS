@@ -226,6 +226,21 @@ ReportAgent
 
 This is context only. It does not change computed costs, scores, option rankings, or ticket timing.
 
+Phase 7.6 adds claim-level traceability:
+
+```text
+Internal report claim
+   |
+   v
+Evidence Traceability Matrix
+   |
+   +-- source_backed
+   +-- internal_estimate_not_source_backed
+   +-- no_source_backed_data_found
+```
+
+The report is explicit when real public evidence is missing. Unsupported values remain marked as internal estimates or not source-backed; they are not disguised as live market data.
+
 ## Ticket Link Recommendation Layer
 
 Phase 7.2 adds official-first ticket link recommendations without purchase automation.

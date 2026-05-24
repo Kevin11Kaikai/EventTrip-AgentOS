@@ -16,6 +16,14 @@ The deterministic `08_final_report.md` remains an internal planning and regressi
 
 Phase 7.5 also adds a short `Source-Backed Citation Summary` section to `08_final_report.md`. That internal section provides public-source context only. It does not turn deterministic ticket, flight, hotel, local transportation, or budget estimates into sourced claims.
 
+Phase 7.6 adds an `Evidence Traceability Matrix` to `08_final_report.md`. The matrix marks each major claim as one of:
+
+- `source_backed`: supported by registered public official/news evidence.
+- `internal_estimate_not_source_backed`: produced by deterministic planning logic but not a public-source fact.
+- `no_source_backed_data_found`: no registered public source supports the exact claim yet.
+
+This is intentionally strict. If the project cannot verify a real public source for a value, the report says that directly rather than presenting a placeholder as real data.
+
 ## Evidence Sources
 
 The registry currently includes:
