@@ -1,4 +1,10 @@
+import sys
+
 from app import streamlit_app
+
+
+def test_dashboard_adds_project_root_to_sys_path():
+    assert str(streamlit_app.PROJECT_ROOT) in sys.path
 
 
 def test_dashboard_snapshot_summary_loads_seed_data():

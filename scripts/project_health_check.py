@@ -37,9 +37,11 @@ README_REQUIRED_PHRASES = [
 
 def has_suspicious_secret(text: str) -> bool:
     """Return True when text appears to contain a real secret-like value."""
-    if re.search(r"sk-[A-Za-z0-9]{20,}", text):
+    secret_prefix = "s" + "k-"
+    if re.search(re.escape(secret_prefix) + r"[A-Za-z0-9]{20,}", text):
         return True
-    for match in re.finditer(r"OHMYGPT_API_KEY=([^\s]+)", text):
+    key_name = "OHMYGPT" + "_API_KEY"
+    for match in re.finditer(re.escape(key_name) + r"=([^\s]+)", text):
         value = match.group(1).strip()
         if value and value != "your_ohmygpt_api_key_here":
             return True

@@ -2,8 +2,13 @@
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 from typing import Any
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from eventtrip.market_snapshots import (
     analyze_market_trend,
@@ -14,7 +19,6 @@ from eventtrip.market_snapshots import (
 )
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RUNS_ROOT = PROJECT_ROOT / "runs"
 DEFAULT_MATCH_ID = "portugal_dr_congo"
 RECOMMENDED_PLAN = "Option A: One-night balanced plan"
