@@ -30,6 +30,14 @@ def test_dashboard_budget_rows_include_expected_options():
     }
 
 
+def test_dashboard_ticket_link_rows_include_official_fifa():
+    rows = streamlit_app.ticket_link_rows("portugal_dr_congo")
+
+    assert rows[0]["Source Type"] == "official_primary"
+    assert "FIFA" in rows[0]["Label"]
+    assert rows[0]["URL"].startswith("https://")
+
+
 def test_find_latest_run_uses_deterministic_name_sort(tmp_path):
     older = tmp_path / "portugal_dr_congo_houston_demo_20260523_100000"
     newer = tmp_path / "portugal_dr_congo_houston_demo_20260523_110000"

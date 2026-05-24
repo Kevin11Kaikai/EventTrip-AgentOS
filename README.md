@@ -16,6 +16,7 @@ The default demo is deterministic, offline, and does not call paid APIs. It does
 - Multi-agent orchestration for ticket, flight, hotel, market, budget, risk, and report agents.
 - Markdown shared memory with YAML frontmatter for transparent agent handoffs.
 - MCP server wrapper with official MCP client validation.
+- Official-first ticket link recommendations without checkout automation.
 - Manual market snapshot tracker for price/listing trend analysis.
 - Combined ticket timing stance: single-day monitor + trend wait => Monitor with wait bias.
 - Safe snapshot CLI with `--dry-run` and explicit `--overwrite`.
@@ -85,6 +86,7 @@ Phase 1 core demo remains compatible with Python 3.9+. Phase 3+ development and 
 - [Dashboard Guide](docs/dashboard_guide.md)
 - [API Adapter Design](docs/api_adapter_design.md)
 - [Web Collection Layer](docs/web_collection.md)
+- [Ticket Link Recommendations](docs/ticket_links.md)
 - [Release v0.1.0 Draft](docs/release_v0_1_0.md)
 - [Verified MCP client output](examples/mcp_client_validation_output.txt)
 - [Changelog](CHANGELOG.md)
@@ -125,7 +127,7 @@ Orchestrator
 Markdown Shared Memory / File Bus
    |
    v
-Ticket Agent -> Flight Agent -> Hotel Agent -> Snapshot Agent -> Market Agent -> Budget Agent -> Risk Agent -> Report Agent
+Ticket Agent -> Ticket Link Agent -> Flight Agent -> Hotel Agent -> Snapshot Agent -> Market Agent -> Budget Agent -> Risk Agent -> Report Agent
    |
    v
 Final Markdown Report
@@ -161,6 +163,8 @@ Ticket timing recommendation: Monitor with wait bias
 Phase 1 implements pure Python functions in `eventtrip/mcp_server/tools.py`. They look like MCP tools but use local mock data:
 
 - `get_ticket_market`
+- `get_ticket_links`
+- `recommend_ticket_links`
 - `get_flight_quotes`
 - `get_hotel_quotes`
 - `get_market_signals`
@@ -198,6 +202,8 @@ Use a Python 3.10+ environment for full official SDK-based MCP client integratio
 Exposed MCP tools:
 
 - `get_ticket_market`
+- `get_ticket_links`
+- `recommend_ticket_links`
 - `get_flight_quotes`
 - `get_hotel_quotes`
 - `get_market_signals`
@@ -377,6 +383,19 @@ python -m eventtrip.evidence_review_cli convert --evidence examples\sample_web_e
 
 Use `--save` only after reviewing the candidate values. Duplicate match/date rows still require explicit `--overwrite`.
 
+## Ticket Link Recommendations
+
+EventTrip-AgentOS can recommend official-first ticket navigation links, but it never purchases tickets or automates checkout.
+
+The local registry lives at `data/ticket_links.yaml`. The current policy is:
+
+- Use FIFA official ticketing first.
+- Use FIFA official resale/exchange for verified resale inventory.
+- Use official FIFA support articles to verify resale policy and risk.
+- Treat hospitality as optional premium inventory, not budget-first default.
+
+See [Ticket Link Recommendations](docs/ticket_links.md).
+
 ## Project Health Check
 
 Run the local health check before pushing larger documentation or release changes:
@@ -415,6 +434,7 @@ Deterministic filenames:
 
 - `00_user_request.md`
 - `01_ticket_agent.md`
+- `01b_ticket_link_agent.md`
 - `02_flight_agent.md`
 - `03_hotel_agent.md`
 - `04_snapshot_agent.md`
@@ -430,6 +450,7 @@ Deterministic filenames:
 - Demo Assumptions
 - Agent Workflow
 - Portugal vs DR Congo Ticket Analysis
+- Recommended Ticket Links
 - Flight Analysis
 - Hotel Analysis
 - Market Timing / Anti-Scalper Analysis

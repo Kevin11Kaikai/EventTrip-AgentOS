@@ -8,9 +8,11 @@ from eventtrip.agents.report_agent import ReportAgent
 from eventtrip.agents.risk_agent import RiskAgent
 from eventtrip.agents.snapshot_agent import SnapshotAgent
 from eventtrip.agents.ticket_agent import TicketAgent
+from eventtrip.agents.ticket_link_agent import TicketLinkAgent
 
 __all__ = [
     "TicketAgent",
+    "TicketLinkAgent",
     "FlightAgent",
     "HotelAgent",
     "MarketAgent",

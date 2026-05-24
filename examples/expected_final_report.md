@@ -25,13 +25,14 @@ The single-day market signal says monitor, while the multi-snapshot trend signal
 ## Agent Workflow
 
 1. Ticket Agent reviewed the mock ticket market.
-2. Flight Agent compared travel windows.
-3. Hotel Agent ranked shared two-bed lodging.
-4. Snapshot Agent analyzed manual market snapshots.
-5. Market Agent computed anti-scalper timing signals.
-6. Budget Agent ranked options.
-7. Risk Agent flagged coordination risks.
-8. Report Agent generated the final Markdown report.
+2. Ticket Link Agent recommended official-first manual purchase links.
+3. Flight Agent compared travel windows.
+4. Hotel Agent ranked shared two-bed lodging.
+5. Snapshot Agent analyzed manual market snapshots.
+6. Market Agent computed anti-scalper timing signals.
+7. Budget Agent ranked options.
+8. Risk Agent flagged coordination risks.
+9. Report Agent generated the final Markdown report.
 
 ## Ticket Trigger Policy
 
@@ -39,6 +40,23 @@ The single-day market signal says monitor, while the multi-snapshot trend signal
 - Strongly consider buying if the total all-in ticket price falls below $600.
 - Continue monitoring if the price remains around $700 and listings remain high.
 - Re-evaluate if listings fall sharply while flight and hotel pressure rise.
+
+## Recommended Ticket Links
+
+These links are manual navigation recommendations only. EventTrip-AgentOS does not log in, bypass access controls, automate checkout, or purchase tickets.
+
+### Official First
+
+- [FIFA World Cup 2026 Tickets](https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/tickets): use this first for official sales phases and official ticketing navigation.
+- [FIFA Resale/Exchange Marketplace](https://www.fifa.com/tickets): use this for verified official resale/exchange inventory when available.
+
+### Manual Checklist Before Buying
+
+- Confirm the seller/page is official FIFA ticketing or official FIFA resale/exchange.
+- Confirm the match is Portugal vs DR Congo.
+- Confirm the date is June 17, 2026.
+- Confirm the venue is NRG Stadium / Houston Stadium in Houston.
+- Compare all-in price against the $550 buy trigger and $600 strong-consider trigger.
 
 ## Market Timing / Anti-Scalper Analysis
 

@@ -43,6 +43,8 @@
 - Web collection tests must use local fixtures; do not call live ticket, hotel, or flight sites.
 - MCP web evidence tools must remain preview-only unless a future prompt explicitly adds reviewed write behavior.
 - Reviewed web evidence conversion must require explicit human-provided snapshot fields and must default to dry-run/no-write behavior.
+- Ticket link recommendations must remain manual navigation only; never add automated checkout, login, payment handling, or CAPTCHA bypass.
+- Prefer official FIFA ticketing/resale links before any non-FIFA ticket source.
 - Generated web evidence cache files under `data/web_evidence/` must stay ignored except `.gitkeep`.
 - Keep `docs/web_collection.md` aligned with web collection behavior.
 - Dashboard media in `docs/assets/` must be clearly labeled as mockup or real screenshot.

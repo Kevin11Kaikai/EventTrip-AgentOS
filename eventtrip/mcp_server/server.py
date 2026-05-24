@@ -18,6 +18,8 @@ from eventtrip.mcp_server import tools as mock_tools
 SERVER_NAME = "EventTrip-AgentOS MCP Server"
 EXPECTED_TOOL_NAMES = [
     "get_ticket_market",
+    "get_ticket_links",
+    "recommend_ticket_links",
     "get_flight_quotes",
     "get_hotel_quotes",
     "get_market_signals",
@@ -55,6 +57,18 @@ def _register_tool(func):
 def get_ticket_market(match_id: str) -> dict:
     """Return mock secondary-market ticket data for one match ID."""
     return mock_tools.get_ticket_market(match_id)
+
+
+@_register_tool
+def get_ticket_links(match_id: str) -> list[dict]:
+    """Return deterministic manual ticket link registry entries for one match."""
+    return mock_tools.get_ticket_links(match_id)
+
+
+@_register_tool
+def recommend_ticket_links(match_id: str, ticket_timing: str = "monitor_with_wait_bias") -> dict:
+    """Return official-first manual ticket link recommendations for one match."""
+    return mock_tools.recommend_ticket_links(match_id, ticket_timing)
 
 
 @_register_tool
@@ -134,6 +148,8 @@ def preview_web_evidence_from_local_file(
 
 TOOL_REGISTRY = {
     "get_ticket_market": get_ticket_market,
+    "get_ticket_links": get_ticket_links,
+    "recommend_ticket_links": recommend_ticket_links,
     "get_flight_quotes": get_flight_quotes,
     "get_hotel_quotes": get_hotel_quotes,
     "get_market_signals": get_market_signals,
@@ -153,6 +169,19 @@ TOOL_SCHEMAS: dict[str, dict[str, Any]] = {
     "get_ticket_market": {
         "type": "object",
         "properties": {"match_id": {"type": "string"}},
+        "required": ["match_id"],
+    },
+    "get_ticket_links": {
+        "type": "object",
+        "properties": {"match_id": {"type": "string"}},
+        "required": ["match_id"],
+    },
+    "recommend_ticket_links": {
+        "type": "object",
+        "properties": {
+            "match_id": {"type": "string"},
+            "ticket_timing": {"type": "string", "default": "monitor_with_wait_bias"},
+        },
         "required": ["match_id"],
     },
     "get_flight_quotes": {

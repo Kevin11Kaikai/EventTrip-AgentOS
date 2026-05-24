@@ -14,6 +14,7 @@ class ReportAgent(BaseAgent):
     def run(self, trip_request: dict, run_dir: Path, context: dict[str, Any]) -> dict[str, Any]:
         match = trip_request["match"]
         ticket = context["ticket"]
+        ticket_links = context.get("ticket_links", {})
         stress = context["scalper_stress"]
         timing = context["ticket_timing"]
         selected_hotel = context["hotels"]["selected"]
@@ -67,6 +68,12 @@ class ReportAgent(BaseAgent):
         )
         risk_lines = "\n".join(f"- {risk}" for risk in context["risks"])
         mitigation_lines = "\n".join(f"- {item}" for item in context["mitigations"])
+        ticket_link_lines = _ticket_link_lines(ticket_links.get("primary_links", []))
+        ticket_info_lines = _ticket_link_lines(ticket_links.get("info_links", []))
+        ticket_optional_lines = _ticket_link_lines(ticket_links.get("optional_links", []))
+        ticket_checklist_lines = "\n".join(
+            f"- {item}" for item in ticket_links.get("manual_purchase_checklist", [])
+        )
         snapshot_explanation = ""
         if snapshot_trend:
             snapshot_explanation = "\n".join(f"- {item}" for item in snapshot_trend["explanation"])
@@ -97,13 +104,14 @@ The single-day market signal says {timing}; the multi-snapshot trend signal says
 ## Agent Workflow
 
 1. Ticket Agent reviewed the mock ticket market.
-2. Flight Agent compared same-day, one-night, and two-night flight windows.
-3. Hotel Agent ranked shared two-bed hotel options.
-4. Snapshot Agent analyzed manual market snapshots.
-5. Market Agent computed anti-scalper timing signals.
-6. Budget Agent ranked trip options by cost-effectiveness.
-7. Risk Agent flagged booking and coordination risks.
-8. Report Agent generated this Markdown report from shared memory and structured outputs.
+2. Ticket Link Agent recommended official-first manual purchase links.
+3. Flight Agent compared same-day, one-night, and two-night flight windows.
+4. Hotel Agent ranked shared two-bed hotel options.
+5. Snapshot Agent analyzed manual market snapshots.
+6. Market Agent computed anti-scalper timing signals.
+7. Budget Agent ranked trip options by cost-effectiveness.
+8. Risk Agent flagged booking and coordination risks.
+9. Report Agent generated this Markdown report from shared memory and structured outputs.
 
 ## Portugal vs DR Congo Ticket Analysis
 
@@ -122,6 +130,26 @@ The ticket price is high enough to require discipline. The system recommends mon
 - Strongly consider buying if the total all-in ticket price falls below $600.
 - Continue monitoring if the price remains around $700 and listings remain high.
 - Re-evaluate if listings fall sharply while flight and hotel pressure rise.
+
+## Recommended Ticket Links
+
+These links are manual navigation recommendations only. EventTrip-AgentOS does not log in, bypass access controls, automate checkout, or purchase tickets.
+
+### Official First
+
+{ticket_link_lines}
+
+### Official Information / Risk References
+
+{ticket_info_lines}
+
+### Optional Premium Official Path
+
+{ticket_optional_lines}
+
+### Manual Checklist Before Buying
+
+{ticket_checklist_lines}
 
 ## Flight Analysis
 
@@ -285,3 +313,15 @@ def combine_ticket_timing(single_day_signal: str, snapshot_trend: dict[str, Any]
         explanation.append("Use the ticket trigger policy to decide when monitoring becomes buying.")
 
     return {"code": code, "label": label, "explanation": explanation}
+
+
+def _ticket_link_lines(links: list[dict[str, Any]]) -> str:
+    if not links:
+        return "- No links configured."
+    rows = []
+    for link in links:
+        rows.append(
+            f"- [{link['label']}]({link['url']}) "
+            f"({link['source_type']}, risk: {link['risk_level']}): {link['recommendation']}"
+        )
+    return "\n".join(rows)

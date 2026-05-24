@@ -20,6 +20,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SERVER_MODULE = "eventtrip.mcp_server.server"
 EXPECTED_TOOL_NAMES = {
     "get_ticket_market",
+    "get_ticket_links",
+    "recommend_ticket_links",
     "get_flight_quotes",
     "get_hotel_quotes",
     "get_market_signals",
@@ -158,6 +160,20 @@ async def run_validation() -> int:
             assert ticket["listings"] == 300
             assert ticket["demand_level"] == "high"
 
+            ticket_links = extract_tool_payload(
+                await session.call_tool(
+                    "recommend_ticket_links",
+                    {
+                        "match_id": "portugal_dr_congo",
+                        "ticket_timing": "monitor_with_wait_bias",
+                    },
+                )
+            )
+            _assert_json_serializable(ticket_links)
+            assert ticket_links["primary_links"]
+            assert ticket_links["primary_links"][0]["source_type"] == "official_primary"
+            assert "FIFA" in ticket_links["primary_links"][0]["label"]
+
             stress = extract_tool_payload(
                 await session.call_tool(
                     "compute_scalper_stress_index",
@@ -259,6 +275,9 @@ async def run_validation() -> int:
     print(f"- lowest_price = {ticket['lowest_price']}")
     print(f"- listings = {ticket['listings']}")
     print(f"- demand_level = {ticket['demand_level']}")
+    print("Sample recommend_ticket_links(portugal_dr_congo):")
+    print(f"- primary_link = {ticket_links['primary_links'][0]['label']}")
+    print(f"- source_type = {ticket_links['primary_links'][0]['source_type']}")
     print("Sample compute_scalper_stress_index:")
     print(f"- score = {stress['score']}")
     print(f"- interpretation = {stress['interpretation']}")

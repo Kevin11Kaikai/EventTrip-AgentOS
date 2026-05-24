@@ -3,6 +3,8 @@ from scripts import validate_mcp_client
 
 EXPECTED_TOOLS = {
     "get_ticket_market",
+    "get_ticket_links",
+    "recommend_ticket_links",
     "get_flight_quotes",
     "get_hotel_quotes",
     "get_market_signals",

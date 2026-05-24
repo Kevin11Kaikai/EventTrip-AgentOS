@@ -25,6 +25,7 @@
 - Phase 6.1: disabled-by-default official API adapter design and stubs.
 - Phase 7.0: safe web collection layer, local fixture extraction, and preview-only MCP evidence tools.
 - Phase 7.1: reviewed evidence to snapshot conversion with dry-run and duplicate protection.
+- Phase 7.2: official-first ticket link recommendation layer.
 
 ## Phase 3 Status
 
@@ -55,12 +56,12 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Keep web scraping deferred.
 - Preserve manual snapshot mode as the default fallback.
 
-### Phase 7.2: Source Citations in Final Report
+### Phase 7.3: Source Citations in Final Report
 
 - Add optional evidence citation summaries to generated reports.
 - Keep deterministic source-of-truth numbers separate from unverified evidence candidates.
 
-### Phase 7.3: Official/Search API Provider Adapters
+### Phase 7.4: Official/Search API Provider Adapters
 
 - Add provider adapters only behind explicit opt-in configuration.
 - Prefer official APIs or safe search APIs.
@@ -103,6 +104,7 @@ Phase 7.0 adds a safe web evidence layer without changing default demo behavior.
 - MCP exposes preview-only web evidence tools.
 - Dashboard previews the local fixture only and performs no live HTTP.
 - Phase 7.1 adds `evidence_review_cli` so reviewed evidence can become a manual snapshot only after explicit human-provided fields and `--save`.
+- Phase 7.2 adds `data/ticket_links.yaml`, `TicketLinkAgent`, dashboard ticket link rows, MCP link tools, and final-report ticket link guidance.
 
 ## Later Phase 3 Work
 

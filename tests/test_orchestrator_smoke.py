@@ -13,10 +13,12 @@ def test_orchestrator_creates_final_report(tmp_path):
     assert "Overall ticket timing recommendation: Monitor with wait bias." in final_report.read_text(
         encoding="utf-8"
     )
+    assert "## Recommended Ticket Links" in final_report.read_text(encoding="utf-8")
     output_names = {path.name for path in result["run_dir"].glob("*.md")}
     assert output_names == {
         "00_user_request.md",
         "01_ticket_agent.md",
+        "01b_ticket_link_agent.md",
         "02_flight_agent.md",
         "03_hotel_agent.md",
         "04_snapshot_agent.md",

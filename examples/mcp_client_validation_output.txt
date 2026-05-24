@@ -9,15 +9,20 @@ Listed MCP tools:
 - get_hotel_quotes
 - get_market_signals
 - get_market_snapshots
+- get_ticket_links
 - get_ticket_market
 - preview_snapshot_import
 - preview_web_evidence_from_local_file
 - preview_web_evidence_from_text
 - rank_budget_options
+- recommend_ticket_links
 Sample get_ticket_market(portugal_dr_congo):
 - lowest_price = 700
 - listings = 300
 - demand_level = high
+Sample recommend_ticket_links(portugal_dr_congo):
+- primary_link = FIFA World Cup 2026 Tickets
+- source_type = official_primary
 Sample compute_scalper_stress_index:
 - score = 41.9
 - interpretation = moderate scalper stress, monitor

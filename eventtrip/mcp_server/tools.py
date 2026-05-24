@@ -25,6 +25,8 @@ from eventtrip.market_snapshots import (
     upsert_market_snapshot,
 )
 from eventtrip.schemas import MarketSnapshot, to_plain_dict
+from eventtrip.ticket_links import get_ticket_links as load_ticket_links
+from eventtrip.ticket_links import recommend_ticket_links as build_ticket_link_recommendations
 from eventtrip.web_collection.extractor import (
     extract_market_evidence,
     extract_text_from_html,
@@ -53,6 +55,16 @@ def get_ticket_market(match_id: str) -> dict:
     ticket = dict(data[match_id])
     ticket["match_id"] = match_id
     return ticket
+
+
+def get_ticket_links(match_id: str) -> list[dict]:
+    """Return deterministic manual ticket link registry entries for one match."""
+    return load_ticket_links(match_id)
+
+
+def recommend_ticket_links(match_id: str, ticket_timing: str = "monitor_with_wait_bias") -> dict:
+    """Return official-first manual ticket link recommendations for one match."""
+    return build_ticket_link_recommendations(match_id, ticket_timing=ticket_timing)
 
 
 def get_flight_quotes(origin: str, destination: str, depart_date: str, return_date: str) -> list[dict]:

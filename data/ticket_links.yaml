@@ -1,0 +1,66 @@
+portugal_dr_congo:
+  match_id: portugal_dr_congo
+  verified_at: 2026-05-24
+  notes: >
+    Manual link registry for Portugal vs DR Congo. Links are navigation
+    recommendations only; EventTrip-AgentOS does not log in, purchase tickets,
+    bypass controls, or automate checkout.
+  links:
+    - link_id: fifa_world_cup_2026_tickets
+      label: FIFA World Cup 2026 Tickets
+      url: https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/tickets
+      source_type: official_primary
+      purchase_role: recommended_official_entry
+      risk_level: low
+      priority: 1
+      recommendation: Use this first for official sales phases, last-minute sales, and official ticketing navigation.
+      manual_checks:
+        - Confirm the match is Portugal vs DR Congo.
+        - Confirm the date is June 17, 2026.
+        - Confirm the venue is NRG Stadium / Houston Stadium in Houston.
+        - Confirm the seat category, quantity, all-in price, fees, transfer policy, and refund policy before paying.
+    - link_id: fifa_resale_exchange_marketplace
+      label: FIFA Resale/Exchange Marketplace
+      url: https://www.fifa.com/tickets
+      source_type: official_resale
+      purchase_role: recommended_verified_resale_entry
+      risk_level: low
+      priority: 2
+      recommendation: Use this for verified official resale/exchange inventory when available.
+      manual_checks:
+        - Confirm the page remains within FIFA official ticketing.
+        - Confirm inventory is verified official resale/exchange.
+        - Compare the all-in price against the $550 and $600 trigger policy.
+    - link_id: fifa_resale_support_article
+      label: FIFA Resale/Exchange Support
+      url: https://gpcustomersupportfwc2026.tickets.fifa.com/hc/en-gb/articles/30547501328285-1-Are-you-looking-for-an-official-and-secure-way-to-resell-exchange-your-FIFA-World-Cup-2026-tickets
+      source_type: official_info
+      purchase_role: info_only
+      risk_level: low
+      priority: 3
+      recommendation: Read this when verifying whether a resale path is official.
+      manual_checks:
+        - Use it as policy guidance, not as a checkout page.
+        - Confirm final purchase still happens through the official FIFA ticketing path.
+    - link_id: fifa_unofficial_resale_risk_article
+      label: FIFA Unofficial Resale Risk Guidance
+      url: https://gpcustomersupportfwc2026.tickets.fifa.com/hc/en-gb/articles/30546984877981-25-What-are-the-risks-of-buying-resale-tickets-that-are-not-from-FIFA-com-tickets
+      source_type: official_info
+      purchase_role: caution_reference
+      risk_level: low
+      priority: 4
+      recommendation: Review this before considering any non-FIFA resale source.
+      manual_checks:
+        - Treat non-FIFA resale as higher risk.
+        - Do not assume a third-party listing is valid or transferable.
+    - link_id: fifa_hospitality
+      label: FIFA World Cup 2026 Hospitality
+      url: https://www.fifa.com/hospitality
+      source_type: official_hospitality
+      purchase_role: optional_official_premium_entry
+      risk_level: medium
+      priority: 5
+      recommendation: Use only if travelers intentionally want ticket-inclusive hospitality and accept premium pricing.
+      manual_checks:
+        - Confirm ticket-inclusive package terms.
+        - Compare total package cost against the budget-first plan.

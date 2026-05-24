@@ -24,6 +24,7 @@ from eventtrip.agents import (
     RiskAgent,
     SnapshotAgent,
     TicketAgent,
+    TicketLinkAgent,
 )
 from eventtrip.markdown_io import create_run_dir, write_markdown
 from eventtrip.report_polisher import polish_report
@@ -89,6 +90,7 @@ def run_demo(
     context: dict[str, Any] = {}
     agents = [
         TicketAgent(use_llm=False),
+        TicketLinkAgent(use_llm=False),
         FlightAgent(use_llm=False),
         HotelAgent(use_llm=False),
         SnapshotAgent(use_llm=False),

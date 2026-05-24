@@ -17,6 +17,7 @@ from eventtrip.market_snapshots import (
     snapshot_to_dict,
     trend_result_to_dict,
 )
+from eventtrip.ticket_links import recommend_ticket_links
 from eventtrip.web_collection.extractor import (
     extract_market_evidence,
     extract_text_from_html,
@@ -78,6 +79,23 @@ def budget_table_rows() -> list[dict[str, Any]]:
             "Score": 42.0,
         },
     ]
+
+
+def ticket_link_rows(match_id: str = DEFAULT_MATCH_ID) -> list[dict[str, Any]]:
+    """Return official-first ticket link rows for display."""
+    recommendations = recommend_ticket_links(match_id, ticket_timing="monitor_with_wait_bias")
+    rows = []
+    for link in recommendations["primary_links"] + recommendations["info_links"] + recommendations["optional_links"]:
+        rows.append(
+            {
+                "Label": link["label"],
+                "Source Type": link["source_type"],
+                "Role": link["purchase_role"],
+                "Risk": link["risk_level"],
+                "URL": link["url"],
+            }
+        )
+    return rows
 
 
 def find_latest_run(
@@ -204,6 +222,13 @@ def main() -> None:
 
     st.subheader("Budget Comparison")
     st.table(budget_table_rows())
+
+    st.subheader("Ticket Links")
+    st.write(
+        "Official-first manual navigation links. The dashboard does not log in, "
+        "open checkout, or purchase tickets."
+    )
+    st.table(ticket_link_rows(match_id))
 
     st.subheader("Web Evidence Preview")
     st.write(

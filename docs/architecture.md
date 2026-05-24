@@ -34,7 +34,7 @@ Orchestrator
 Markdown Shared Memory / File Bus
    |
    v
-Ticket Agent -> Flight Agent -> Hotel Agent -> Snapshot Agent -> Market Agent -> Budget Agent -> Risk Agent -> Report Agent
+Ticket Agent -> Ticket Link Agent -> Flight Agent -> Hotel Agent -> Snapshot Agent -> Market Agent -> Budget Agent -> Risk Agent -> Report Agent
    |
    v
 Final Markdown Report
@@ -60,6 +60,7 @@ Phase 5.2 adds `docs/assets/dashboard_mockup.svg`, a static labeled mockup for G
 | Agent | Input | Output | Purpose |
 |---|---|---|---|
 | Ticket Agent | mock ticket data | ticket recommendation | Analyze ticket price/listings |
+| Ticket Link Agent | local ticket link registry | official-first link guidance | Recommend manual ticket purchase paths |
 | Flight Agent | mock flight data | flight window comparison | Compare same-day, one-night, two-night plans |
 | Hotel Agent | mock hotel data | ranked shared hotel options | Evaluate two-bed shared lodging |
 | Snapshot Agent | manual market snapshots | trend analysis | Track price/listing movement over time |
@@ -79,6 +80,7 @@ Expected files:
 ```text
 00_user_request.md
 01_ticket_agent.md
+01b_ticket_link_agent.md
 02_flight_agent.md
 03_hotel_agent.md
 04_snapshot_agent.md
@@ -180,6 +182,22 @@ Optional --save to manual snapshot CSV
 
 This keeps extracted web values as candidates until a human supplies the remaining demand-proxy fields and explicitly writes the reviewed snapshot.
 
+## Ticket Link Recommendation Layer
+
+Phase 7.2 adds official-first ticket link recommendations without purchase automation.
+
+```text
+data/ticket_links.yaml
+   |
+   v
+Ticket Link Agent / MCP link tools / Dashboard
+   |
+   v
+Recommended Ticket Links section in final report
+```
+
+The layer recommends manual navigation links only. It does not open checkout, log in, handle payment, bypass CAPTCHA, or purchase tickets. FIFA official ticketing and FIFA official resale/exchange are prioritized before any other path.
+
 ## Ticket Timing Fusion
 
 The final report keeps the single-day MarketAgent signal and the multi-snapshot SnapshotAgent signal separate, then fuses them into one user-facing stance.
@@ -203,6 +221,8 @@ This means travelers should not panic buy in the current $680-$700 range, but sh
 Current MCP tools:
 
 - `get_ticket_market`
+- `get_ticket_links`
+- `recommend_ticket_links`
 - `get_flight_quotes`
 - `get_hotel_quotes`
 - `get_market_signals`
@@ -290,6 +310,7 @@ Invariant validation
 - `data/mock_hotels.yaml`: mock shared two-bed hotel options.
 - `data/mock_market_signals.yaml`: mock travel-demand and market-pressure signals.
 - `data/market_snapshots/portugal_dr_congo_snapshots.csv`: manual ticket market snapshot history.
+- `data/ticket_links.yaml`: official-first manual ticket link registry.
 - `data/web_evidence/`: ignored local web evidence cache, with tracked `.gitkeep` placeholders.
 - `examples/sample_ticket_market_page.html`: deterministic local HTML fixture for web evidence extraction.
 
@@ -303,6 +324,7 @@ Invariant validation
 - Dashboard tests verify import-safe helpers, deterministic snapshot summaries, budget rows, and latest-run path detection.
 - Web collection tests verify local fixture collection, extraction heuristics, safety policy behavior, evidence store roundtrip, and CLI dry-run behavior.
 - Evidence review tests verify candidate snapshot construction, dry-run behavior, duplicate protection, overwrite, and safe writes to temporary CSV files.
+- Ticket link tests verify registry validation, official-first ordering, Ticket Link Agent output, MCP link tools, and dashboard rows.
 - MCP server tests verify wrapper registration and direct mock outputs.
 - MCP client validation tests verify guard behavior and helper parsing.
 - Orchestrator smoke tests verify end-to-end report generation.

@@ -23,6 +23,8 @@ EventTrip-AgentOS exposes deterministic mock travel-planning tools through an MC
 ## Exposed MCP Tools
 
 - `get_ticket_market`: returns deterministic mock ticket market data for one match.
+- `get_ticket_links`: returns deterministic manual ticket link registry entries.
+- `recommend_ticket_links`: returns official-first manual ticket link recommendations.
 - `get_flight_quotes`: returns mock flight quotes for one origin and date window.
 - `get_hotel_quotes`: returns mock hotel quotes for a city, stay window, and bed count.
 - `get_market_signals`: returns mock demand and market-pressure signals.
@@ -61,9 +63,10 @@ In Python 3.9, the validation script should exit cleanly with a message that ful
 ## Verified Results
 
 - The MCP client launched the local server through stdio.
-- The client listed 13 tools.
+- The client listed 15 tools.
 - The client called:
   - `get_ticket_market`
+  - `recommend_ticket_links`
   - `compute_scalper_stress_index`
   - `get_hotel_quotes`
   - `get_market_snapshots`

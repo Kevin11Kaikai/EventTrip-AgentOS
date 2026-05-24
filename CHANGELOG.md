@@ -16,6 +16,7 @@
 - Added local HTML fixture evidence extraction.
 - Added preview-only MCP web evidence tools.
 - Added reviewed evidence to snapshot conversion CLI with dry-run and duplicate protection.
+- Added official-first ticket link registry, Ticket Link Agent, report section, dashboard section, and MCP link recommendation tools.
 
 ## v0.1.0 - 2026-05-23
 

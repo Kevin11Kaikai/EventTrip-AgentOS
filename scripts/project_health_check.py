@@ -23,6 +23,7 @@ IMPORTANT_FILES = [
     "docs/dashboard_guide.md",
     "docs/api_adapter_design.md",
     "docs/web_collection.md",
+    "docs/ticket_links.md",
     "examples/mcp_client_validation_output.txt",
     "examples/external_snapshot_import.csv",
     "examples/sample_ticket_market_page.html",
@@ -33,6 +34,9 @@ IMPORTANT_FILES = [
     "eventtrip/web_collect_cli.py",
     "eventtrip/evidence_review.py",
     "eventtrip/evidence_review_cli.py",
+    "eventtrip/ticket_links.py",
+    "eventtrip/agents/ticket_link_agent.py",
+    "data/ticket_links.yaml",
     "eventtrip/web_collection/collector.py",
     "eventtrip/web_collection/extractor.py",
 ]

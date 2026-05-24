@@ -33,7 +33,7 @@ Orchestrator
 Markdown Shared Memory / File Bus
    |
    v
-Ticket -> Flight -> Hotel -> Snapshot -> Market -> Budget -> Risk -> Report
+Ticket -> Ticket Link -> Flight -> Hotel -> Snapshot -> Market -> Budget -> Risk -> Report
    |
    v
 Final Report
@@ -44,6 +44,7 @@ Each agent writes one Markdown file into the run directory. YAML frontmatter sto
 ## Agent Pipeline
 
 - `TicketAgent`: reads mock ticket data and reviews price, listings, Category 3 range, and initial buy/monitor posture.
+- `TicketLinkAgent`: recommends official-first manual ticket navigation links and purchase checks.
 - `FlightAgent`: compares same-day, one-night, and two-night flight windows for PIT and SEA travelers.
 - `HotelAgent`: evaluates shared two-bed hotel options by cost, access, cancellation policy, and rating.
 - `SnapshotAgent`: analyzes manual ticket market snapshots and trend direction.
@@ -97,6 +98,7 @@ The final report appears in a timestamped `runs/` directory. Generated run direc
 - Traveler B estimated cost: $1220
 - Ticket timing: Monitor with wait bias
 - Snapshot trend: falling prices and rising listings support disciplined waiting/monitoring rather than panic buying
+- Ticket link guidance: use FIFA official ticketing or FIFA official resale/exchange first; user purchases manually
 
 ## Example Final Report Sections
 
@@ -114,6 +116,7 @@ The final report appears in a timestamped `runs/` directory. Generated run direc
 - YAML frontmatter metadata
 - MCP server wrapper
 - Official MCP client validation
+- Official-first ticket link recommendations
 - Manual snapshot tracker
 - Trend-based ticket timing
 - Safe CLI with dry-run and overwrite protection
@@ -179,6 +182,20 @@ python -m eventtrip.evidence_review_cli convert --evidence examples\sample_web_e
 ```
 
 Use `--save` only after the candidate fields are manually checked.
+
+## Ticket Link Recommendations
+
+Phase 7.2 adds official-first manual ticket link recommendations. The system provides navigation links and a checklist; it does not log in, automate checkout, or buy tickets.
+
+The final report includes:
+
+- FIFA official ticketing
+- FIFA official resale/exchange
+- FIFA official support/risk references
+- Optional official hospitality as a premium path
+- Manual checks before buying
+
+The local registry is `data/ticket_links.yaml`.
 
 ## Next Step
 
