@@ -1,0 +1,87 @@
+portugal_dr_congo:
+  match_id: portugal_dr_congo
+  evidence_verified_at: 2026-05-24
+  report_scope: Public web and news evidence only. No mock estimates are used in the source-backed report.
+  sources:
+    - source_id: fifa_match_preview
+      title: Portugal v Congo DR | World Cup | Match preview
+      publisher: FIFA
+      published_date: 2026-04
+      url: https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/portugal-congo-dr-preview-live-stream-team-news-tickets
+      source_type: official
+      evidence_tags:
+        - match
+        - venue
+        - date
+      summary: FIFA identifies Portugal vs Congo DR as a June 17 match at Houston Stadium.
+    - source_id: fifa_tickets
+      title: Tickets - FIFA World Cup 2026
+      publisher: FIFA
+      published_date: 2026
+      url: https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/tickets
+      source_type: official
+      evidence_tags:
+        - tickets
+        - official_purchase
+      summary: FIFA maintains the official World Cup 2026 ticketing entry point.
+    - source_id: fifa_resale_support
+      title: FIFA Resale/Exchange Marketplace
+      publisher: FIFA World Cup 2026 Customer Support
+      published_date: 2026
+      url: https://gpcustomersupportfwc2026.tickets.fifa.com/hc/en-gb/sections/30546469442077-FIFA-Resale-Exchange-Marketplace
+      source_type: official
+      evidence_tags:
+        - tickets
+        - official_resale
+      summary: FIFA support lists the Resale/Exchange Marketplace as the official resale and exchange support area.
+    - source_id: axios_drc_base_camp
+      title: Democratic Republic of Congo selects Houston for World Cup base camp
+      publisher: Axios Houston
+      published_date: 2026-04-22
+      url: https://www.axios.com/local/houston/2026/04/22/dr-congo-houston-world-cup-2026-base-camp
+      source_type: news
+      evidence_tags:
+        - team_base_camp
+        - houston
+        - match
+      summary: Axios reported that DR Congo will use Houston as its World Cup base camp and play Portugal on June 17 in Houston.
+    - source_id: axios_houston_transport_waymo
+      title: Waymo nearly doubles Houston service area before World Cup
+      publisher: Axios Houston
+      published_date: 2026-05-13
+      url: https://www.axios.com/local/houston/2026/05/13/waymo-houston-expansion-world-cup-nrg-stadium
+      source_type: news
+      evidence_tags:
+        - local_transport
+        - houston
+      summary: Axios reported Waymo expansion in Houston includes NRG Stadium and East Downtown ahead of World Cup crowds.
+    - source_id: axios_houston_pitch
+      title: Houston's mad dash to lay World Cup grass
+      publisher: Axios Houston
+      published_date: 2026-05-12
+      url: https://www.axios.com/local/houston/2026/05/12/houston-world-cup-grass-pitch
+      source_type: news
+      evidence_tags:
+        - venue_readiness
+        - houston
+      summary: Axios reported Houston Stadium pitch preparation for seven World Cup matches.
+    - source_id: kiplinger_ticket_scams
+      title: Buying World Cup Tickets? Beware of These Scams
+      publisher: Kiplinger
+      published_date: 2026-05-20
+      url: https://www.kiplinger.com/personal-finance/online-shopping/buying-tickets-to-the-world-cup-beware-of-scams
+      source_type: news
+      evidence_tags:
+        - ticket_safety
+        - resale_risk
+      summary: Kiplinger warned about World Cup ticket scams and advised starting with FIFA's ticket market.
+    - source_id: moneyweek_ticket_scam_warning
+      title: Football fans issued warning over ticket scams ahead of 2026 World Cup
+      publisher: MoneyWeek
+      published_date: 2025-12
+      url: https://moneyweek.com/personal-finance/world-cup-football-tickets-scam
+      source_type: news
+      evidence_tags:
+        - ticket_safety
+        - resale_risk
+      summary: MoneyWeek reported official advice that fans should buy World Cup tickets through FIFA and avoid unofficial resale channels.

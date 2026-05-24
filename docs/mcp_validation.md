@@ -79,7 +79,7 @@ In Python 3.9, the validation script should exit cleanly with a message that ful
 ## What This Does Not Do
 
 - No live APIs.
-- No scraping.
+- No default live collection during validation.
 - No paid travel APIs.
 - No OhMyGPT call.
 - No dashboard automation.

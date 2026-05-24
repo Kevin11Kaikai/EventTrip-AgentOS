@@ -147,6 +147,14 @@ The final report is written to:
 runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\08_final_report.md
 ```
 
+The source-backed public report is written to:
+
+```text
+runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\10_source_backed_final_report.md
+```
+
+Use `10_source_backed_final_report.md` for public sharing when you want only official/news/web-backed statements. It intentionally excludes unsourced flight, hotel, ticket, and total budget estimates.
+
 Example CLI summary:
 
 ```text
@@ -396,6 +404,22 @@ The local registry lives at `data/ticket_links.yaml`. The current policy is:
 
 See [Ticket Link Recommendations](docs/ticket_links.md).
 
+## Source-Backed Public Report
+
+Phase 7.3 adds a source-backed public report generated from `data/source_evidence.yaml`. It uses official FIFA pages and public news sources only. It does not include local planning estimates unless they have a registered public source.
+
+```powershell
+python -m eventtrip.orchestrator --demo portugal_dr_congo_houston
+```
+
+Then open:
+
+```text
+runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\10_source_backed_final_report.md
+```
+
+The original deterministic `08_final_report.md` remains useful for internal regression tests and planning logic. The source-backed report is the safer public-facing artifact when you want no local placeholder data in the visible report.
+
 ## Project Health Check
 
 Run the local health check before pushing larger documentation or release changes:
@@ -443,6 +467,7 @@ Deterministic filenames:
 - `07_risk_agent.md`
 - `08_final_report.md`
 - `09_final_report_polished.md` only when `--use-llm` succeeds
+- `10_source_backed_final_report.md`
 
 ## Final Report Contents
 

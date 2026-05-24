@@ -26,6 +26,7 @@
 - Phase 7.0: safe web collection layer, local fixture extraction, and preview-only MCP evidence tools.
 - Phase 7.1: reviewed evidence to snapshot conversion with dry-run and duplicate protection.
 - Phase 7.2: official-first ticket link recommendation layer.
+- Phase 7.3: source-backed public report with official/news evidence registry.
 
 ## Phase 3 Status
 
@@ -56,12 +57,12 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Keep web scraping deferred.
 - Preserve manual snapshot mode as the default fallback.
 
-### Phase 7.3: Source Citations in Final Report
+### Phase 7.4: Source Citations in Internal Planning Report
 
 - Add optional evidence citation summaries to generated reports.
 - Keep deterministic source-of-truth numbers separate from unverified evidence candidates.
 
-### Phase 7.4: Official/Search API Provider Adapters
+### Phase 7.5: Official/Search API Provider Adapters
 
 - Add provider adapters only behind explicit opt-in configuration.
 - Prefer official APIs or safe search APIs.
@@ -105,6 +106,7 @@ Phase 7.0 adds a safe web evidence layer without changing default demo behavior.
 - Dashboard previews the local fixture only and performs no live HTTP.
 - Phase 7.1 adds `evidence_review_cli` so reviewed evidence can become a manual snapshot only after explicit human-provided fields and `--save`.
 - Phase 7.2 adds `data/ticket_links.yaml`, `TicketLinkAgent`, dashboard ticket link rows, MCP link tools, and final-report ticket link guidance.
+- Phase 7.3 adds `data/source_evidence.yaml` and `SourceBackedReportAgent`, producing `10_source_backed_final_report.md` without local planning estimates.
 
 ## Later Phase 3 Work
 

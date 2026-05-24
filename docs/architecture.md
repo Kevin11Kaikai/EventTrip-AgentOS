@@ -182,6 +182,22 @@ Optional --save to manual snapshot CSV
 
 This keeps extracted web values as candidates until a human supplies the remaining demand-proxy fields and explicitly writes the reviewed snapshot.
 
+## Source-Backed Public Report
+
+Phase 7.3 adds a source-backed public report that avoids local planning estimates in the visible output.
+
+```text
+data/source_evidence.yaml
+   |
+   v
+SourceBackedReportAgent
+   |
+   v
+10_source_backed_final_report.md
+```
+
+The deterministic `08_final_report.md` remains useful for regression and internal planning logic. The shareable source-backed report uses only registered public web, official, and news sources. If airfare, hotel, ticket price, or total trip budget data is not source-backed, the report explicitly omits those claims.
+
 ## Ticket Link Recommendation Layer
 
 Phase 7.2 adds official-first ticket link recommendations without purchase automation.
@@ -311,6 +327,7 @@ Invariant validation
 - `data/mock_market_signals.yaml`: mock travel-demand and market-pressure signals.
 - `data/market_snapshots/portugal_dr_congo_snapshots.csv`: manual ticket market snapshot history.
 - `data/ticket_links.yaml`: official-first manual ticket link registry.
+- `data/source_evidence.yaml`: curated public web/news evidence registry for source-backed reports.
 - `data/web_evidence/`: ignored local web evidence cache, with tracked `.gitkeep` placeholders.
 - `examples/sample_ticket_market_page.html`: deterministic local HTML fixture for web evidence extraction.
 
@@ -325,6 +342,7 @@ Invariant validation
 - Web collection tests verify local fixture collection, extraction heuristics, safety policy behavior, evidence store roundtrip, and CLI dry-run behavior.
 - Evidence review tests verify candidate snapshot construction, dry-run behavior, duplicate protection, overwrite, and safe writes to temporary CSV files.
 - Ticket link tests verify registry validation, official-first ordering, Ticket Link Agent output, MCP link tools, and dashboard rows.
+- Source-backed report tests verify public-source registry validation and ensure the shareable report excludes local placeholder estimates.
 - MCP server tests verify wrapper registration and direct mock outputs.
 - MCP client validation tests verify guard behavior and helper parsing.
 - Orchestrator smoke tests verify end-to-end report generation.

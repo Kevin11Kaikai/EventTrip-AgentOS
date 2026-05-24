@@ -23,6 +23,7 @@ from eventtrip.agents import (
     ReportAgent,
     RiskAgent,
     SnapshotAgent,
+    SourceBackedReportAgent,
     TicketAgent,
     TicketLinkAgent,
 )
@@ -98,6 +99,7 @@ def run_demo(
         BudgetAgent(use_llm=False),
         RiskAgent(use_llm=False),
         ReportAgent(use_llm=False),
+        SourceBackedReportAgent(use_llm=False),
     ]
     for agent in agents:
         context.update(agent.run(trip_request, run_dir, context))
@@ -112,6 +114,7 @@ def run_demo(
     return {
         "run_dir": run_dir,
         "final_report_path": context["final_report_path"],
+        "source_backed_report_path": context.get("source_backed_report_path"),
         "polished_report": polish_result,
         "recommended_option": recommended["option_name"],
         "estimated_cost_per_traveler": recommended["total_cost_per_traveler"],
@@ -140,6 +143,8 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     print(f"Final report: {result['final_report_path']}")
+    if result.get("source_backed_report_path"):
+        print(f"Source-backed report: {result['source_backed_report_path']}")
     print(f"Recommended option: {result['recommended_option']}")
     print("Estimated cost per traveler:")
     for traveler, total in result["estimated_cost_per_traveler"].items():

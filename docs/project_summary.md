@@ -24,6 +24,7 @@ EventTrip-AgentOS coordinates specialized Python agents through Markdown shared 
 - Safe web evidence collection and extraction
 - Reviewed evidence to snapshot conversion
 - Official-first ticket link recommendation layer
+- Source-backed public report from official/news evidence
 - Preview-only MCP web evidence tools
 - Project health check script
 - Deterministic offline tests

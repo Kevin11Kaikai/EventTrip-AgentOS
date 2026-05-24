@@ -91,6 +91,14 @@ python -m eventtrip.orchestrator --demo portugal_dr_congo_houston
 
 The final report appears in a timestamped `runs/` directory. Generated run directories are ignored by Git except for `runs/.gitkeep`.
 
+For public sharing without local placeholder estimates, use:
+
+```text
+10_source_backed_final_report.md
+```
+
+This report is built from official/news source evidence and omits unsourced flight, hotel, ticket price, and total budget claims.
+
 ## Expected Decision Output
 
 - Travel plan: Option A: One-night balanced plan
