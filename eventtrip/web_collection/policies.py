@@ -22,6 +22,14 @@ SUSPICIOUS_URL_WORDS = [
     "auth",
     "session",
 ]
+LIVE_COLLECTION_POLICY = {
+    "max_pages_per_command": 1,
+    "robots_txt_required": True,
+    "javascript_execution": False,
+    "login_or_cookie_session": False,
+    "max_response_bytes": 1_000_000,
+    "default_live_http": False,
+}
 
 
 def normalize_url(url: str) -> str:
@@ -69,3 +77,8 @@ def validate_collection_target(target: WebCollectionTarget) -> list[str]:
         elif not local_path.exists():
             errors.append(f"local_path does not exist: {target.local_path}")
     return errors
+
+
+def collection_policy_summary() -> dict[str, object]:
+    """Return the conservative live collection policy for CLI/docs/tests."""
+    return dict(LIVE_COLLECTION_POLICY)

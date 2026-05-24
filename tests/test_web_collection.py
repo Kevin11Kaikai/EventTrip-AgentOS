@@ -6,7 +6,7 @@ from eventtrip.mcp_server import server
 from eventtrip.web_collection.collector import WebCollector
 from eventtrip.web_collection.evidence_store import load_web_evidence, save_web_evidence
 from eventtrip.web_collection.extractor import extract_market_evidence, extract_text_from_html
-from eventtrip.web_collection.policies import is_probably_disallowed_url
+from eventtrip.web_collection.policies import collection_policy_summary, is_probably_disallowed_url
 from eventtrip.web_collection.schemas import WebCollectionTarget
 
 
@@ -102,3 +102,12 @@ def test_mcp_web_evidence_preview_rejects_env_files():
 
     assert preview["validation_status"] == "error"
     assert "environment files" in preview["error"]
+
+
+def test_collection_policy_summary_is_conservative():
+    policy = collection_policy_summary()
+
+    assert policy["max_pages_per_command"] == 1
+    assert policy["robots_txt_required"] is True
+    assert policy["default_live_http"] is False
+    assert policy["javascript_execution"] is False

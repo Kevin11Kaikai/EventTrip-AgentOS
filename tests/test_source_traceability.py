@@ -13,8 +13,8 @@ def test_traceability_matrix_marks_source_backed_and_unsourced_claims():
     assert "internal_estimate_not_source_backed" in statuses
     assert "no_source_backed_data_found" in statuses
     assert any(item.claim_id == "claim-match-facts" for item in items)
-    assert any("Traveler A estimated cost is $1120" in item.claim for item in items)
-    assert any("No registered public source" in item.note for item in items)
+    assert any("Traveler A 估算成本为 $1120" in item.claim for item in items)
+    assert any("没有登记公开来源" in item.note for item in items)
 
 
 def test_traceability_markdown_contains_statuses_and_sources():

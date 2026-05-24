@@ -126,6 +126,8 @@ python -m eventtrip.live_data_cli import --input examples\live_api_snapshot_resp
 
 Reviewed rows saved with `source_type=reviewed_live_data` are the only live/API rows shown in the source-backed HTML live-data table.
 
+Phase 8.3 changes the client-facing HTML report to Chinese and adds inline SVG cost-pressure charts. The chart uses a pressure-index forecast when exact reviewed dollar prices are unavailable, so unverifiable values remain unknown.
+
 ## Expected Decision Output
 
 - Travel plan: Option A: One-night balanced plan

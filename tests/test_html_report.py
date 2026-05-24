@@ -21,23 +21,26 @@ def test_source_backed_html_report_is_static_and_client_readable():
     )
 
     assert "<!doctype html>" in html
-    assert "EventTrip-AgentOS Source-Backed Report" in html
-    assert "Static client report" in html
-    assert "Decision Summary" in html
-    assert "What To Do Next" in html
-    assert "Recommended Official Purchase Paths" in html
-    assert "Secondary Marketplace Candidate" in html
+    assert "EventTrip-AgentOS 中文来源报告" in html
+    assert "静态客户展示报告" in html
+    assert "决策摘要" in html
+    assert "下一步怎么做" in html
+    assert "推荐官方购票路径" in html
+    assert "二级市场候选渠道" in html
     assert "StubHub World Cup Tickets" in html
-    assert "What Is Still Unknown" in html
-    assert "Opt-In Live Data Status" in html
-    assert "No opt-in live API payload is attached" in html
+    assert "仍然未知的内容" in html
+    assert "人工审核 Live/API 数据状态" in html
+    assert "本报告没有附加已审核的 live/API 数据" in html
+    assert "价格趋势图与购买窗口预测" in html
+    assert "成本压力指数折线图" in html
+    assert "未找到可靠公开来源支持" in html
     assert "report-nav" in html
     assert "@media print" in html
     assert "claim-match-facts" in html
     assert "claim-secondary-marketplace-stubhub" in html
     assert "FIFA: Portugal v Congo DR" in html
     assert "[FIFA: Portugal v Congo DR" not in html
-    assert "No live purchase" in html
+    assert "不执行实时购票" in html
     assert "mock" not in html.lower()
 
 
@@ -67,7 +70,7 @@ def test_html_report_displays_reviewed_live_snapshots():
         ],
     )
 
-    assert "Reviewed live/API snapshots are attached below" in html
+    assert "以下是已人工审核的 live/API snapshot" in html
     assert "$640" in html
     assert "reviewed_live_data" in html
     assert "Human-reviewed fixture preview." in html

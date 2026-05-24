@@ -25,7 +25,7 @@ def test_orchestrator_creates_final_report(tmp_path):
     assert "## Evidence Traceability Matrix" in final_report.read_text(encoding="utf-8")
     assert "no_source_backed_data_found" in final_report.read_text(encoding="utf-8")
     assert "mock" not in source_report.read_text(encoding="utf-8").lower()
-    assert "EventTrip-AgentOS Source-Backed Report" in source_html_report.read_text(
+    assert "EventTrip-AgentOS 中文来源报告" in source_html_report.read_text(
         encoding="utf-8"
     )
     output_names = {path.name for path in result["run_dir"].glob("*.md")}

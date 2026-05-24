@@ -187,6 +187,20 @@ SourceBackedReportAgent
 
 Rows without `source_type=reviewed_live_data` remain out of that public live-data table.
 
+Phase 8.3 adds a Chinese client-facing forecast layer to the HTML output:
+
+```text
+Registered source evidence + reviewed snapshots
+   |
+   v
+Chinese HTML forecast section
+   |
+   v
+Inline SVG cost-pressure charts + PIT/SEA timing guidance
+```
+
+The chart is a model pressure index when exact reviewed dollar prices are unavailable. It explicitly says unverifiable values remain unknown.
+
 The seed file is `data/market_snapshots/portugal_dr_congo_snapshots.csv`. It records deterministic mock snapshots for lowest ticket price, listings, Category 3 range, hotel availability proxy, flight price pressure, social buzz, and days before event.
 
 `python -m eventtrip.snapshots_cli` provides safe manual commands to analyze snapshots, validate proposed rows, dry-run appends, and overwrite duplicate match/date rows only when explicitly requested. These manual snapshots feed the SnapshotAgent and final trend analysis.
@@ -235,6 +249,8 @@ Optional --save to manual snapshot CSV
 ```
 
 This keeps extracted web values as candidates until a human supplies the remaining demand-proxy fields and explicitly writes the reviewed snapshot.
+
+Phase 8.3 adds a printable collection policy command and a conservative HTTP response-size cap. Live collection remains single-page, robots.txt-gated, no JavaScript, no login/cookies, and disabled by default.
 
 ## Source-Backed Public Report
 

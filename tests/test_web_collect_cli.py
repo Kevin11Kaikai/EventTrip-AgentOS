@@ -79,3 +79,12 @@ def test_cli_url_collection_requires_live_http(capsys):
 
     assert code == 2
     assert "Live HTTP collection is disabled" in output
+
+
+def test_cli_policy_prints_conservative_policy(capsys):
+    code = web_collect_cli.main(["policy"])
+    output = capsys.readouterr().out
+
+    assert code == 0
+    assert '"max_pages_per_command": 1' in output
+    assert '"default_live_http": false' in output

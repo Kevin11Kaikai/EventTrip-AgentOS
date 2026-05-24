@@ -28,6 +28,8 @@
 - Added StubHub as a separated secondary-market ticket candidate while keeping FIFA official paths first.
 - Added reviewed live/API snapshot import requiring explicit `--save --reviewed` before writing.
 - Added source-backed HTML display for reviewed live/API snapshots only.
+- Added Chinese HTML forecast charts with PIT/SEA purchase timing guidance.
+- Hardened web collection policy output and live HTTP response-size limits.
 
 ## v0.1.0 - 2026-05-23
 

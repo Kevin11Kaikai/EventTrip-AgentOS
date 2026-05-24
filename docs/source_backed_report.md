@@ -85,6 +85,8 @@ Phase 8.0 adds an `Opt-In Live Data Status` section. By default it states that n
 
 Phase 8.2 displays reviewed live/API snapshots in the HTML report only when their snapshot `source_type` is `reviewed_live_data`. Unreviewed API previews and ordinary mock/manual snapshots are not shown in the public live-data table.
 
+Phase 8.3 switches the source-backed HTML report to a Chinese client-facing presentation and adds an inline SVG forecast section. The chart uses pressure indices for ticket, flight, hotel, and total-cost direction. If exact reviewed dollar prices are unavailable, the report says so directly and does not invent values.
+
 ## Latest Report CLI
 
 Print the latest source-backed report path:

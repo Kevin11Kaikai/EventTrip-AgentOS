@@ -39,17 +39,19 @@ def test_source_backed_report_agent_writes_no_mock_report(tmp_path):
     assert "### Match facts" in text
     assert "### Ticket safety" in text
     assert "### Houston logistics" in text
+    assert "### Cost trend evidence" in text
     assert "### Unknown or not source-backed yet" in text
     assert "Axios" in text
     assert "FIFA" in text
     assert "StubHub" in text
     assert "mock" not in text.lower()
-    assert "EventTrip-AgentOS Source-Backed Report" in html
-    assert "What Is Still Unknown" in html
-    assert "Secondary Marketplace Candidate" in html
+    assert "EventTrip-AgentOS 中文来源报告" in html
+    assert "仍然未知的内容" in html
+    assert "二级市场候选渠道" in html
     assert "StubHub World Cup Tickets" in html
     assert "claim-match-facts" in html
     assert "claim-secondary-marketplace-stubhub" in html
+    assert "价格趋势图与购买窗口预测" in html
     assert "mock" not in html.lower()
 
 

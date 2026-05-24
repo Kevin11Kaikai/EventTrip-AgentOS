@@ -10,7 +10,14 @@ import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_EVIDENCE_PATH = PROJECT_ROOT / "data" / "source_evidence.yaml"
-ALLOWED_SOURCE_TYPES = {"official", "news", "government", "transportation", "marketplace"}
+ALLOWED_SOURCE_TYPES = {
+    "official",
+    "news",
+    "government",
+    "transportation",
+    "marketplace",
+    "travel_data",
+}
 SOURCE_CITATION_GROUPS: dict[str, dict[str, Any]] = {
     "match_facts": {
         "title": "Match facts",
@@ -30,6 +37,10 @@ SOURCE_CITATION_GROUPS: dict[str, dict[str, Any]] = {
     "houston_logistics": {
         "title": "Houston logistics",
         "tags": {"houston", "local_transport", "venue_readiness", "team_base_camp"},
+    },
+    "cost_trends": {
+        "title": "Cost trend evidence",
+        "tags": {"airfare_trend", "hotel_trend", "ticket_market_pressure"},
     },
 }
 

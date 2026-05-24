@@ -10,11 +10,16 @@ from urllib.robotparser import RobotFileParser
 from urllib.request import Request, urlopen
 
 from eventtrip.web_collection.extractor import extract_market_evidence, extract_text_from_html
-from eventtrip.web_collection.policies import normalize_url, validate_collection_target
+from eventtrip.web_collection.policies import (
+    LIVE_COLLECTION_POLICY,
+    normalize_url,
+    validate_collection_target,
+)
 from eventtrip.web_collection.schemas import WebCollectionTarget, WebEvidence, to_dict
 
 
 DEFAULT_USER_AGENT = "EventTrip-AgentOS research prototype; contact: local user"
+MAX_RESPONSE_BYTES = int(LIVE_COLLECTION_POLICY["max_response_bytes"])
 
 
 class WebCollector:
@@ -79,7 +84,10 @@ class WebCollector:
             status = getattr(response, "status", 200)
             if status != 200:
                 raise ValueError(f"HTTP collection failed with status {status}.")
-            return response.read().decode("utf-8", errors="replace")
+            payload = response.read(MAX_RESPONSE_BYTES + 1)
+            if len(payload) > MAX_RESPONSE_BYTES:
+                raise ValueError("HTTP response is too large for the conservative collector.")
+            return payload.decode("utf-8", errors="replace")
 
 
 def _looks_like_html(text: str) -> bool:

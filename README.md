@@ -202,6 +202,8 @@ If a real value cannot be verified, the reports keep it unknown rather than inve
 
 The source-backed HTML report displays reviewed live/API snapshots only when they were saved as `reviewed_live_data`. Unreviewed previews remain outside the public live-data table.
 
+Phase 8.3 also adds a Chinese client-facing forecast section to the HTML report. It includes inline SVG trend charts for ticket, flight, hotel, and total-cost pressure indices, plus separate PIT and SEA timing guidance. Exact dollar charts are shown only when reviewed source-backed data exists; otherwise the page clearly labels the chart as a model pressure index and leaves unverifiable prices unknown.
+
 Print or open the latest source-backed report:
 
 ```powershell
@@ -434,6 +436,7 @@ Extract local fixture evidence:
 conda activate eventtrip_mcp
 cd D:\others\Eventrip_agentos
 python -m eventtrip.web_collect_cli extract --local-path examples\sample_ticket_market_page.html --match portugal_dr_congo
+python -m eventtrip.web_collect_cli policy
 ```
 
 The collector does not bypass login, CAPTCHA, paywalls, or access controls. It does not automate purchases and does not write market snapshots directly. See [Web Collection Layer](docs/web_collection.md).

@@ -95,6 +95,10 @@ The following values are not source-backed yet. If they cannot be verified from 
 
 {_grouped_source_list(citation_groups["houston_logistics"])}
 
+### Cost trend evidence
+
+{_grouped_source_list(citation_groups["cost_trends"])}
+
 ### Unknown or not source-backed yet
 
 - Exact all-in ticket price for Portugal vs DR Congo: no source-backed citation registered yet.

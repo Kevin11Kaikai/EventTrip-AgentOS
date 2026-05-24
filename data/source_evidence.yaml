@@ -13,7 +13,7 @@ portugal_dr_congo:
         - match
         - venue
         - date
-      summary: FIFA identifies Portugal vs Congo DR as a June 17 match at Houston Stadium.
+      summary: FIFA 将 Portugal vs Congo DR 标为 6 月 17 日在 Houston Stadium 举行的比赛。
     - source_id: fifa_tickets
       title: Tickets - FIFA World Cup 2026
       publisher: FIFA
@@ -23,7 +23,7 @@ portugal_dr_congo:
       evidence_tags:
         - tickets
         - official_purchase
-      summary: FIFA maintains the official World Cup 2026 ticketing entry point.
+      summary: FIFA 维护 2026 世界杯官方票务入口。
     - source_id: fifa_resale_support
       title: FIFA Resale/Exchange Marketplace
       publisher: FIFA World Cup 2026 Customer Support
@@ -33,7 +33,7 @@ portugal_dr_congo:
       evidence_tags:
         - tickets
         - official_resale
-      summary: FIFA support lists the Resale/Exchange Marketplace as the official resale and exchange support area.
+      summary: FIFA 支持页面列出 Resale/Exchange Marketplace 作为官方转售和换票支持区域。
     - source_id: axios_drc_base_camp
       title: Democratic Republic of Congo selects Houston for World Cup base camp
       publisher: Axios Houston
@@ -44,7 +44,7 @@ portugal_dr_congo:
         - team_base_camp
         - houston
         - match
-      summary: Axios reported that DR Congo will use Houston as its World Cup base camp and play Portugal on June 17 in Houston.
+      summary: Axios 报道 DR Congo 将把 Houston 作为世界杯 base camp，并在 6 月 17 日于 Houston 对阵 Portugal。
     - source_id: axios_houston_transport_waymo
       title: Waymo nearly doubles Houston service area before World Cup
       publisher: Axios Houston
@@ -54,7 +54,7 @@ portugal_dr_congo:
       evidence_tags:
         - local_transport
         - houston
-      summary: Axios reported Waymo expansion in Houston includes NRG Stadium and East Downtown ahead of World Cup crowds.
+      summary: Axios 报道 Waymo 在 Houston 的扩展覆盖 NRG Stadium 和 East Downtown，以应对世界杯人流。
     - source_id: axios_houston_pitch
       title: Houston's mad dash to lay World Cup grass
       publisher: Axios Houston
@@ -64,7 +64,7 @@ portugal_dr_congo:
       evidence_tags:
         - venue_readiness
         - houston
-      summary: Axios reported Houston Stadium pitch preparation for seven World Cup matches.
+      summary: Axios 报道 Houston Stadium 正在为 7 场世界杯比赛进行草坪准备。
     - source_id: kiplinger_ticket_scams
       title: Buying World Cup Tickets? Beware of These Scams
       publisher: Kiplinger
@@ -74,7 +74,7 @@ portugal_dr_congo:
       evidence_tags:
         - ticket_safety
         - resale_risk
-      summary: Kiplinger warned about World Cup ticket scams and advised starting with FIFA's ticket market.
+      summary: Kiplinger 提醒世界杯购票诈骗风险，并建议优先从 FIFA 票务市场开始。
     - source_id: stubhub_world_cup_tickets
       title: World Cup Tickets
       publisher: StubHub
@@ -85,7 +85,7 @@ portugal_dr_congo:
         - tickets
         - secondary_market
         - resale_risk
-      summary: StubHub maintains a World Cup ticket marketplace page; EventTrip-AgentOS treats it as a secondary-market monitoring option, not an official FIFA ticketing channel.
+      summary: StubHub 维护 World Cup ticket marketplace 页面；EventTrip-AgentOS 将其视为二级市场监控选项，而不是 FIFA 官方票务渠道。
     - source_id: moneyweek_ticket_scam_warning
       title: Football fans issued warning over ticket scams ahead of 2026 World Cup
       publisher: MoneyWeek
@@ -95,4 +95,43 @@ portugal_dr_congo:
       evidence_tags:
         - ticket_safety
         - resale_risk
-      summary: MoneyWeek reported official advice that fans should buy World Cup tickets through FIFA and avoid unofficial resale channels.
+      summary: MoneyWeek 报道官方建议球迷通过 FIFA 购买世界杯门票，并避免非官方转售渠道。
+    - source_id: ap_group_games_general_sale
+      title: Exorbitantly expensive tickets for early World Cup games still on general sale
+      publisher: Associated Press
+      published_date: 2026-05-01
+      url: https://apnews.com/article/9a5a713fabdd0ec3743222e5b6c8a384
+      source_type: news
+      evidence_tags:
+        - tickets
+        - ticket_market_pressure
+      summary: AP 报道部分世界杯小组赛门票在开赛前约一个多月仍在公开销售，但许多价格仍然偏高。
+    - source_id: expedia_2026_air_hacks
+      title: Expedia 2026 Air Hacks
+      publisher: Expedia
+      published_date: 2026-02
+      url: https://www.expedia.com/newsroom/expedia-2026-air-hacks/
+      source_type: travel_data
+      evidence_tags:
+        - airfare_trend
+      summary: Expedia 2026 Air Hacks 指出美国国内经济舱较优购票窗口约为出发前 15-30 天，过早预订可能更贵。
+    - source_id: kayak_2026_hotel_timing
+      title: The best time to book a hotel is sooner than you'd think
+      publisher: KAYAK
+      published_date: 2026-04
+      url: https://www.kayak.com/news/best-time-to-book-a-hotel/
+      source_type: travel_data
+      evidence_tags:
+        - hotel_trend
+      summary: KAYAK 2026 酒店预订数据指出，美国国内酒店在入住前一周内预订可能比提前一个月更便宜，但大型赛事需要额外考虑可订性风险。
+    - source_id: axios_houston_worldcup_hotel_supply
+      title: "Houston's World Cup countdown: Transit, Fan Fest and security"
+      publisher: Axios Houston
+      published_date: 2026-04-25
+      url: https://www.axios.com/local/houston/2026/04/25/houston-world-cup-2026-preparations-readiness-50-days
+      source_type: news
+      evidence_tags:
+        - houston
+        - hotel_trend
+        - local_transport
+      summary: Axios 报道 Houston 区域酒店供应被认为能够应对世界杯需求，同时比赛日停车可能较贵。

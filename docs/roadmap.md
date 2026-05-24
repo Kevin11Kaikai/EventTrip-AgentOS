@@ -36,6 +36,7 @@
 - Phase 8.0: opt-in HTTP JSON provider and live data preview CLI.
 - Phase 8.1: reviewed live data import with `--save --reviewed` write gate.
 - Phase 8.2: reviewed live/API snapshot display in source-backed HTML reports.
+- Phase 8.3: Chinese HTML forecast charts and conservative web collection policy hardening.
 
 ## Phase 3 Status
 
@@ -66,15 +67,15 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Keep web scraping deferred.
 - Preserve manual snapshot mode as the default fallback.
 
-### Phase 8.3: Compliant Public Web Collection
+### Phase 8.4: Field-Level Source Attribution
 
-- Use single-page public collection with robots.txt checks and conservative rate limits.
-- Do not bypass login, paywalls, CAPTCHA, bot detection, or access controls.
-- Keep tests fixture-based and offline.
+- Add source badges beside each chart/recommendation field.
+- Separate exact sourced prices, reviewed API values, model indices, and unknown values.
+- Keep all customer-facing report text Chinese.
 
-### Phase 8.4: Source Citation Detail
+### Phase 8.5: Customer HTML Polish
 
-- Add per-field citation detail beside ticket prices, listing counts, and travel facts.
+- Improve spacing, print layout, and portfolio screenshots.
 - Keep unsourced live values out of public-facing totals.
 - If a real value cannot be verified, mark it as unknown rather than inventing it.
 
@@ -126,6 +127,7 @@ Phase 7.0 adds a safe web evidence layer without changing default demo behavior.
 - Phase 8.0 adds `OptInHttpJsonProvider` and `live_data_cli preview` for fixture-based or explicitly enabled HTTP JSON snapshot previews.
 - Phase 8.1 adds `live_data_cli import`, which validates opt-in live/API previews and writes them to snapshot CSV only with `--save --reviewed`.
 - Phase 8.2 displays only `reviewed_live_data` snapshots in the source-backed HTML live-data table.
+- Phase 8.3 switches the client HTML to Chinese, adds inline SVG cost-pressure forecast charts, adds PIT/SEA timing guidance, and hardens the web collection policy output.
 
 ## Later Phase 3 Work
 

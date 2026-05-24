@@ -34,3 +34,4 @@ def test_source_evidence_grouped_citations_cover_expected_sections():
     assert groups["match_facts"]
     assert groups["ticket_safety"]
     assert groups["houston_logistics"]
+    assert groups["cost_trends"]

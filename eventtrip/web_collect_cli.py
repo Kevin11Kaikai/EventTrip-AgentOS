@@ -14,6 +14,7 @@ from eventtrip.web_collection.extractor import (
     extract_text_from_html,
     extraction_to_dict,
 )
+from eventtrip.web_collection.policies import collection_policy_summary
 from eventtrip.web_collection.schemas import WebCollectionTarget, to_dict
 
 
@@ -42,6 +43,8 @@ def build_parser() -> argparse.ArgumentParser:
     extract_parser = subparsers.add_parser("extract", help="Extract candidates from one local file.")
     extract_parser.add_argument("--local-path", required=True, type=Path)
     extract_parser.add_argument("--match", "--match-id", dest="match_id", default="portugal_dr_congo")
+
+    subparsers.add_parser("policy", help="Print the conservative web collection policy.")
 
     return parser
 
@@ -109,6 +112,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         return run_collect(args)
     if args.command == "extract":
         return run_extract(args)
+    if args.command == "policy":
+        print(json.dumps(collection_policy_summary(), indent=2, sort_keys=True))
+        return 0
     parser.error(f"Unsupported command: {args.command}")
     return 2
 

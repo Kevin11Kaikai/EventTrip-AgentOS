@@ -30,6 +30,8 @@ EventTrip-AgentOS coordinates specialized Python agents through Markdown shared 
 - Opt-in HTTP JSON provider for future official/search API snapshot previews
 - Reviewed live/API snapshot import with explicit human approval before writes
 - Source-backed HTML display for reviewed live/API snapshots only
+- Chinese HTML forecast charts with PIT/SEA timing guidance
+- Conservative web collection policy command and response-size cap
 - Preview-only MCP web evidence tools
 - Project health check script
 - Deterministic offline tests

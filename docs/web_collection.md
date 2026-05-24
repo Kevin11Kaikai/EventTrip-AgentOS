@@ -89,9 +89,18 @@ Extracted values are heuristic candidates and require human review before any sn
 - `--save` is required to write evidence JSON and raw cache files.
 - Generated evidence under `data/web_evidence/` is ignored by Git except `.gitkeep`.
 - Live HTTP requires explicit `--live-http`.
+- Live HTTP remains one page per command and has a conservative response-size cap.
 - Live HTTP checks robots.txt before collection and fails closed if it cannot verify access.
 - The collector uses simple HTTP GET only; it does not execute JavaScript, use browser automation, manage sessions, or handle login cookies.
 - MCP web evidence tools are preview-only and do not write evidence or snapshots.
+
+Print the current conservative policy:
+
+```powershell
+python -m eventtrip.web_collect_cli policy
+```
+
+Phase 8.3 keeps this layer conservative: one page per command, robots.txt required, no JavaScript execution, no cookie/login sessions, no default live HTTP, and a 1 MB response-size cap.
 
 ## Reviewed Evidence to Snapshot Conversion
 
