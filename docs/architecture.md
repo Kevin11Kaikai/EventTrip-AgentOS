@@ -135,6 +135,34 @@ The seed file is `data/market_snapshots/portugal_dr_congo_snapshots.csv`. It rec
 
 `python -m eventtrip.snapshots_cli` provides safe manual commands to analyze snapshots, validate proposed rows, dry-run appends, and overwrite duplicate match/date rows only when explicitly requested. These manual snapshots feed the SnapshotAgent and final trend analysis.
 
+## Web Evidence Collection Layer
+
+Phase 7 adds an opt-in evidence collection layer. It is separate from the default demo and does not write directly to market snapshots.
+
+```text
+Public URL / Local HTML Fixture
+   |
+   v
+WebCollector
+   |
+   v
+Raw Evidence Cache
+   |
+   v
+EvidenceExtractor
+   |
+   v
+Structured Evidence JSON
+   |
+   v
+Human Review / Snapshot Import
+   |
+   v
+SnapshotAgent / Report / Dashboard
+```
+
+Local fixtures are the default path. Live HTTP requires explicit `--live-http`, uses one simple public GET, and does not execute JavaScript, manage sessions, bypass access controls, or automate purchases. MCP web evidence tools are preview-only and do not write evidence files or snapshot CSV rows.
+
 ## Ticket Timing Fusion
 
 The final report keeps the single-day MarketAgent signal and the multi-snapshot SnapshotAgent signal separate, then fuses them into one user-facing stance.
@@ -168,6 +196,8 @@ Current MCP tools:
 - `analyze_market_snapshots`
 - `append_market_snapshot`
 - `preview_snapshot_import`
+- `preview_web_evidence_from_text`
+- `preview_web_evidence_from_local_file`
 
 ## Data Provider Layer
 
@@ -243,6 +273,8 @@ Invariant validation
 - `data/mock_hotels.yaml`: mock shared two-bed hotel options.
 - `data/mock_market_signals.yaml`: mock travel-demand and market-pressure signals.
 - `data/market_snapshots/portugal_dr_congo_snapshots.csv`: manual ticket market snapshot history.
+- `data/web_evidence/`: ignored local web evidence cache, with tracked `.gitkeep` placeholders.
+- `examples/sample_ticket_market_page.html`: deterministic local HTML fixture for web evidence extraction.
 
 ## Testing Strategy
 
@@ -252,6 +284,7 @@ Invariant validation
 - Snapshot Agent tests verify Markdown output and YAML frontmatter.
 - Snapshot CLI tests verify dry-run, append, duplicate handling, overwrite, and validation failures.
 - Dashboard tests verify import-safe helpers, deterministic snapshot summaries, budget rows, and latest-run path detection.
+- Web collection tests verify local fixture collection, extraction heuristics, safety policy behavior, evidence store roundtrip, and CLI dry-run behavior.
 - MCP server tests verify wrapper registration and direct mock outputs.
 - MCP client validation tests verify guard behavior and helper parsing.
 - Orchestrator smoke tests verify end-to-end report generation.

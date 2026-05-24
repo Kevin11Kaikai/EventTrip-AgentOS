@@ -25,6 +25,11 @@ from eventtrip.market_snapshots import (
     upsert_market_snapshot,
 )
 from eventtrip.schemas import MarketSnapshot, to_plain_dict
+from eventtrip.web_collection.extractor import (
+    extract_market_evidence,
+    extract_text_from_html,
+    extraction_to_dict,
+)
 
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "data"
@@ -161,7 +166,7 @@ def append_market_snapshot(snapshot: dict) -> dict:
 def preview_snapshot_import(input_path: str, match_id: str | None = None) -> dict:
     """Preview local CSV/JSON snapshot imports without writing to the snapshot store."""
     try:
-        safe_path = _resolve_safe_local_import_path(input_path)
+        safe_path = _resolve_safe_local_project_path(input_path, "Snapshot import preview")
         snapshots = SnapshotImportProvider(safe_path).load_snapshots(match_id=match_id)
     except Exception as exc:
         return {
@@ -179,14 +184,59 @@ def preview_snapshot_import(input_path: str, match_id: str | None = None) -> dic
     }
 
 
-def _resolve_safe_local_import_path(input_path: str) -> Path:
+def preview_web_evidence_from_text(text: str, match_id: str = "portugal_dr_congo") -> dict:
+    """Preview deterministic web-evidence extraction from supplied text without writing data."""
+    extraction = extract_market_evidence(text, match_id)
+    return {
+        "validation_status": "valid",
+        "error": None,
+        "extraction": extraction_to_dict(extraction),
+    }
+
+
+def preview_web_evidence_from_local_file(
+    local_path: str,
+    match_id: str = "portugal_dr_congo",
+) -> dict:
+    """Preview deterministic web-evidence extraction from a local project file."""
+    try:
+        safe_path = _resolve_safe_web_preview_path(local_path)
+        raw_text = safe_path.read_text(encoding="utf-8")
+        text = extract_text_from_html(raw_text)
+        extraction = extract_market_evidence(text, match_id)
+    except Exception as exc:
+        return {
+            "validation_status": "error",
+            "error": str(exc),
+            "input_path": local_path,
+            "extraction": None,
+        }
+    return {
+        "validation_status": "valid",
+        "error": None,
+        "input_path": str(safe_path),
+        "extraction": extraction_to_dict(extraction),
+    }
+
+
+def _resolve_safe_local_project_path(input_path: str, purpose: str) -> Path:
     if "://" in input_path or input_path.startswith("\\\\"):
-        raise ValueError("Only local project files are supported for snapshot import preview.")
+        raise ValueError(f"Only local project files are supported for {purpose}.")
     raw_path = Path(input_path)
     candidate = raw_path if raw_path.is_absolute() else PROJECT_ROOT / raw_path
     resolved = candidate.resolve(strict=False)
     try:
         resolved.relative_to(PROJECT_ROOT)
     except ValueError as exc:
-        raise ValueError("Snapshot import preview paths must stay inside the project root.") from exc
+        raise ValueError(f"{purpose} paths must stay inside the project root.") from exc
+    return resolved
+
+
+def _resolve_safe_web_preview_path(local_path: str) -> Path:
+    resolved = _resolve_safe_local_project_path(local_path, "Web evidence preview")
+    lowered_parts = {part.lower() for part in resolved.parts}
+    if ".git" in lowered_parts or resolved.name.lower() in {".env", ".env.local"}:
+        raise ValueError("Web evidence preview will not read Git metadata or environment files.")
+    if resolved.suffix.lower() not in {".html", ".htm", ".txt", ".md"}:
+        raise ValueError("Web evidence preview supports only .html, .htm, .txt, or .md files.")
     return resolved

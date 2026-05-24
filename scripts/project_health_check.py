@@ -22,9 +22,17 @@ IMPORTANT_FILES = [
     "docs/project_summary.md",
     "docs/dashboard_guide.md",
     "docs/api_adapter_design.md",
+    "docs/web_collection.md",
     "examples/mcp_client_validation_output.txt",
     "examples/external_snapshot_import.csv",
+    "examples/sample_ticket_market_page.html",
+    "examples/sample_web_evidence.json",
     "app/streamlit_app.py",
+    "data/web_evidence/.gitkeep",
+    "data/web_evidence/raw/.gitkeep",
+    "eventtrip/web_collect_cli.py",
+    "eventtrip/web_collection/collector.py",
+    "eventtrip/web_collection/extractor.py",
 ]
 README_REQUIRED_PHRASES = [
     "deterministic, offline",

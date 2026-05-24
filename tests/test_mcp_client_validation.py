@@ -13,6 +13,8 @@ EXPECTED_TOOLS = {
     "analyze_market_snapshots",
     "append_market_snapshot",
     "preview_snapshot_import",
+    "preview_web_evidence_from_text",
+    "preview_web_evidence_from_local_file",
 }
 
 

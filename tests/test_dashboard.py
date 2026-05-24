@@ -47,3 +47,11 @@ def test_latest_report_paths_handles_missing_runs(tmp_path):
     report_paths = streamlit_app.latest_report_paths(tmp_path)
 
     assert report_paths == {"run_dir": None, "final_report": None, "polished_report": None}
+
+
+def test_dashboard_web_evidence_preview_uses_local_fixture():
+    preview = streamlit_app.load_sample_web_evidence_preview()
+
+    assert preview["status"] == "ok"
+    assert preview["extraction"]["candidate_lowest_price"] == 680.0
+    assert preview["extraction"]["candidate_listings"] == 340

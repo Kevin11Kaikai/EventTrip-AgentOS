@@ -84,6 +84,7 @@ Phase 1 core demo remains compatible with Python 3.9+. Phase 3+ development and 
 - [Project Summary](docs/project_summary.md)
 - [Dashboard Guide](docs/dashboard_guide.md)
 - [API Adapter Design](docs/api_adapter_design.md)
+- [Web Collection Layer](docs/web_collection.md)
 - [Release v0.1.0 Draft](docs/release_v0_1_0.md)
 - [Verified MCP client output](examples/mcp_client_validation_output.txt)
 - [Changelog](CHANGELOG.md)
@@ -170,8 +171,10 @@ Phase 1 implements pure Python functions in `eventtrip/mcp_server/tools.py`. The
 - `analyze_market_snapshots`
 - `append_market_snapshot`
 - `preview_snapshot_import`
+- `preview_web_evidence_from_text`
+- `preview_web_evidence_from_local_file`
 
-Phase 2 exposes these same functions through a real MCP server without changing the agent contract. Phase 3 adds deterministic market snapshot tools backed by local CSV data.
+Phase 2 exposes these same functions through a real MCP server without changing the agent contract. Phase 3 adds deterministic market snapshot tools backed by local CSV data. Phase 7 adds preview-only web evidence extraction tools.
 
 ## Phase 2: MCP Server
 
@@ -205,6 +208,8 @@ Exposed MCP tools:
 - `analyze_market_snapshots`
 - `append_market_snapshot`
 - `preview_snapshot_import`
+- `preview_web_evidence_from_text`
+- `preview_web_evidence_from_local_file`
 
 Example local MCP client config:
 
@@ -348,6 +353,20 @@ To write validated rows into the manual snapshot CSV, run the same command witho
 Phase 6.1 adds disabled-by-default official API provider stubs and a design document for future adapters. No live providers run in the default demo.
 
 - [API Adapter Design](docs/api_adapter_design.md)
+
+## Phase 7: Web Evidence Collection
+
+Phase 7 adds an opt-in web evidence layer for local HTML/text fixtures and explicitly requested single-page public HTTP collection with robots.txt checking. The default demo, tests, dashboard, and MCP validation do not perform live HTTP collection.
+
+Extract local fixture evidence:
+
+```powershell
+conda activate eventtrip_mcp
+cd D:\others\Eventrip_agentos
+python -m eventtrip.web_collect_cli extract --local-path examples\sample_ticket_market_page.html --match portugal_dr_congo
+```
+
+The collector does not bypass login, CAPTCHA, paywalls, or access controls. It does not automate purchases and does not write market snapshots directly. See [Web Collection Layer](docs/web_collection.md).
 
 ## Project Health Check
 

@@ -28,6 +28,8 @@ EXPECTED_TOOL_NAMES = [
     "analyze_market_snapshots",
     "append_market_snapshot",
     "preview_snapshot_import",
+    "preview_web_evidence_from_text",
+    "preview_web_evidence_from_local_file",
 ]
 
 try:  # pragma: no cover - depends on optional SDK availability
@@ -115,6 +117,21 @@ def preview_snapshot_import(input_path: str, match_id: str | None = None) -> dic
     return mock_tools.preview_snapshot_import(input_path, match_id)
 
 
+@_register_tool
+def preview_web_evidence_from_text(text: str, match_id: str = "portugal_dr_congo") -> dict:
+    """Preview deterministic web-evidence extraction from supplied text without writing data."""
+    return mock_tools.preview_web_evidence_from_text(text, match_id)
+
+
+@_register_tool
+def preview_web_evidence_from_local_file(
+    local_path: str,
+    match_id: str = "portugal_dr_congo",
+) -> dict:
+    """Preview deterministic web-evidence extraction from a local project file."""
+    return mock_tools.preview_web_evidence_from_local_file(local_path, match_id)
+
+
 TOOL_REGISTRY = {
     "get_ticket_market": get_ticket_market,
     "get_flight_quotes": get_flight_quotes,
@@ -127,6 +144,8 @@ TOOL_REGISTRY = {
     "analyze_market_snapshots": analyze_market_snapshots,
     "append_market_snapshot": append_market_snapshot,
     "preview_snapshot_import": preview_snapshot_import,
+    "preview_web_evidence_from_text": preview_web_evidence_from_text,
+    "preview_web_evidence_from_local_file": preview_web_evidence_from_local_file,
 }
 
 
@@ -204,6 +223,22 @@ TOOL_SCHEMAS: dict[str, dict[str, Any]] = {
             "match_id": {"type": ["string", "null"], "default": None},
         },
         "required": ["input_path"],
+    },
+    "preview_web_evidence_from_text": {
+        "type": "object",
+        "properties": {
+            "text": {"type": "string"},
+            "match_id": {"type": "string", "default": "portugal_dr_congo"},
+        },
+        "required": ["text"],
+    },
+    "preview_web_evidence_from_local_file": {
+        "type": "object",
+        "properties": {
+            "local_path": {"type": "string"},
+            "match_id": {"type": "string", "default": "portugal_dr_congo"},
+        },
+        "required": ["local_path"],
     },
 }
 

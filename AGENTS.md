@@ -39,6 +39,11 @@
 - Phase 3.4 is skeleton-only; do not add real live API calls without a future explicit request.
 - Official API provider stubs must remain disabled by default and must not call network services in tests.
 - Keep `docs/api_adapter_design.md` aligned with provider adapter changes.
+- Web collection must remain opt-in and safe: no login bypass, CAPTCHA bypass, paywall bypass, purchase automation, private page scraping, or high-frequency polling.
+- Web collection tests must use local fixtures; do not call live ticket, hotel, or flight sites.
+- MCP web evidence tools must remain preview-only unless a future prompt explicitly adds reviewed write behavior.
+- Generated web evidence cache files under `data/web_evidence/` must stay ignored except `.gitkeep`.
+- Keep `docs/web_collection.md` aligned with web collection behavior.
 - Dashboard media in `docs/assets/` must be clearly labeled as mockup or real screenshot.
 - Run `python scripts\project_health_check.py` before release/documentation pushes when practical.
 - MCP snapshot validation must not mutate committed seed snapshot data.

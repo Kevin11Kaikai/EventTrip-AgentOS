@@ -22,6 +22,15 @@ dist/
 runs/*
 !runs/.gitkeep
 
+# Generated web evidence cache
+/data/web_evidence/*.json
+/data/web_evidence/raw/*
+!/data/web_evidence/.gitkeep
+!/data/web_evidence/raw/.gitkeep
+
+# Optional local dashboard screenshots
+docs/assets/dashboard_screenshot.png
+
 # OS/editor files
 .DS_Store
 Thumbs.db

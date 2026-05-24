@@ -158,6 +158,19 @@ python -m eventtrip.snapshots_cli import --input examples\external_snapshot_impo
 
 This import workflow uses local files only. It does not call live APIs, scrape websites, or require credentials.
 
+## Web Evidence Preview
+
+Phase 7 adds a safe web evidence preview layer. It can extract candidate ticket-market values from a local HTML fixture without writing snapshots.
+
+```powershell
+conda activate eventtrip_mcp
+cd D:\others\Eventrip_agentos
+python -m eventtrip.web_collect_cli extract --local-path examples\sample_ticket_market_page.html --match portugal_dr_congo
+python -m eventtrip.web_collect_cli collect --target-id sample_fixture --local-path examples\sample_ticket_market_page.html --match portugal_dr_congo --dry-run
+```
+
+The collector is opt-in. Live HTTP is disabled by default, generated evidence requires `--save`, and extracted values remain heuristic candidates for human review.
+
 ## Next Step
 
 Next planned phase: dashboard screenshots/GitHub media polish or optional official API adapters behind the existing interfaces.

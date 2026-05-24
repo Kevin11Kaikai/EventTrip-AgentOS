@@ -30,6 +30,8 @@ EXPECTED_TOOL_NAMES = {
     "analyze_market_snapshots",
     "append_market_snapshot",
     "preview_snapshot_import",
+    "preview_web_evidence_from_text",
+    "preview_web_evidence_from_local_file",
 }
 PYTHON_39_MESSAGE = (
     "Full MCP client validation requires Python 3.10+ because the official MCP SDK "
@@ -234,6 +236,20 @@ async def run_validation() -> int:
             assert import_preview["validation_status"] == "valid"
             assert import_preview["count"] >= 1
 
+            web_preview = extract_tool_payload(
+                await session.call_tool(
+                    "preview_web_evidence_from_local_file",
+                    {
+                        "local_path": "examples/sample_ticket_market_page.html",
+                        "match_id": "portugal_dr_congo",
+                    },
+                )
+            )
+            _assert_json_serializable(web_preview)
+            assert web_preview["validation_status"] == "valid"
+            assert web_preview["extraction"]["candidate_lowest_price"] == 680.0
+            assert web_preview["extraction"]["candidate_listings"] == 340
+
     print(f"Python environment: {environment_label()} ({sys.version.split()[0]})")
     print("Official MCP SDK validation path used: yes")
     print("Listed MCP tools:")
@@ -257,6 +273,10 @@ async def run_validation() -> int:
     print("Sample preview_snapshot_import:")
     print(f"- validation_status = {import_preview['validation_status']}")
     print(f"- snapshots_returned = {import_preview['count']}")
+    print("Sample preview_web_evidence_from_local_file:")
+    print(f"- validation_status = {web_preview['validation_status']}")
+    print(f"- candidate_lowest_price = {web_preview['extraction']['candidate_lowest_price']}")
+    print(f"- candidate_listings = {web_preview['extraction']['candidate_listings']}")
     print("MCP client validation passed.")
     return 0
 

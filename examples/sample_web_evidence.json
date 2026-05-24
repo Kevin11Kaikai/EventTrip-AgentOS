@@ -1,0 +1,26 @@
+{
+  "collected_at": "2026-05-23T00:00:00+00:00",
+  "evidence_id": "sample_fixture_demo",
+  "extracted_fields": {
+    "candidate_currency": "USD",
+    "candidate_flight_price": null,
+    "candidate_hotel_price": 160.0,
+    "candidate_listings": 340,
+    "candidate_lowest_price": 680.0,
+    "confidence": "medium",
+    "evidence_summary": "candidate lowest price $680; candidate listings 340; candidate hotel price $160",
+    "match_id": "portugal_dr_congo",
+    "warnings": [
+      "Extracted values are heuristic candidates and require human review."
+    ]
+  },
+  "extraction_confidence": "medium",
+  "local_path": "examples/sample_ticket_market_page.html",
+  "match_id": "portugal_dr_congo",
+  "notes": "Curated deterministic example evidence for documentation and tests.",
+  "raw_cache_path": null,
+  "source_url": null,
+  "target_id": "sample_fixture",
+  "text_excerpt": "Portugal vs DR Congo Ticket Market Snapshot. Portugal vs DR Congo Ticket Market Snapshot. Lowest observed ticket price: $680.. Approximate resale listings: 340 listings.. Nearby hotel examples around $160 per night.. Mock page for EventTrip-AgentOS tests only.",
+  "title": "Portugal vs DR Congo Ticket Market Snapshot"
+}

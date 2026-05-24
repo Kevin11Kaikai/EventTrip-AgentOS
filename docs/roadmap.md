@@ -23,6 +23,7 @@
 - Phase 6.0: safe local snapshot import/provider adapter foundation.
 - Phase 5.2: dashboard mockup asset and README media polish.
 - Phase 6.1: disabled-by-default official API adapter design and stubs.
+- Phase 7.0: safe web collection layer, local fixture extraction, and preview-only MCP evidence tools.
 
 ## Phase 3 Status
 
@@ -53,6 +54,23 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Keep web scraping deferred.
 - Preserve manual snapshot mode as the default fallback.
 
+### Phase 7.1: Reviewed Evidence to Snapshot Conversion
+
+- Convert reviewed web evidence candidates into manual snapshot rows.
+- Keep human approval in the loop.
+- Preserve `--dry-run` and duplicate protection.
+
+### Phase 7.2: Source Citations in Final Report
+
+- Add optional evidence citation summaries to generated reports.
+- Keep deterministic source-of-truth numbers separate from unverified evidence candidates.
+
+### Phase 7.3: Official/Search API Provider Adapters
+
+- Add provider adapters only behind explicit opt-in configuration.
+- Prefer official APIs or safe search APIs.
+- Keep tests fixture-based and offline.
+
 ## Phase 5 Status
 
 Phase 5.0 adds a local Streamlit dashboard for deterministic portfolio demos.
@@ -79,6 +97,17 @@ Phase 6.0 adds a safe provider-adapter foundation without live API calls.
 
 Phase 6.1 adds `docs/api_adapter_design.md` and disabled provider stubs for `official_ticket_api`, `official_hotel_api`, and `official_flight_api`. These stubs fail closed and do not make network calls.
 
+## Phase 7 Status
+
+Phase 7.0 adds a safe web evidence layer without changing default demo behavior.
+
+- `WebCollector` supports local HTML/text fixtures and explicit single-page public HTTP collection.
+- `EvidenceExtractor` extracts heuristic candidate prices/listings for human review.
+- `web_collect_cli` provides extract, dry-run collect, and explicit save commands.
+- Generated web evidence cache files are ignored by Git.
+- MCP exposes preview-only web evidence tools.
+- Dashboard previews the local fixture only and performs no live HTTP.
+
 ## Later Phase 3 Work
 
 - Add charts or Markdown tables for snapshot trend history.
@@ -94,7 +123,7 @@ Phase 6.1 adds `docs/api_adapter_design.md` and disabled provider stubs for `off
 - Real ticket price forecasting.
 - Optional live data integrations through official APIs or search APIs.
 - Multi-model LLM comparison through OhMyGPT.
-- Web scraping remains deferred and should be avoided when official or manual data paths are sufficient.
+- Broad scraping remains deferred and should be avoided when official, manual, import, or reviewed evidence paths are sufficient.
 
 ## Engineering Principles
 

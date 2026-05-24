@@ -1,0 +1,13 @@
+targets:
+  - target_id: sample_fixture
+    local_path: examples/sample_ticket_market_page.html
+    match_id: portugal_dr_congo
+    source_type: local_fixture
+    notes: Deterministic local fixture for offline tests and demos.
+
+# Optional live HTTP example. Live HTTP is disabled unless --live-http is passed.
+#  - target_id: example_public
+#    url: https://example.com
+#    match_id: portugal_dr_congo
+#    source_type: public_web
+#    notes: Safe public page smoke-test target.

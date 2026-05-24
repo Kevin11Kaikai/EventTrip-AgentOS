@@ -17,12 +17,18 @@ from eventtrip.market_snapshots import (
     snapshot_to_dict,
     trend_result_to_dict,
 )
+from eventtrip.web_collection.extractor import (
+    extract_market_evidence,
+    extract_text_from_html,
+    extraction_to_dict,
+)
 
 
 RUNS_ROOT = PROJECT_ROOT / "runs"
 DEFAULT_MATCH_ID = "portugal_dr_congo"
 RECOMMENDED_PLAN = "Option A: One-night balanced plan"
 TICKET_TIMING_LABEL = "Monitor with wait bias"
+SAMPLE_WEB_FIXTURE = PROJECT_ROOT / "examples" / "sample_ticket_market_page.html"
 
 
 def load_dashboard_snapshot_summary(
@@ -105,6 +111,28 @@ def latest_report_paths(runs_root: str | Path = RUNS_ROOT) -> dict[str, str | No
     }
 
 
+def load_sample_web_evidence_preview(
+    path: str | Path = SAMPLE_WEB_FIXTURE,
+    match_id: str = DEFAULT_MATCH_ID,
+) -> dict[str, Any]:
+    """Return deterministic extraction preview from the local web fixture."""
+    fixture_path = Path(path)
+    if not fixture_path.exists():
+        return {
+            "status": "missing",
+            "path": str(fixture_path),
+            "extraction": None,
+        }
+    raw_text = fixture_path.read_text(encoding="utf-8")
+    text = extract_text_from_html(raw_text)
+    extraction = extract_market_evidence(text, match_id)
+    return {
+        "status": "ok",
+        "path": str(fixture_path),
+        "extraction": extraction_to_dict(extraction),
+    }
+
+
 def main() -> None:
     """Render the local-only Streamlit dashboard."""
     try:
@@ -177,6 +205,22 @@ def main() -> None:
     st.subheader("Budget Comparison")
     st.table(budget_table_rows())
 
+    st.subheader("Web Evidence Preview")
+    st.write(
+        "Phase 7 web evidence extraction is opt-in. The dashboard only previews a "
+        "local fixture and does not perform live HTTP collection or write evidence files."
+    )
+    web_preview = load_sample_web_evidence_preview(match_id=match_id)
+    if web_preview["status"] != "ok":
+        st.info(f"Sample web fixture not found: {web_preview['path']}")
+    else:
+        extraction = web_preview["extraction"]
+        preview_cols = st.columns(3)
+        preview_cols[0].metric("Candidate price", f"${extraction['candidate_lowest_price']:.0f}")
+        preview_cols[1].metric("Candidate listings", f"{extraction['candidate_listings']}")
+        preview_cols[2].metric("Confidence", extraction["confidence"])
+        st.caption("Extracted values are heuristic candidates and require human review.")
+
     st.subheader("Reports")
     st.code("python -m eventtrip.orchestrator --demo portugal_dr_congo_houston", language="powershell")
     report_paths = latest_report_paths()
@@ -193,6 +237,7 @@ def main() -> None:
         "- `docs/architecture.md`\n"
         "- `docs/mcp_validation.md`\n"
         "- `docs/dashboard_guide.md`\n"
+        "- `docs/web_collection.md`\n"
         "- `docs/release_v0_1_0.md`"
     )
 

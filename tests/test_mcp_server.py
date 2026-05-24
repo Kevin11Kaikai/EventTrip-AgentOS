@@ -13,6 +13,8 @@ EXPECTED_TOOLS = {
     "analyze_market_snapshots",
     "append_market_snapshot",
     "preview_snapshot_import",
+    "preview_web_evidence_from_text",
+    "preview_web_evidence_from_local_file",
 }
 
 
@@ -35,6 +37,10 @@ def test_mcp_wrappers_return_mock_data_directly():
         "examples/external_snapshot_import.csv",
         "portugal_dr_congo",
     )
+    web_preview = server.preview_web_evidence_from_local_file(
+        "examples/sample_ticket_market_page.html",
+        "portugal_dr_congo",
+    )
 
     assert ticket["lowest_price"] == 700
     assert flights[0]["trip_type"] == "one_night_balanced"
@@ -46,3 +52,6 @@ def test_mcp_wrappers_return_mock_data_directly():
     assert trend["match_id"] == "portugal_dr_congo"
     assert preview["validation_status"] == "valid"
     assert preview["count"] == 2
+    assert web_preview["validation_status"] == "valid"
+    assert web_preview["extraction"]["candidate_lowest_price"] == 680.0
+    assert web_preview["extraction"]["candidate_listings"] == 340

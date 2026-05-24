@@ -11,6 +11,8 @@ Listed MCP tools:
 - get_market_snapshots
 - get_ticket_market
 - preview_snapshot_import
+- preview_web_evidence_from_local_file
+- preview_web_evidence_from_text
 - rank_budget_options
 Sample get_ticket_market(portugal_dr_congo):
 - lowest_price = 700
@@ -30,4 +32,8 @@ Sample analyze_market_snapshots:
 Sample preview_snapshot_import:
 - validation_status = valid
 - snapshots_returned = 2
+Sample preview_web_evidence_from_local_file:
+- validation_status = valid
+- candidate_lowest_price = 680.0
+- candidate_listings = 340
 MCP client validation passed.

@@ -12,6 +12,9 @@
 - Added dashboard mockup asset and README preview wiring.
 - Added API adapter design doc and disabled official-provider stubs.
 - Added local project health check script.
+- Added safe web collection layer.
+- Added local HTML fixture evidence extraction.
+- Added preview-only MCP web evidence tools.
 
 ## v0.1.0 - 2026-05-23
 
