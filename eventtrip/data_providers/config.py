@@ -14,12 +14,14 @@ from eventtrip.data_providers.live_api_stubs import (
 )
 from eventtrip.data_providers.manual_snapshot_provider import ManualSnapshotProvider
 from eventtrip.data_providers.mock_live_provider import MockLiveProvider
+from eventtrip.data_providers.opt_in_http_provider import OptInHttpJsonProvider
 
 
 SUPPORTED_PROVIDER_TYPES = [
     "manual_csv",
     "mock_live",
     "import_file",
+    "opt_in_http_json",
     "official_ticket_api",
     "official_hotel_api",
     "official_flight_api",
@@ -44,6 +46,14 @@ def get_provider(provider_type: str, **kwargs: Any):
         if not input_path:
             raise ValueError("input_path is required for provider_type='import_file'.")
         return SnapshotImportProvider(input_path)
+    if provider_type == "opt_in_http_json":
+        return OptInHttpJsonProvider(
+            input_path=kwargs.get("input_path"),
+            endpoint_url=kwargs.get("endpoint_url"),
+            api_key_env=kwargs.get("api_key_env"),
+            allowed_hosts=kwargs.get("allowed_hosts"),
+            timeout_seconds=int(kwargs.get("timeout_seconds", 10)),
+        )
     if provider_type in OFFICIAL_PROVIDER_TYPES:
         enable_live = bool(kwargs.get("enable_live", False))
         if not enable_live:

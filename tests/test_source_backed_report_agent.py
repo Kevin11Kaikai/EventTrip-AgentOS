@@ -27,6 +27,9 @@ def test_source_backed_report_agent_writes_no_mock_report(tmp_path):
     assert "Source-Backed Final Report" in text
     assert "## What To Do Next" in text
     assert "## Recommended Official Purchase Paths" in text
+    assert "## Secondary Marketplace Candidate" in text
+    assert "StubHub World Cup Tickets" in text
+    assert "not treated as an official FIFA source" in text
     assert "## What Is Still Unknown" in text
     assert "Exact all-in ticket price for Portugal vs DR Congo." in text
     assert "EventTrip-AgentOS does not log in" in text
@@ -37,8 +40,12 @@ def test_source_backed_report_agent_writes_no_mock_report(tmp_path):
     assert "### Unknown or not source-backed yet" in text
     assert "Axios" in text
     assert "FIFA" in text
+    assert "StubHub" in text
     assert "mock" not in text.lower()
     assert "EventTrip-AgentOS Source-Backed Report" in html
     assert "What Is Still Unknown" in html
+    assert "Secondary Marketplace Candidate" in html
+    assert "StubHub World Cup Tickets" in html
     assert "claim-match-facts" in html
+    assert "claim-secondary-marketplace-stubhub" in html
     assert "mock" not in html.lower()

@@ -39,7 +39,13 @@ def build_evidence_traceability(match_sources: dict[str, Any]) -> list[EvidenceT
     """
     groups = grouped_citations(match_sources)
     match_labels = _labels(groups.get("match_facts", []))
-    ticket_labels = _labels(groups.get("ticket_safety", []))
+    ticket_sources = groups.get("ticket_safety", [])
+    official_ticket_labels = _labels(
+        [source for source in ticket_sources if "secondary_market" not in source.get("evidence_tags", [])]
+    )
+    secondary_ticket_labels = _labels(
+        [source for source in ticket_sources if "secondary_market" in source.get("evidence_tags", [])]
+    )
     logistics_labels = _labels(groups.get("houston_logistics", []))
 
     return [
@@ -49,15 +55,23 @@ def build_evidence_traceability(match_sources: dict[str, Any]) -> list[EvidenceT
             status="source_backed",
             evidence_group="Match facts",
             evidence=match_labels,
-            note="Backed by registered official/news sources.",
+            note="Backed by registered official, marketplace, and news sources.",
         ),
         EvidenceTraceabilityItem(
             claim_id="claim-official-ticket-paths",
             claim="Manual ticket purchase should start with FIFA official ticketing or official resale/exchange paths.",
             status="source_backed",
             evidence_group="Ticket safety",
-            evidence=ticket_labels,
+            evidence=official_ticket_labels,
             note="Backed by FIFA ticketing/support references and public ticket-safety reporting.",
+        ),
+        EvidenceTraceabilityItem(
+            claim_id="claim-secondary-marketplace-stubhub",
+            claim="StubHub can be monitored as a secondary-market candidate, but it is not treated as an official FIFA ticketing channel.",
+            status="source_backed",
+            evidence_group="Ticket safety",
+            evidence=secondary_ticket_labels,
+            note="Backed by registered marketplace and ticket-safety references.",
         ),
         EvidenceTraceabilityItem(
             claim_id="claim-houston-logistics",

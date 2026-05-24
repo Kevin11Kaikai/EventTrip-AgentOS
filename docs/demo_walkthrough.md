@@ -98,9 +98,19 @@ For public sharing without local placeholder estimates, use:
 11_source_backed_final_report.html
 ```
 
-Use the HTML report for client-facing presentation. It is static, local, and generated from the same registered official/news evidence as the source-backed Markdown report.
+Use the HTML report for client-facing presentation. It is static, local, and generated from the same registered official, marketplace, and news evidence as the source-backed Markdown report.
 
-This report is built from official/news source evidence and omits unsourced flight, hotel, ticket price, and total budget claims.
+## Opt-In Live Data Preview
+
+Phase 8.0 adds a safe preview path for future official/search API JSON. The default demo remains offline. Start with the deterministic fixture:
+
+```powershell
+python -m eventtrip.live_data_cli preview --input examples\live_api_snapshot_response.json --match portugal_dr_congo
+```
+
+Real HTTP requires explicit `--live-http`, `EVENTTRIP_ENABLE_LIVE_PROVIDERS=true`, and an allowed host.
+
+This report is built from official, marketplace, and news source evidence and omits unsourced flight, hotel, ticket price, and total budget claims.
 
 ## Expected Decision Output
 
@@ -109,7 +119,7 @@ This report is built from official/news source evidence and omits unsourced flig
 - Traveler B estimated cost: $1220
 - Ticket timing: Monitor with wait bias
 - Snapshot trend: falling prices and rising listings support disciplined waiting/monitoring rather than panic buying
-- Ticket link guidance: use FIFA official ticketing or FIFA official resale/exchange first; user purchases manually
+- Ticket link guidance: use FIFA official ticketing or FIFA official resale/exchange first; StubHub can be monitored only as a manually verified secondary-market candidate
 
 ## Example Final Report Sections
 
@@ -204,6 +214,7 @@ The final report includes:
 - FIFA official resale/exchange
 - FIFA official support/risk references
 - Optional official hospitality as a premium path
+- StubHub as a separated secondary-market candidate, not an official FIFA path
 - Manual checks before buying
 
 The local registry is `data/ticket_links.yaml`.

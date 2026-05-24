@@ -24,6 +24,7 @@ def test_source_evidence_uses_public_https_sources():
     assert all(source["url"].startswith("https://") for source in sources["sources"])
     assert any(source["source_type"] == "news" for source in sources["sources"])
     assert any(source["source_type"] == "official" for source in sources["sources"])
+    assert any(source["source_type"] == "marketplace" for source in sources["sources"])
 
 
 def test_source_evidence_grouped_citations_cover_expected_sections():

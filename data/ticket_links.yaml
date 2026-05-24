@@ -64,3 +64,16 @@ portugal_dr_congo:
       manual_checks:
         - Confirm ticket-inclusive package terms.
         - Compare total package cost against the budget-first plan.
+    - link_id: stubhub_world_cup_tickets
+      label: StubHub World Cup Tickets
+      url: https://www.stubhub.com/world-cup-tickets/grouping/45410
+      source_type: secondary_market
+      purchase_role: secondary_market_candidate
+      risk_level: medium_high
+      priority: 6
+      recommendation: Consider only as a secondary-market monitoring path after FIFA official ticketing and FIFA official resale/exchange have been checked.
+      manual_checks:
+        - Confirm StubHub has a listing for Portugal vs DR Congo, not just a general World Cup listing page.
+        - Confirm the all-in price including fees before comparing against the $550 and $600 trigger policy.
+        - Confirm delivery timing, FIFA ticket-transfer method, refund policy, and guarantee terms before paying.
+        - Remember StubHub is a third-party marketplace, not the FIFA official ticketing channel.

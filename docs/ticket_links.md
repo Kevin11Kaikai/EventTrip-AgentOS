@@ -12,6 +12,7 @@ The goal is to point travelers toward official or verified official paths while 
 - Prefer FIFA official resale/exchange before any non-FIFA source.
 - Treat official support articles as policy references, not checkout pages.
 - Treat hospitality as optional and premium, not budget-first by default.
+- Treat StubHub as a secondary-market monitoring candidate, not as the preferred or official purchase channel.
 - Do not recommend third-party marketplaces as preferred purchase channels.
 - Always require manual verification before payment.
 
@@ -30,6 +31,7 @@ For `portugal_dr_congo`, it includes:
 - FIFA Resale/Exchange support guidance
 - FIFA unofficial resale risk guidance
 - FIFA hospitality as an optional premium path
+- StubHub World Cup Tickets as a secondary-market candidate to monitor manually
 
 ## Manual Purchase Checklist
 
@@ -41,6 +43,7 @@ Before buying, manually confirm:
 - The venue is NRG Stadium / Houston Stadium in Houston.
 - Seat category, quantity, all-in price, fees, transfer policy, and refund policy.
 - The all-in price against the $550 buy trigger and $600 strong-consider trigger.
+- For StubHub or another third-party marketplace, confirm the exact match listing, delivery timing, FIFA transfer method, refund policy, and buyer protection terms.
 
 ## What This Does Not Do
 
@@ -50,6 +53,7 @@ Before buying, manually confirm:
 - No browser automation.
 - No scraping of ticket marketplaces.
 - No guarantee that inventory is available.
+- No claim that StubHub is an official FIFA ticketing channel.
 
 ## MCP Tools
 

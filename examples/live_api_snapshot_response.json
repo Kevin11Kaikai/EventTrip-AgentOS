@@ -1,0 +1,20 @@
+{
+  "provider": "example_official_api_fixture",
+  "retrieved_at": "2026-05-24T00:00:00Z",
+  "snapshots": [
+    {
+      "snapshot_date": "2026-05-20",
+      "match_id": "portugal_dr_congo",
+      "lowest_price": 640,
+      "listings": 355,
+      "category_3_low": 400,
+      "category_3_high": 750,
+      "hotel_availability_score": 0.50,
+      "flight_price_pressure": 0.56,
+      "social_buzz_score": 0.87,
+      "days_before_event": 28,
+      "source_type": "opt_in_api_fixture",
+      "notes": "Deterministic fixture shaped like a future official/search API response; not live data."
+    }
+  ]
+}

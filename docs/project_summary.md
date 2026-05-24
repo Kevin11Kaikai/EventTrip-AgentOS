@@ -23,10 +23,11 @@ EventTrip-AgentOS coordinates specialized Python agents through Markdown shared 
 - Disabled-by-default official API adapter stubs
 - Safe web evidence collection and extraction
 - Reviewed evidence to snapshot conversion
-- Official-first ticket link recommendation layer
-- Source-backed public report from official/news evidence
+- Official-first ticket link recommendation layer with StubHub separated as a secondary-market candidate
+- Source-backed public report from official, marketplace, and news evidence
 - Static HTML source-backed report for client-facing presentation
 - Client-facing HTML visual polish with navigation, summary cards, and traceability status colors
+- Opt-in HTTP JSON provider for future official/search API snapshot previews
 - Preview-only MCP web evidence tools
 - Project health check script
 - Deterministic offline tests

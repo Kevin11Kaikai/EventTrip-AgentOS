@@ -75,6 +75,17 @@ portugal_dr_congo:
         - ticket_safety
         - resale_risk
       summary: Kiplinger warned about World Cup ticket scams and advised starting with FIFA's ticket market.
+    - source_id: stubhub_world_cup_tickets
+      title: World Cup Tickets
+      publisher: StubHub
+      published_date: 2026
+      url: https://www.stubhub.com/world-cup-tickets/grouping/45410
+      source_type: marketplace
+      evidence_tags:
+        - tickets
+        - secondary_market
+        - resale_risk
+      summary: StubHub maintains a World Cup ticket marketplace page; EventTrip-AgentOS treats it as a secondary-market monitoring option, not an official FIFA ticketing channel.
     - source_id: moneyweek_ticket_scam_warning
       title: Football fans issued warning over ticket scams ahead of 2026 World Cup
       publisher: MoneyWeek

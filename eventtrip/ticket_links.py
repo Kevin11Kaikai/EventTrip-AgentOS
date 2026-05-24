@@ -15,6 +15,7 @@ OFFICIAL_SOURCE_TYPES = {
     "official_resale",
     "official_info",
     "official_hospitality",
+    "secondary_market",
 }
 
 
@@ -51,9 +52,11 @@ def recommend_ticket_links(
     ]
     info_links = [link for link in links if link.get("purchase_role") in {"info_only", "caution_reference"}]
     optional_links = [link for link in links if link.get("purchase_role") == "optional_official_premium_entry"]
+    secondary_links = [link for link in links if link.get("purchase_role") == "secondary_market_candidate"]
     warnings = [
         "EventTrip-AgentOS recommends navigation links only; it does not purchase tickets.",
         "Prefer FIFA official ticketing and FIFA official resale/exchange before any non-FIFA source.",
+        "StubHub can be monitored as a secondary marketplace, but it is not the FIFA official ticketing channel.",
         "Manually verify match, date, venue, category, quantity, all-in price, fees, transfer policy, and refund policy before paying.",
     ]
     if ticket_timing == "monitor_with_wait_bias":
@@ -68,6 +71,7 @@ def recommend_ticket_links(
         "primary_links": primary_links,
         "info_links": info_links,
         "optional_links": optional_links,
+        "secondary_links": secondary_links,
         "all_links": links,
         "warnings": warnings,
         "manual_purchase_checklist": manual_purchase_checklist(),
@@ -83,6 +87,7 @@ def manual_purchase_checklist() -> list[str]:
         "Confirm the venue is NRG Stadium / Houston Stadium in Houston.",
         "Confirm seat category, quantity, all-in price, fees, transfer policy, and refund policy.",
         "Compare all-in price against the $550 buy trigger and $600 strong-consider trigger.",
+        "If using StubHub or another third-party marketplace, confirm the ticket transfer method and buyer protection terms manually.",
         "Do not share payment details through unofficial links or messages.",
     ]
 

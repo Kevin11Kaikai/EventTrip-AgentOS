@@ -29,6 +29,9 @@ class SourceBackedReportAgent(BaseAgent):
             _ticket_row(link) for link in ticket_links.get("primary_links", [])
         )
         info_ticket_rows = "\n".join(_ticket_row(link) for link in ticket_links.get("info_links", []))
+        secondary_ticket_rows = "\n".join(
+            _ticket_row(link) for link in ticket_links.get("secondary_links", [])
+        )
         official_purchase_path_rows = _official_purchase_path_rows(ticket_links)
         still_unknown_rows = _still_unknown_rows()
         next_action_rows = _next_action_rows()
@@ -40,14 +43,14 @@ class SourceBackedReportAgent(BaseAgent):
 
         body = f"""# Source-Backed Final Report
 
-This report uses only curated public web, official, and news sources listed below. It intentionally excludes local planning estimates for flight, hotel, ticket, and budget totals.
+This report uses only curated public web, official, marketplace, and news sources listed below. It intentionally excludes local planning estimates for flight, hotel, ticket, and budget totals.
 
 ## Executive Summary
 
 - Event: {match["name"]}
 - Date: {match["date"]}
 - Venue: {match["venue"]} / Houston Stadium, {match["city"]}
-- Ticket purchase stance: use official FIFA ticketing or official FIFA resale/exchange; do not use social-media or unofficial resale offers as a primary path.
+- Ticket purchase stance: use official FIFA ticketing or official FIFA resale/exchange first; StubHub may be monitored only as a secondary-market candidate after manual verification.
 - Travel-cost stance: no source-backed flight, hotel, or local-transport price estimates are included yet, so this report does not claim a sourced total trip budget.
 
 ## What To Do Next
@@ -59,6 +62,12 @@ This report uses only curated public web, official, and news sources listed belo
 These are manual navigation links only. EventTrip-AgentOS does not log in, bypass access controls, automate checkout, or purchase tickets.
 
 {official_purchase_path_rows}
+
+## Secondary Marketplace Candidate
+
+StubHub is included as a manually reviewed secondary-market option because public StubHub pages list World Cup ticket marketplace access. It is not treated as an official FIFA source, and this report does not verify any StubHub listing, all-in price, transfer method, or seller inventory for this exact match.
+
+{secondary_ticket_rows}
 
 ## What Is Still Unknown
 
@@ -83,6 +92,7 @@ The following values are not source-backed yet. If they cannot be verified from 
 ### Unknown or not source-backed yet
 
 - Exact all-in ticket price for Portugal vs DR Congo: no source-backed citation registered yet.
+- Exact all-in StubHub price for Portugal vs DR Congo: no source-backed citation registered yet.
 - Traveler A airfare from PIT: no source-backed citation registered yet.
 - Traveler B airfare from SEA: no source-backed citation registered yet.
 - Shared hotel quote for a two-bed room: no source-backed citation registered yet.
@@ -174,6 +184,7 @@ def _next_action_rows() -> str:
         [
             "- Start with FIFA official ticketing pages before considering any other ticket source.",
             "- If resale is needed, use FIFA official resale/exchange information first.",
+            "- Monitor StubHub only as a secondary-market candidate, and only after verifying match, transfer, fees, and buyer-protection terms manually.",
             "- Verify match name, date, venue, seat category, quantity, transfer policy, refund policy, and all-in fees before paying.",
             "- Treat social-media, messaging-app, and unofficial resale offers as high risk unless independently verified through official channels.",
             "- Keep flight, hotel, and local-transport price claims out of this public report until a registered public source supports them.",
@@ -185,6 +196,7 @@ def _still_unknown_rows() -> str:
     return "\n".join(
         [
             "- Exact all-in ticket price for Portugal vs DR Congo.",
+            "- Exact all-in StubHub price for Portugal vs DR Congo.",
             "- Verified official resale inventory level for this exact match.",
             "- Traveler A airfare from PIT.",
             "- Traveler B airfare from SEA.",

@@ -26,10 +26,15 @@ def test_source_backed_html_report_is_static_and_client_readable():
     assert "Decision Summary" in html
     assert "What To Do Next" in html
     assert "Recommended Official Purchase Paths" in html
+    assert "Secondary Marketplace Candidate" in html
+    assert "StubHub World Cup Tickets" in html
     assert "What Is Still Unknown" in html
+    assert "Opt-In Live Data Status" in html
+    assert "No opt-in live API payload is attached" in html
     assert "report-nav" in html
     assert "@media print" in html
     assert "claim-match-facts" in html
+    assert "claim-secondary-marketplace-stubhub" in html
     assert "FIFA: Portugal v Congo DR" in html
     assert "[FIFA: Portugal v Congo DR" not in html
     assert "No live purchase" in html

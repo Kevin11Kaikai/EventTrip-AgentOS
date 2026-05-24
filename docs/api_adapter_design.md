@@ -54,3 +54,16 @@ These variables are proposed for future work. They are not required for the curr
 - Keep manual snapshot import as the fallback.
 - Add recorded fixtures for tests.
 - Keep web scraping deferred unless a future phase explicitly accepts that risk.
+
+## Phase 8.0 Implementation
+
+Phase 8.0 adds `OptInHttpJsonProvider` as a conservative bridge toward official/search API data.
+
+- Local JSON fixtures are supported for deterministic tests and demos.
+- Live HTTP is disabled unless `--live-http` is passed.
+- `EVENTTRIP_ENABLE_LIVE_PROVIDERS=true` is required for live HTTP.
+- Endpoint hosts must be explicitly allowlisted.
+- Optional API keys are read from environment variables only.
+- Provider output normalizes into `MarketSnapshot`.
+
+The default orchestrator, dashboard, tests, and MCP validation do not call live APIs.

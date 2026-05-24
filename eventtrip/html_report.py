@@ -16,10 +16,12 @@ def build_source_backed_html_report(
     citation_groups: dict[str, list[dict[str, Any]]],
     source_data: dict[str, Any],
     traceability_items: list[EvidenceTraceabilityItem],
+    live_snapshot_preview: dict[str, Any] | None = None,
 ) -> str:
     """Build a static, dependency-free HTML report for client-facing review."""
     primary_links = ticket_links.get("primary_links", [])
     info_links = ticket_links.get("info_links", [])
+    secondary_links = ticket_links.get("secondary_links", [])
     all_ticket_links = [*primary_links, *info_links]
     sources = source_data.get("sources", [])
 
@@ -169,7 +171,7 @@ def build_source_backed_html_report(
   <header>
     <span class="eyebrow">Static client report</span>
     <h1>EventTrip-AgentOS Source-Backed Report</h1>
-    <p class="subtitle">Client-facing HTML view built from curated public official/news evidence. It excludes local planning estimates for flight, hotel, ticket, and total budget values unless a public source is registered.</p>
+    <p class="subtitle">Client-facing HTML view built from curated public official, marketplace, and news evidence. It excludes local planning estimates for flight, hotel, ticket, and total budget values unless a public source is registered.</p>
     <div class="metrics">
       <div class="metric"><span>Event</span><strong>{escape(str(match["name"]))}</strong></div>
       <div class="metric"><span>Date</span><strong>{escape(str(match["date"]))}</strong></div>
@@ -179,7 +181,9 @@ def build_source_backed_html_report(
     <nav class="report-nav" aria-label="Report sections">
       <a href="#next-actions">Next actions</a>
       <a href="#official-paths">Official paths</a>
+      <a href="#secondary-market">Secondary market</a>
       <a href="#unknowns">Still unknown</a>
+      <a href="#live-data">Live data</a>
       <a href="#citations">Citations</a>
       <a href="#traceability">Traceability</a>
       <a href="#registry">Sources</a>
@@ -190,7 +194,7 @@ def build_source_backed_html_report(
       <h2>Decision Summary</h2>
       <p class="section-lead">This page is designed for client review: source-backed facts are separated from unknown values and internal estimates.</p>
       <div class="status-strip">
-        <div class="status-card"><strong>Ticket path</strong>Use FIFA official ticketing or official FIFA resale/exchange first.</div>
+        <div class="status-card"><strong>Ticket path</strong>Use FIFA official ticketing or official FIFA resale/exchange first; StubHub is secondary-market monitoring only.</div>
         <div class="status-card"><strong>Unknown prices</strong>Exact ticket, flight, hotel, transport, and total budget values are not source-backed yet.</div>
         <div class="status-card"><strong>Automation policy</strong>No checkout automation, login bypass, CAPTCHA bypass, or payment action.</div>
       </div>
@@ -198,7 +202,7 @@ def build_source_backed_html_report(
 
     <section id="next-actions">
       <h2>What To Do Next</h2>
-      <p class="section-lead">Manual next steps based only on registered official/news evidence.</p>
+      <p class="section-lead">Manual next steps based only on registered official, marketplace, and news evidence.</p>
       {_html_list(_next_actions())}
     </section>
 
@@ -208,10 +212,21 @@ def build_source_backed_html_report(
       {_link_cards(all_ticket_links)}
     </section>
 
+    <section id="secondary-market">
+      <h2>Secondary Marketplace Candidate</h2>
+      <p class="note unknown">StubHub can be monitored as a secondary marketplace, but it is not treated as an official FIFA ticketing source. Verify the exact match listing, all-in fees, delivery timing, FIFA transfer method, refund policy, and buyer protection before paying.</p>
+      {_link_cards(secondary_links)}
+    </section>
+
     <section id="unknowns">
       <h2>What Is Still Unknown</h2>
       <p class="note unknown">These values are not source-backed yet. If they cannot be verified from public sources, they remain unknown rather than being filled with local estimates.</p>
       {_html_list(_still_unknowns())}
+    </section>
+
+    <section id="live-data">
+      <h2>Opt-In Live Data Status</h2>
+      {_live_data_status(live_snapshot_preview)}
     </section>
 
     <section id="citations">
@@ -248,6 +263,7 @@ def _next_actions() -> list[str]:
     return [
         "Start with FIFA official ticketing pages before considering any other ticket source.",
         "If resale is needed, use FIFA official resale/exchange information first.",
+        "Monitor StubHub only as a secondary-market candidate after checking FIFA official ticketing and official resale/exchange.",
         "Verify match name, date, venue, seat category, quantity, transfer policy, refund policy, and all-in fees before paying.",
         "Treat social-media, messaging-app, and unofficial resale offers as high risk unless independently verified through official channels.",
         "Keep flight, hotel, and local-transport price claims out of this public report until a registered public source supports them.",
@@ -257,6 +273,7 @@ def _next_actions() -> list[str]:
 def _still_unknowns() -> list[str]:
     return [
         "Exact all-in ticket price for Portugal vs DR Congo.",
+        "Exact all-in StubHub price for Portugal vs DR Congo.",
         "Verified official resale inventory level for this exact match.",
         "Traveler A airfare from PIT.",
         "Traveler B airfare from SEA.",
@@ -359,3 +376,17 @@ def _markdown_link_to_html(text: str) -> str:
         return escape(text)
     label, url = match.groups()
     return f'<a href="{escape(url, quote=True)}">{escape(label)}</a>'
+
+
+def _live_data_status(preview: dict[str, Any] | None) -> str:
+    if not preview:
+        return (
+            '<p class="note">No opt-in live API payload is attached to this report. '
+            "Default demo output remains deterministic and offline.</p>"
+        )
+    rows = [
+        f"<li>Status: {escape(str(preview.get('status', 'unknown')))}</li>",
+        f"<li>Snapshot count: {escape(str(preview.get('snapshot_count', 0)))}</li>",
+        f"<li>Source: {escape(str(preview.get('source', 'n/a')))}</li>",
+    ]
+    return "<ul>" + "".join(rows) + "</ul>"

@@ -16,7 +16,7 @@ The default demo is deterministic, offline, and does not call paid APIs. It does
 - Multi-agent orchestration for ticket, flight, hotel, market, budget, risk, and report agents.
 - Markdown shared memory with YAML frontmatter for transparent agent handoffs.
 - MCP server wrapper with official MCP client validation.
-- Official-first ticket link recommendations without checkout automation.
+- Official-first ticket link recommendations plus StubHub as a clearly labeled secondary-market candidate.
 - Manual market snapshot tracker for price/listing trend analysis.
 - Combined ticket timing stance: single-day monitor + trend wait => Monitor with wait bias.
 - Safe snapshot CLI with `--dry-run` and explicit `--overwrite`.
@@ -87,6 +87,7 @@ Phase 1 core demo remains compatible with Python 3.9+. Phase 3+ development and 
 - [API Adapter Design](docs/api_adapter_design.md)
 - [Web Collection Layer](docs/web_collection.md)
 - [Ticket Link Recommendations](docs/ticket_links.md)
+- [Opt-In Live Data Integration](docs/live_data_integration.md)
 - [Release v0.1.0 Draft](docs/release_v0_1_0.md)
 - [Verified MCP client output](examples/mcp_client_validation_output.txt)
 - [Changelog](CHANGELOG.md)
@@ -161,11 +162,31 @@ The client-facing HTML version is written to:
 runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\11_source_backed_final_report.html
 ```
 
-Use `10_source_backed_final_report.md` for public sharing when you want only official/news/web-backed statements. It intentionally excludes unsourced flight, hotel, ticket, and total budget estimates.
+Use `10_source_backed_final_report.md` for public sharing when you want only official/marketplace/news/web-backed statements. It intentionally excludes unsourced flight, hotel, ticket, and total budget estimates.
 
 The source-backed report includes `What To Do Next`, `Recommended Official Purchase Paths`, and `What Is Still Unknown` sections so users can act on official links while seeing exactly which values are not publicly sourced yet.
 
 The HTML report adds a client-facing layout with a decision summary, section navigation, color-coded traceability statuses, and print-friendly styling.
+
+## Phase 8: Opt-In Live Data
+
+Phase 8.0 adds a safe provider path for future official/search API JSON data. Default demo behavior remains deterministic and offline.
+
+Preview a local API-shaped fixture:
+
+```powershell
+python -m eventtrip.live_data_cli preview --input examples\live_api_snapshot_response.json --match portugal_dr_congo
+```
+
+Real HTTP requires explicit opt-in:
+
+```powershell
+$env:EVENTTRIP_ENABLE_LIVE_PROVIDERS="true"
+$env:EVENTTRIP_LIVE_API_ALLOWED_HOSTS="api.example.com"
+python -m eventtrip.live_data_cli preview --endpoint-url https://api.example.com/snapshots --allow-host api.example.com --match portugal_dr_congo --live-http
+```
+
+If a real value cannot be verified, the reports keep it unknown rather than inventing or backfilling data.
 
 Print or open the latest source-backed report:
 
@@ -422,12 +443,13 @@ The local registry lives at `data/ticket_links.yaml`. The current policy is:
 - Use FIFA official resale/exchange for verified resale inventory.
 - Use official FIFA support articles to verify resale policy and risk.
 - Treat hospitality as optional premium inventory, not budget-first default.
+- Treat StubHub as a secondary-market monitoring path only after FIFA official options are checked.
 
 See [Ticket Link Recommendations](docs/ticket_links.md).
 
 ## Source-Backed Public Report
 
-Phase 7.3 adds a source-backed public report generated from `data/source_evidence.yaml`. It uses official FIFA pages and public news sources only. It does not include local planning estimates unless they have a registered public source.
+Phase 7.3 adds a source-backed public report generated from `data/source_evidence.yaml`. It uses official FIFA pages, clearly labeled marketplace references such as StubHub, and public news sources only. It does not include local planning estimates unless they have a registered public source.
 
 ```powershell
 python -m eventtrip.orchestrator --demo portugal_dr_congo_houston

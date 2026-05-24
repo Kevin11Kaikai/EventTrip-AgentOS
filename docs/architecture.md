@@ -60,7 +60,7 @@ Phase 5.2 adds `docs/assets/dashboard_mockup.svg`, a static labeled mockup for G
 | Agent | Input | Output | Purpose |
 |---|---|---|---|
 | Ticket Agent | mock ticket data | ticket recommendation | Analyze ticket price/listings |
-| Ticket Link Agent | local ticket link registry | official-first link guidance | Recommend manual ticket purchase paths |
+| Ticket Link Agent | local ticket link registry | official-first link guidance plus separated secondary-market candidates | Recommend manual ticket purchase paths |
 | Flight Agent | mock flight data | flight window comparison | Compare same-day, one-night, two-night plans |
 | Hotel Agent | mock hotel data | ranked shared hotel options | Evaluate two-bed shared lodging |
 | Snapshot Agent | manual market snapshots | trend analysis | Track price/listing movement over time |
@@ -133,6 +133,23 @@ SnapshotAgent / dashboard / MCP snapshot tools
 
 This prepares provider adapters without enabling live APIs by default. External imports read only local CSV/JSON files, validate every row, and preserve the deterministic manual snapshot store.
 
+Phase 8.0 adds a concrete opt-in JSON provider:
+
+```text
+Local JSON fixture or explicitly enabled HTTP JSON endpoint
+   |
+   v
+OptInHttpJsonProvider
+   |
+   v
+Validated MarketSnapshot objects
+   |
+   v
+Preview CLI / future reviewed import / HTML live data status
+```
+
+Live HTTP requires `--live-http`, `EVENTTRIP_ENABLE_LIVE_PROVIDERS=true`, and an explicit host allowlist. The default orchestrator path remains offline.
+
 The seed file is `data/market_snapshots/portugal_dr_congo_snapshots.csv`. It records deterministic mock snapshots for lowest ticket price, listings, Category 3 range, hotel availability proxy, flight price pressure, social buzz, and days before event.
 
 `python -m eventtrip.snapshots_cli` provides safe manual commands to analyze snapshots, validate proposed rows, dry-run appends, and overwrite duplicate match/date rows only when explicitly requested. These manual snapshots feed the SnapshotAgent and final trend analysis.
@@ -197,7 +214,7 @@ SourceBackedReportAgent
 11_source_backed_final_report.html
 ```
 
-The deterministic `08_final_report.md` remains useful for regression and internal planning logic. The shareable source-backed report uses only registered public web, official, and news sources. If airfare, hotel, ticket price, or total trip budget data is not source-backed, the report explicitly omits those claims.
+The deterministic `08_final_report.md` remains useful for regression and internal planning logic. The shareable source-backed report uses only registered public web, official, marketplace, and news sources. If airfare, hotel, ticket price, or total trip budget data is not source-backed, the report explicitly omits those claims.
 
 Phase 7.4 groups source-backed citations into reader-facing categories:
 
@@ -283,7 +300,7 @@ Ticket Link Agent / MCP link tools / Dashboard
 Recommended Ticket Links section in final report
 ```
 
-The layer recommends manual navigation links only. It does not open checkout, log in, handle payment, bypass CAPTCHA, or purchase tickets. FIFA official ticketing and FIFA official resale/exchange are prioritized before any other path.
+The layer recommends manual navigation links only. It does not open checkout, log in, handle payment, bypass CAPTCHA, or purchase tickets. FIFA official ticketing and FIFA official resale/exchange are prioritized before any other path. StubHub is represented only as a separated secondary-market candidate for manual monitoring and verification.
 
 ## Ticket Timing Fusion
 
@@ -397,7 +414,7 @@ Invariant validation
 - `data/mock_hotels.yaml`: mock shared two-bed hotel options.
 - `data/mock_market_signals.yaml`: mock travel-demand and market-pressure signals.
 - `data/market_snapshots/portugal_dr_congo_snapshots.csv`: manual ticket market snapshot history.
-- `data/ticket_links.yaml`: official-first manual ticket link registry.
+- `data/ticket_links.yaml`: official-first manual ticket link registry with separated secondary-market candidates.
 - `data/source_evidence.yaml`: curated public web/news evidence registry for source-backed reports.
 - `data/web_evidence/`: ignored local web evidence cache, with tracked `.gitkeep` placeholders.
 - `examples/sample_ticket_market_page.html`: deterministic local HTML fixture for web evidence extraction.

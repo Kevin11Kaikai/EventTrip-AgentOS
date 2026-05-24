@@ -23,6 +23,9 @@ class TicketLinkAgent(BaseAgent):
         )
         info_rows = "\n".join(_link_line(link) for link in recommendations["info_links"])
         optional_rows = "\n".join(_link_line(link) for link in recommendations["optional_links"])
+        secondary_rows = "\n".join(
+            _link_line(link) for link in recommendations.get("secondary_links", [])
+        )
         warning_lines = "\n".join(f"- {item}" for item in recommendations["warnings"])
         checklist_lines = "\n".join(
             f"- {item}" for item in recommendations["manual_purchase_checklist"]
@@ -43,6 +46,10 @@ Phase 7.2 recommends safe manual navigation links only. EventTrip-AgentOS does n
 ## Optional Premium Official Path
 
 {optional_rows}
+
+## Secondary Marketplace Candidate
+
+{secondary_rows}
 
 ## Warnings
 

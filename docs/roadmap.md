@@ -26,13 +26,14 @@
 - Phase 7.0: safe web collection layer, local fixture extraction, and preview-only MCP evidence tools.
 - Phase 7.1: reviewed evidence to snapshot conversion with dry-run and duplicate protection.
 - Phase 7.2: official-first ticket link recommendation layer.
-- Phase 7.3: source-backed public report with official/news evidence registry.
+- Phase 7.3: source-backed public report with official, marketplace, and news evidence registry.
 - Phase 7.4: grouped source-backed citations and latest source-backed report CLI.
 - Phase 7.5: optional source-backed citation summary in the internal deterministic report.
 - Phase 7.6: claim-level evidence traceability matrix in the internal report.
 - Phase 7.7: source-backed public report usability polish.
 - Phase 7.8: static HTML source-backed report and claim anchors.
 - Phase 7.9: client-facing HTML visual polish.
+- Phase 8.0: opt-in HTTP JSON provider and live data preview CLI.
 
 ## Phase 3 Status
 
@@ -63,15 +64,14 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Keep web scraping deferred.
 - Preserve manual snapshot mode as the default fallback.
 
-### Phase 8.0: Opt-In Live Data Provider Integration
+### Phase 8.1: Reviewed Live Data Import
 
-- Add live data only behind explicit opt-in configuration.
-- Prefer official APIs or safe search APIs before webpage collection.
-- Cache raw evidence and extracted structured evidence locally.
+- Convert opt-in live provider previews into reviewed snapshot candidates.
+- Require human approval before writing live-derived data to manual snapshot CSV.
 - Keep every live-derived value source-backed in the HTML report.
 - If a real value cannot be verified, mark it as unknown rather than inventing it.
 
-### Phase 8.1: Compliant Public Web Collection
+### Phase 8.2: Compliant Public Web Collection
 
 - Use single-page public collection with robots.txt checks and conservative rate limits.
 - Do not bypass login, paywalls, CAPTCHA, bot detection, or access controls.
@@ -114,7 +114,7 @@ Phase 7.0 adds a safe web evidence layer without changing default demo behavior.
 - MCP exposes preview-only web evidence tools.
 - Dashboard previews the local fixture only and performs no live HTTP.
 - Phase 7.1 adds `evidence_review_cli` so reviewed evidence can become a manual snapshot only after explicit human-provided fields and `--save`.
-- Phase 7.2 adds `data/ticket_links.yaml`, `TicketLinkAgent`, dashboard ticket link rows, MCP link tools, and final-report ticket link guidance.
+- Phase 7.2 adds `data/ticket_links.yaml`, `TicketLinkAgent`, dashboard ticket link rows, MCP link tools, and final-report ticket link guidance. StubHub is included only as a separated secondary-market candidate, not as an official FIFA path.
 - Phase 7.3 adds `data/source_evidence.yaml` and `SourceBackedReportAgent`, producing `10_source_backed_final_report.md` without local planning estimates.
 - Phase 7.4 groups source-backed citations into Match facts, Ticket safety, Houston logistics, and Unknown/not source-backed sections, and adds `source_report_cli` for locating the latest public report.
 - Phase 7.5 adds a `Source-Backed Citation Summary` to `08_final_report.md` while preserving deterministic costs and recommendations.
@@ -122,6 +122,7 @@ Phase 7.0 adds a safe web evidence layer without changing default demo behavior.
 - Phase 7.7 adds public-report usability sections: What To Do Next, Recommended Official Purchase Paths, and What Is Still Unknown.
 - Phase 7.8 adds claim IDs/anchors and `11_source_backed_final_report.html` for client-facing presentation.
 - Phase 7.9 polishes the static HTML report with navigation, summary cards, color-coded evidence statuses, and print-friendly CSS.
+- Phase 8.0 adds `OptInHttpJsonProvider` and `live_data_cli preview` for fixture-based or explicitly enabled HTTP JSON snapshot previews.
 
 ## Later Phase 3 Work
 
