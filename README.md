@@ -178,6 +178,18 @@ Preview a local API-shaped fixture:
 python -m eventtrip.live_data_cli preview --input examples\live_api_snapshot_response.json --match portugal_dr_congo
 ```
 
+Review a live/API-shaped payload before importing it into the manual snapshot CSV:
+
+```powershell
+python -m eventtrip.live_data_cli import --input examples\live_api_snapshot_response.json --match portugal_dr_congo --dry-run
+```
+
+Writing reviewed data requires explicit human confirmation:
+
+```powershell
+python -m eventtrip.live_data_cli import --input examples\live_api_snapshot_response.json --match portugal_dr_congo --save --reviewed
+```
+
 Real HTTP requires explicit opt-in:
 
 ```powershell

@@ -40,6 +40,7 @@ IMPORTANT_FILES = [
     "eventtrip/ticket_links.py",
     "eventtrip/html_report.py",
     "eventtrip/live_data_cli.py",
+    "eventtrip/live_data_review.py",
     "eventtrip/source_evidence.py",
     "eventtrip/source_report_cli.py",
     "eventtrip/source_traceability.py",

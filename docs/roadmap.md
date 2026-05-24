@@ -34,6 +34,7 @@
 - Phase 7.8: static HTML source-backed report and claim anchors.
 - Phase 7.9: client-facing HTML visual polish.
 - Phase 8.0: opt-in HTTP JSON provider and live data preview CLI.
+- Phase 8.1: reviewed live data import with `--save --reviewed` write gate.
 
 ## Phase 3 Status
 
@@ -64,18 +65,17 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Keep web scraping deferred.
 - Preserve manual snapshot mode as the default fallback.
 
-### Phase 8.1: Reviewed Live Data Import
-
-- Convert opt-in live provider previews into reviewed snapshot candidates.
-- Require human approval before writing live-derived data to manual snapshot CSV.
-- Keep every live-derived value source-backed in the HTML report.
-- If a real value cannot be verified, mark it as unknown rather than inventing it.
-
 ### Phase 8.2: Compliant Public Web Collection
 
 - Use single-page public collection with robots.txt checks and conservative rate limits.
 - Do not bypass login, paywalls, CAPTCHA, bot detection, or access controls.
 - Keep tests fixture-based and offline.
+
+### Phase 8.3: Source-Backed Live Snapshot Display
+
+- Attach reviewed live/API snapshots to the source-backed HTML report only after source metadata is registered.
+- Keep unsourced live values out of public-facing totals.
+- If a real value cannot be verified, mark it as unknown rather than inventing it.
 
 ## Phase 5 Status
 
@@ -123,6 +123,7 @@ Phase 7.0 adds a safe web evidence layer without changing default demo behavior.
 - Phase 7.8 adds claim IDs/anchors and `11_source_backed_final_report.html` for client-facing presentation.
 - Phase 7.9 polishes the static HTML report with navigation, summary cards, color-coded evidence statuses, and print-friendly CSS.
 - Phase 8.0 adds `OptInHttpJsonProvider` and `live_data_cli preview` for fixture-based or explicitly enabled HTTP JSON snapshot previews.
+- Phase 8.1 adds `live_data_cli import`, which validates opt-in live/API previews and writes them to snapshot CSV only with `--save --reviewed`.
 
 ## Later Phase 3 Work
 

@@ -67,3 +67,12 @@ Phase 8.0 adds `OptInHttpJsonProvider` as a conservative bridge toward official/
 - Provider output normalizes into `MarketSnapshot`.
 
 The default orchestrator, dashboard, tests, and MCP validation do not call live APIs.
+
+## Phase 8.1 Reviewed Import
+
+Phase 8.1 adds a reviewed write gate on top of `OptInHttpJsonProvider`.
+
+- `live_data_cli import --dry-run` validates opt-in live/API snapshots without writing.
+- `live_data_cli import --save --reviewed` is required before writing live/API-derived rows to the manual snapshot CSV.
+- Duplicate match/date rows still fail safely unless `--overwrite` is explicit.
+- Saved rows are marked as `reviewed_live_data` and preserve the original provider source type in notes.

@@ -112,6 +112,18 @@ Real HTTP requires explicit `--live-http`, `EVENTTRIP_ENABLE_LIVE_PROVIDERS=true
 
 This report is built from official, marketplace, and news source evidence and omits unsourced flight, hotel, ticket price, and total budget claims.
 
+Phase 8.1 adds reviewed live-data import. Preview first:
+
+```powershell
+python -m eventtrip.live_data_cli import --input examples\live_api_snapshot_response.json --match portugal_dr_congo --dry-run
+```
+
+Only after a human review, write explicitly:
+
+```powershell
+python -m eventtrip.live_data_cli import --input examples\live_api_snapshot_response.json --match portugal_dr_congo --save --reviewed
+```
+
 ## Expected Decision Output
 
 - Travel plan: Option A: One-night balanced plan

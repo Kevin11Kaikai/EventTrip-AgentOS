@@ -145,10 +145,30 @@ OptInHttpJsonProvider
 Validated MarketSnapshot objects
    |
    v
-Preview CLI / future reviewed import / HTML live data status
+Preview CLI / reviewed import dry-run / explicit reviewed save / HTML live data status
 ```
 
 Live HTTP requires `--live-http`, `EVENTTRIP_ENABLE_LIVE_PROVIDERS=true`, and an explicit host allowlist. The default orchestrator path remains offline.
+
+Phase 8.1 adds the reviewed live-data import gate:
+
+```text
+Opt-in JSON preview
+   |
+   v
+live_data_cli import --dry-run
+   |
+   v
+Human review of source, match, date, price, listings, and notes
+   |
+   v
+live_data_cli import --save --reviewed
+   |
+   v
+Manual snapshot CSV
+```
+
+The import command refuses to write live/API-derived snapshots unless the user explicitly passes `--reviewed`. Duplicate match/date rows still require `--overwrite`.
 
 The seed file is `data/market_snapshots/portugal_dr_congo_snapshots.csv`. It records deterministic mock snapshots for lowest ticket price, listings, Category 3 range, hotel availability proxy, flight price pressure, social buzz, and days before event.
 

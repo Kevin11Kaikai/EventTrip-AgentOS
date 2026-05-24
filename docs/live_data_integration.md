@@ -9,6 +9,7 @@ Phase 8.0 adds a safe provider path for future official or search API data. The 
 - `OptInHttpJsonProvider` can normalize snapshot-shaped JSON into `MarketSnapshot` objects.
 - Local JSON fixtures can be previewed without network access.
 - Real HTTP JSON endpoints require explicit opt-in.
+- Reviewed live/API snapshots can be imported only after explicit human approval.
 - The HTML report includes an `Opt-In Live Data Status` section.
 
 ## Safety Rules
@@ -18,6 +19,8 @@ Phase 8.0 adds a safe provider path for future official or search API data. The 
 - Live HTTP also requires `EVENTTRIP_ENABLE_LIVE_PROVIDERS=true`.
 - Endpoint hosts must be explicitly allowlisted.
 - Optional API tokens must come from environment variables.
+- Snapshot CSV writes require `--save --reviewed`.
+- Dry-run is the default review behavior.
 - Missing or unverifiable values stay unknown; they are not invented.
 
 ## Fixture Preview
@@ -29,6 +32,24 @@ python -m eventtrip.live_data_cli preview --input examples\live_api_snapshot_res
 ```
 
 This command does not make a network call.
+
+## Reviewed Import Workflow
+
+Preview and validate a local API-shaped payload without writing:
+
+```powershell
+python -m eventtrip.live_data_cli import --input examples\live_api_snapshot_response.json --match portugal_dr_congo --dry-run
+```
+
+If a human has checked the source, match, date, price, listing count, and notes, save it explicitly:
+
+```powershell
+python -m eventtrip.live_data_cli import --input examples\live_api_snapshot_response.json --match portugal_dr_congo --save --reviewed
+```
+
+Duplicate match/date rows fail safely unless `--overwrite` is provided. Use `--destination` for testing against a temporary CSV before touching the default manual snapshot file.
+
+The reviewed import path marks saved rows with `source_type=reviewed_live_data` and preserves the original provider source type in the notes.
 
 ## Live HTTP Preview
 
