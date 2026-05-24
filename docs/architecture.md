@@ -53,6 +53,8 @@ Snapshot CSV + trend analysis + deterministic report outputs
 
 The dashboard reads local CSV snapshots, deterministic helper outputs, and latest generated report paths. It does not change source-of-truth calculations, does not call live APIs, does not scrape websites, and does not require OhMyGPT.
 
+Phase 5.2 adds `docs/assets/dashboard_mockup.svg`, a static labeled mockup for GitHub presentation. It is not a fake screenshot.
+
 ## Agent Responsibilities
 
 | Agent | Input | Output | Purpose |
@@ -178,6 +180,23 @@ Phase 3 introduces a provider interface for market snapshots:
 - `get_provider`: deterministic provider registry for `manual_csv`, `mock_live`, and `import_file`.
 
 Phase 6 keeps official API adapters deferred. `official_api` and `web_scraper` provider types raise clear errors instead of making network calls or scraping websites.
+
+Future official API adapters should follow this disabled-by-default flow:
+
+```text
+Future Official API Providers (disabled by default)
+   |
+   v
+Provider Adapters
+   |
+   v
+Normalized snapshots/quotes
+   |
+   v
+Existing agents, MCP tools, dashboard
+```
+
+Phase 6.1 adds disabled stubs for `official_ticket_api`, `official_hotel_api`, and `official_flight_api`. They do not import external API SDKs, do not read secrets unless methods are explicitly called, and do not make network requests. See `docs/api_adapter_design.md`.
 
 ## Skills Layer
 

@@ -83,6 +83,7 @@ Phase 1 core demo remains compatible with Python 3.9+. Phase 3+ development and 
 - [Demo Walkthrough](docs/demo_walkthrough.md)
 - [Project Summary](docs/project_summary.md)
 - [Dashboard Guide](docs/dashboard_guide.md)
+- [API Adapter Design](docs/api_adapter_design.md)
 - [Release v0.1.0 Draft](docs/release_v0_1_0.md)
 - [Verified MCP client output](examples/mcp_client_validation_output.txt)
 - [Changelog](CHANGELOG.md)
@@ -317,6 +318,12 @@ The dashboard is presentation-only. The CLI and deterministic Markdown report re
 
 See [Dashboard Guide](docs/dashboard_guide.md) for screenshot instructions and review notes.
 
+## Dashboard Preview
+
+![Dashboard mockup](docs/assets/dashboard_mockup.svg)
+
+This is a static mockup asset, not a live screenshot. The local Streamlit page title is `EventTrip-AgentOS Dashboard`, and the dashboard can be run with `streamlit run app\streamlit_app.py`.
+
 ## Snapshot Import
 
 Phase 6 adds a safe local import workflow for external snapshot files. It supports CSV and JSON files with the existing market snapshot schema. This does not call live APIs, does not scrape websites, and does not require secrets.
@@ -335,6 +342,20 @@ To write validated rows into the manual snapshot CSV, run the same command witho
 
 - [Release v0.1.0 Draft](docs/release_v0_1_0.md)
 - [Changelog](CHANGELOG.md)
+
+## API Adapter Design
+
+Phase 6.1 adds disabled-by-default official API provider stubs and a design document for future adapters. No live providers run in the default demo.
+
+- [API Adapter Design](docs/api_adapter_design.md)
+
+## Project Health Check
+
+Run the local health check before pushing larger documentation or release changes:
+
+```powershell
+python scripts\project_health_check.py
+```
 
 ## Skills
 
@@ -461,8 +482,8 @@ Generic travel agents generate itineraries. EventTrip-AgentOS reasons over ticke
 
 ## Future Roadmap
 
-- Phase 5.2: dashboard screenshots and GitHub media polish
-- Phase 6.1: optional official API provider adapters behind the existing interfaces
+- Phase 5.3: real dashboard screenshot capture and README media polish
+- Phase 6.2: choose one official API candidate and implement behind explicit opt-in config
 - Deferred: live APIs by default, web scraping, production dashboard features, forecasting, and generalized event templates
 
 See [Roadmap](docs/roadmap.md) for completed phases and deferred live-integration ideas.

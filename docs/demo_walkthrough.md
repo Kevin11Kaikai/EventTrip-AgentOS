@@ -144,6 +144,8 @@ streamlit run app\streamlit_app.py
 
 The dashboard is local-only. It does not call live APIs, scrape websites, or require OhMyGPT.
 
+The dashboard displays the same deterministic snapshot and recommendation data described in this walkthrough. A static mockup is available at `docs/assets/dashboard_mockup.svg`; users can replace it with a real local screenshot after launching Streamlit.
+
 ## Importing External Snapshot Files
 
 Phase 6 adds a safe local import path for CSV/JSON snapshot files. Use dry-run first to validate rows without modifying the committed seed data.

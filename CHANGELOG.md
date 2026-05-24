@@ -9,6 +9,9 @@
 - Added local dashboard guide and release-page draft.
 - Added CSV/JSON snapshot import provider and CLI import command.
 - Added safe provider registry for manual, mock, and import-file data providers.
+- Added dashboard mockup asset and README preview wiring.
+- Added API adapter design doc and disabled official-provider stubs.
+- Added local project health check script.
 
 ## v0.1.0 - 2026-05-23
 

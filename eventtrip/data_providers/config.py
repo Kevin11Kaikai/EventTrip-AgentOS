@@ -6,12 +6,30 @@ from pathlib import Path
 from typing import Any
 
 from eventtrip.data_providers.import_provider import SnapshotImportProvider
+from eventtrip.data_providers.live_api_stubs import (
+    LiveProviderDisabledError,
+    OfficialFlightAPIProvider,
+    OfficialHotelAPIProvider,
+    OfficialTicketAPIProvider,
+)
 from eventtrip.data_providers.manual_snapshot_provider import ManualSnapshotProvider
 from eventtrip.data_providers.mock_live_provider import MockLiveProvider
 
 
-SUPPORTED_PROVIDER_TYPES = ["manual_csv", "mock_live", "import_file"]
-DEFERRED_PROVIDER_TYPES = ["official_api", "web_scraper"]
+SUPPORTED_PROVIDER_TYPES = [
+    "manual_csv",
+    "mock_live",
+    "import_file",
+    "official_ticket_api",
+    "official_hotel_api",
+    "official_flight_api",
+]
+DEFERRED_PROVIDER_TYPES = ["official_api", "search_api_snapshot", "web_scraper"]
+OFFICIAL_PROVIDER_TYPES = {
+    "official_ticket_api": OfficialTicketAPIProvider,
+    "official_hotel_api": OfficialHotelAPIProvider,
+    "official_flight_api": OfficialFlightAPIProvider,
+}
 
 
 def get_provider(provider_type: str, **kwargs: Any):
@@ -26,9 +44,21 @@ def get_provider(provider_type: str, **kwargs: Any):
         if not input_path:
             raise ValueError("input_path is required for provider_type='import_file'.")
         return SnapshotImportProvider(input_path)
+    if provider_type in OFFICIAL_PROVIDER_TYPES:
+        enable_live = bool(kwargs.get("enable_live", False))
+        if not enable_live:
+            raise LiveProviderDisabledError(
+                f"{provider_type} is disabled by default. "
+                "Use deterministic manual/import providers unless a future phase explicitly enables live APIs."
+            )
+        return OFFICIAL_PROVIDER_TYPES[provider_type](**kwargs)
     if provider_type == "official_api":
         raise NotImplementedError(
             "official_api providers are intentionally deferred and are not used by default."
+        )
+    if provider_type == "search_api_snapshot":
+        raise NotImplementedError(
+            "search_api_snapshot is intentionally deferred and is not used by default."
         )
     if provider_type == "web_scraper":
         raise NotImplementedError(

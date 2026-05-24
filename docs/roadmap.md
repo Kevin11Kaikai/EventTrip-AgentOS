@@ -21,6 +21,8 @@
 - Phase 5.0: lightweight local Streamlit dashboard.
 - Phase 5.1: dashboard guide and release-page draft.
 - Phase 6.0: safe local snapshot import/provider adapter foundation.
+- Phase 5.2: dashboard mockup asset and README media polish.
+- Phase 6.1: disabled-by-default official API adapter design and stubs.
 
 ## Phase 3 Status
 
@@ -36,16 +38,17 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 
 ## Recommended Future Work
 
-### Phase 5.1: Dashboard Polish and Screenshots
+### Phase 5.3: Dashboard Screenshot Capture
 
-- Add dashboard screenshots for GitHub.
-- Improve layout polish while keeping dashboard local-only.
-- Keep the CLI and deterministic report workflow as the primary path.
-- Do not require the dashboard for tests or core demo execution.
+- Capture a real local dashboard screenshot.
+- Add it under `docs/assets/dashboard_screenshot.png` after checking it contains no secrets or private data.
+- Keep the static mockup as the fallback asset.
 
-### Phase 6.1: Optional Official API Provider Adapters
+### Phase 6.2: One Opt-In Official API Candidate
 
-- Add optional official API provider adapters behind existing interfaces and MCP tools.
+- Choose one official API candidate.
+- Implement it behind explicit opt-in config.
+- Use fixtures or recorded responses for tests.
 - Prefer official APIs or safe search APIs.
 - Keep web scraping deferred.
 - Preserve manual snapshot mode as the default fallback.
@@ -62,6 +65,8 @@ Phase 5.0 adds a local Streamlit dashboard for deterministic portfolio demos.
 
 Phase 5.1 adds `docs/dashboard_guide.md`, `docs/assets/.gitkeep`, and a GitHub release-page draft at `docs/release_v0_1_0.md`.
 
+Phase 5.2 adds `docs/assets/dashboard_mockup.svg` and README dashboard preview wiring.
+
 ## Phase 6 Status
 
 Phase 6.0 adds a safe provider-adapter foundation without live API calls.
@@ -71,6 +76,8 @@ Phase 6.0 adds a safe provider-adapter foundation without live API calls.
 - `get_provider` registers `manual_csv`, `mock_live`, and `import_file`.
 - `official_api` and `web_scraper` remain intentionally unimplemented.
 - MCP exposes `preview_snapshot_import` as read-only preview behavior.
+
+Phase 6.1 adds `docs/api_adapter_design.md` and disabled provider stubs for `official_ticket_api`, `official_hotel_api`, and `official_flight_api`. These stubs fail closed and do not make network calls.
 
 ## Later Phase 3 Work
 

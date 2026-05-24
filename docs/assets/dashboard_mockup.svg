@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">EventTrip-AgentOS Dashboard Mockup</title>
+  <desc id="desc">Static mockup of the local EventTrip-AgentOS dashboard layout. This is not a real screenshot.</desc>
+  <rect width="1200" height="760" fill="#f6f7f9"/>
+  <rect x="36" y="32" width="1128" height="696" rx="10" fill="#ffffff" stroke="#d7dce2"/>
+  <text x="64" y="78" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#17202a">EventTrip-AgentOS Dashboard Mockup</text>
+  <text x="64" y="108" font-family="Arial, sans-serif" font-size="15" fill="#5a6470">Static layout preview for local deterministic demo data. Not an actual screenshot.</text>
+
+  <rect x="64" y="138" width="1072" height="124" rx="8" fill="#eef6f3" stroke="#c9ded6"/>
+  <text x="88" y="168" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#1f3b32">Executive Metrics</text>
+  <rect x="88" y="188" width="250" height="52" rx="6" fill="#ffffff" stroke="#d6e4df"/>
+  <text x="104" y="209" font-family="Arial, sans-serif" font-size="12" fill="#66737f">Recommended travel plan</text>
+  <text x="104" y="231" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#17202a">Option A: One-night balanced plan</text>
+  <rect x="356" y="188" width="250" height="52" rx="6" fill="#ffffff" stroke="#d6e4df"/>
+  <text x="372" y="209" font-family="Arial, sans-serif" font-size="12" fill="#66737f">Ticket timing</text>
+  <text x="372" y="231" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#17202a">Monitor with wait bias</text>
+  <rect x="624" y="188" width="226" height="52" rx="6" fill="#ffffff" stroke="#d6e4df"/>
+  <text x="640" y="209" font-family="Arial, sans-serif" font-size="12" fill="#66737f">Traveler A</text>
+  <text x="640" y="231" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#17202a">$1120</text>
+  <rect x="868" y="188" width="226" height="52" rx="6" fill="#ffffff" stroke="#d6e4df"/>
+  <text x="884" y="209" font-family="Arial, sans-serif" font-size="12" fill="#66737f">Traveler B</text>
+  <text x="884" y="231" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#17202a">$1220</text>
+
+  <rect x="64" y="290" width="514" height="252" rx="8" fill="#f8fafc" stroke="#d7dce2"/>
+  <text x="88" y="322" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#17202a">Snapshot Trend</text>
+  <polyline points="96,484 168,462 240,446 312,425 384,398 456,382 528,352" fill="none" stroke="#2477b3" stroke-width="4"/>
+  <polyline points="96,440 168,430 240,414 312,394 384,366 456,342 528,316" fill="none" stroke="#2f9d72" stroke-width="4"/>
+  <line x1="96" y1="500" x2="528" y2="500" stroke="#b8c1ca"/>
+  <line x1="96" y1="350" x2="96" y2="500" stroke="#b8c1ca"/>
+  <text x="100" y="526" font-family="Arial, sans-serif" font-size="12" fill="#66737f">Price and listings over manual snapshots</text>
+  <circle cx="88" cy="570" r="5" fill="#2477b3"/>
+  <text x="102" y="574" font-family="Arial, sans-serif" font-size="13" fill="#5a6470">lowest_price: latest $680</text>
+  <circle cx="282" cy="570" r="5" fill="#2f9d72"/>
+  <text x="296" y="574" font-family="Arial, sans-serif" font-size="13" fill="#5a6470">listings: latest 340</text>
+
+  <rect x="622" y="290" width="514" height="252" rx="8" fill="#f8fafc" stroke="#d7dce2"/>
+  <text x="646" y="322" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#17202a">Budget Comparison</text>
+  <rect x="646" y="346" width="466" height="38" fill="#e8edf2"/>
+  <text x="666" y="370" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#17202a">Option</text>
+  <text x="948" y="370" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#17202a">Score</text>
+  <text x="666" y="414" font-family="Arial, sans-serif" font-size="14" fill="#17202a">Option A: One-night balanced plan</text>
+  <text x="948" y="414" font-family="Arial, sans-serif" font-size="14" fill="#17202a">62.0</text>
+  <text x="666" y="452" font-family="Arial, sans-serif" font-size="14" fill="#17202a">Option D: Independent booking plan</text>
+  <text x="948" y="452" font-family="Arial, sans-serif" font-size="14" fill="#17202a">57.9</text>
+  <text x="666" y="490" font-family="Arial, sans-serif" font-size="14" fill="#17202a">Option C: Two-night comfortable plan</text>
+  <text x="948" y="490" font-family="Arial, sans-serif" font-size="14" fill="#17202a">43.9</text>
+  <text x="666" y="528" font-family="Arial, sans-serif" font-size="14" fill="#17202a">Option B: Same-day aggressive plan</text>
+  <text x="948" y="528" font-family="Arial, sans-serif" font-size="14" fill="#17202a">42.0</text>
+
+  <rect x="64" y="580" width="1072" height="104" rx="8" fill="#fff9ec" stroke="#ead8aa"/>
+  <text x="88" y="612" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#3d3420">Report Artifacts</text>
+  <text x="88" y="644" font-family="Arial, sans-serif" font-size="14" fill="#5a6470">08_final_report.md is the deterministic source of truth.</text>
+  <text x="88" y="668" font-family="Arial, sans-serif" font-size="14" fill="#5a6470">09_final_report_polished.md is optional and only generated after validated LLM polishing.</text>
+  <text x="796" y="644" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#17202a">Local only</text>
+  <text x="796" y="668" font-family="Arial, sans-serif" font-size="14" fill="#5a6470">No live APIs, no scraping, no required keys.</text>
+</svg>

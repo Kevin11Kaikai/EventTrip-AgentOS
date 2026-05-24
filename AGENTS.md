@@ -37,6 +37,10 @@
 - Snapshot CLI writes must support validation, dry-run behavior, duplicate protection, and explicit overwrite.
 - Future live data integrations must go behind provider adapters and MCP tool functions.
 - Phase 3.4 is skeleton-only; do not add real live API calls without a future explicit request.
+- Official API provider stubs must remain disabled by default and must not call network services in tests.
+- Keep `docs/api_adapter_design.md` aligned with provider adapter changes.
+- Dashboard media in `docs/assets/` must be clearly labeled as mockup or real screenshot.
+- Run `python scripts\project_health_check.py` before release/documentation pushes when practical.
 - MCP snapshot validation must not mutate committed seed snapshot data.
 - Detailed documentation belongs in `docs/`.
 - Keep README concise and link to deeper docs.

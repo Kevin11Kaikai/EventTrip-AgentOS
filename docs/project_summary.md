@@ -19,6 +19,9 @@ EventTrip-AgentOS coordinates specialized Python agents through Markdown shared 
 - Snapshot CLI
 - Local Streamlit dashboard
 - CSV/JSON snapshot import provider
+- Local dashboard mockup
+- Disabled-by-default official API adapter stubs
+- Project health check script
 - Deterministic offline tests
 - Optional LLM report polishing with invariant validation
 
