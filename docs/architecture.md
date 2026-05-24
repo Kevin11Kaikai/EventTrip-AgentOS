@@ -170,6 +170,23 @@ Manual snapshot CSV
 
 The import command refuses to write live/API-derived snapshots unless the user explicitly passes `--reviewed`. Duplicate match/date rows still require `--overwrite`.
 
+Phase 8.2 connects reviewed rows to the source-backed HTML report:
+
+```text
+Manual snapshot CSV rows with source_type=reviewed_live_data
+   |
+   v
+SnapshotAgent context
+   |
+   v
+SourceBackedReportAgent
+   |
+   v
+11_source_backed_final_report.html live-data table
+```
+
+Rows without `source_type=reviewed_live_data` remain out of that public live-data table.
+
 The seed file is `data/market_snapshots/portugal_dr_congo_snapshots.csv`. It records deterministic mock snapshots for lowest ticket price, listings, Category 3 range, hotel availability proxy, flight price pressure, social buzz, and days before event.
 
 `python -m eventtrip.snapshots_cli` provides safe manual commands to analyze snapshots, validate proposed rows, dry-run appends, and overwrite duplicate match/date rows only when explicitly requested. These manual snapshots feed the SnapshotAgent and final trend analysis.

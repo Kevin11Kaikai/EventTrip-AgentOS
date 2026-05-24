@@ -124,6 +124,8 @@ Only after a human review, write explicitly:
 python -m eventtrip.live_data_cli import --input examples\live_api_snapshot_response.json --match portugal_dr_congo --save --reviewed
 ```
 
+Reviewed rows saved with `source_type=reviewed_live_data` are the only live/API rows shown in the source-backed HTML live-data table.
+
 ## Expected Decision Output
 
 - Travel plan: Option A: One-night balanced plan

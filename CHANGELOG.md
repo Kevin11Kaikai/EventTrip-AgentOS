@@ -27,6 +27,7 @@
 - Added opt-in HTTP JSON provider, fixture preview CLI, and HTML live data status section.
 - Added StubHub as a separated secondary-market ticket candidate while keeping FIFA official paths first.
 - Added reviewed live/API snapshot import requiring explicit `--save --reviewed` before writing.
+- Added source-backed HTML display for reviewed live/API snapshots only.
 
 ## v0.1.0 - 2026-05-23
 

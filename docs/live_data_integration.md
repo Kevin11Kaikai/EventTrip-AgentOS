@@ -21,6 +21,7 @@ Phase 8.0 adds a safe provider path for future official or search API data. The 
 - Optional API tokens must come from environment variables.
 - Snapshot CSV writes require `--save --reviewed`.
 - Dry-run is the default review behavior.
+- Source-backed HTML displays only rows that were saved as `reviewed_live_data`.
 - Missing or unverifiable values stay unknown; they are not invented.
 
 ## Fixture Preview
@@ -50,6 +51,20 @@ python -m eventtrip.live_data_cli import --input examples\live_api_snapshot_resp
 Duplicate match/date rows fail safely unless `--overwrite` is provided. Use `--destination` for testing against a temporary CSV before touching the default manual snapshot file.
 
 The reviewed import path marks saved rows with `source_type=reviewed_live_data` and preserves the original provider source type in the notes.
+
+## Source-Backed HTML Display
+
+Phase 8.2 adds a reviewed live-data section to the source-backed HTML report.
+
+Only snapshots with:
+
+```text
+source_type=reviewed_live_data
+```
+
+are shown in that section. Unreviewed live/API previews, local fixture previews, and ordinary manual/mock snapshots remain out of the public live-data table.
+
+If no reviewed live/API snapshots exist, the HTML report says no opt-in live API payload is attached.
 
 ## Live HTTP Preview
 

@@ -39,3 +39,35 @@ def test_source_backed_html_report_is_static_and_client_readable():
     assert "[FIFA: Portugal v Congo DR" not in html
     assert "No live purchase" in html
     assert "mock" not in html.lower()
+
+
+def test_html_report_displays_reviewed_live_snapshots():
+    source_data = get_match_sources("portugal_dr_congo")
+    html = build_source_backed_html_report(
+        match={
+            "match_id": "portugal_dr_congo",
+            "name": "Portugal vs DR Congo",
+            "date": "2026-06-17",
+            "venue": "NRG Stadium",
+            "city": "Houston",
+        },
+        ticket_links=recommend_ticket_links("portugal_dr_congo", "monitor_with_wait_bias"),
+        citation_groups=grouped_citations(source_data),
+        source_data=source_data,
+        traceability_items=build_evidence_traceability(source_data),
+        reviewed_live_snapshots=[
+            {
+                "snapshot_date": "2026-05-20",
+                "match_id": "portugal_dr_congo",
+                "lowest_price": 640.0,
+                "listings": 355,
+                "source_type": "reviewed_live_data",
+                "notes": "Human-reviewed fixture preview.",
+            }
+        ],
+    )
+
+    assert "Reviewed live/API snapshots are attached below" in html
+    assert "$640" in html
+    assert "reviewed_live_data" in html
+    assert "Human-reviewed fixture preview." in html

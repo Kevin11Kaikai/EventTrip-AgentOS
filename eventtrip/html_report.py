@@ -17,6 +17,7 @@ def build_source_backed_html_report(
     source_data: dict[str, Any],
     traceability_items: list[EvidenceTraceabilityItem],
     live_snapshot_preview: dict[str, Any] | None = None,
+    reviewed_live_snapshots: list[dict[str, Any]] | None = None,
 ) -> str:
     """Build a static, dependency-free HTML report for client-facing review."""
     primary_links = ticket_links.get("primary_links", [])
@@ -226,7 +227,7 @@ def build_source_backed_html_report(
 
     <section id="live-data">
       <h2>Opt-In Live Data Status</h2>
-      {_live_data_status(live_snapshot_preview)}
+      {_live_data_status(live_snapshot_preview, reviewed_live_snapshots)}
     </section>
 
     <section id="citations">
@@ -378,7 +379,17 @@ def _markdown_link_to_html(text: str) -> str:
     return f'<a href="{escape(url, quote=True)}">{escape(label)}</a>'
 
 
-def _live_data_status(preview: dict[str, Any] | None) -> str:
+def _live_data_status(
+    preview: dict[str, Any] | None,
+    reviewed_live_snapshots: list[dict[str, Any]] | None = None,
+) -> str:
+    reviewed = reviewed_live_snapshots or []
+    if reviewed:
+        return (
+            '<p class="note">Reviewed live/API snapshots are attached below. '
+            "They were imported only after explicit human review and are shown separately from unresolved public-source values.</p>"
+            + _reviewed_live_snapshot_table(reviewed)
+        )
     if not preview:
         return (
             '<p class="note">No opt-in live API payload is attached to this report. '
@@ -390,3 +401,30 @@ def _live_data_status(preview: dict[str, Any] | None) -> str:
         f"<li>Source: {escape(str(preview.get('source', 'n/a')))}</li>",
     ]
     return "<ul>" + "".join(rows) + "</ul>"
+
+
+def _reviewed_live_snapshot_table(snapshots: list[dict[str, Any]]) -> str:
+    rows = []
+    for snapshot in snapshots:
+        rows.append(
+            "<tr>"
+            f"<td>{escape(str(snapshot.get('snapshot_date', 'n/a')))}</td>"
+            f"<td>{escape(str(snapshot.get('match_id', 'n/a')))}</td>"
+            f"<td>${escape(_format_number(snapshot.get('lowest_price')))}</td>"
+            f"<td>{escape(_format_number(snapshot.get('listings')))}</td>"
+            f"<td>{escape(str(snapshot.get('source_type', 'n/a')))}</td>"
+            f"<td>{escape(str(snapshot.get('notes', '')))}</td>"
+            "</tr>"
+        )
+    return (
+        "<table><thead><tr><th>Date</th><th>Match</th><th>Lowest price</th>"
+        "<th>Listings</th><th>Source type</th><th>Review note</th></tr></thead><tbody>"
+        + "".join(rows)
+        + "</tbody></table>"
+    )
+
+
+def _format_number(value: Any) -> str:
+    if isinstance(value, float) and value.is_integer():
+        return str(int(value))
+    return str(value if value is not None else "n/a")

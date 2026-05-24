@@ -40,6 +40,8 @@ class SourceBackedReportAgent(BaseAgent):
         )
         citation_groups = grouped_citations(source_data)
         traceability_items = build_evidence_traceability(source_data)
+        reviewed_live_snapshots = _reviewed_live_snapshots(context)
+        reviewed_live_rows = _reviewed_live_rows(reviewed_live_snapshots)
 
         body = f"""# Source-Backed Final Report
 
@@ -74,6 +76,10 @@ StubHub is included as a manually reviewed secondary-market option because publi
 The following values are not source-backed yet. If they cannot be verified from public sources, they should remain unknown rather than being filled with local estimates.
 
 {still_unknown_rows}
+
+## Reviewed Live/API Snapshot Status
+
+{reviewed_live_rows}
 
 ## Citation Groups
 
@@ -143,6 +149,7 @@ The following values are not source-backed yet. If they cannot be verified from 
                 citation_groups=citation_groups,
                 source_data=source_data,
                 traceability_items=traceability_items,
+                reviewed_live_snapshots=reviewed_live_snapshots,
             ),
             encoding="utf-8",
         )
@@ -150,6 +157,7 @@ The following values are not source-backed yet. If they cannot be verified from 
             "source_backed_report_path": output_path,
             "source_backed_html_report_path": html_path,
             "source_evidence": source_data,
+            "reviewed_live_snapshots": reviewed_live_snapshots,
         }
 
 
@@ -205,6 +213,35 @@ def _still_unknown_rows() -> str:
             "- Total source-backed trip budget per traveler.",
         ]
     )
+
+
+def _reviewed_live_snapshots(context: dict[str, Any]) -> list[dict[str, Any]]:
+    return [
+        dict(snapshot)
+        for snapshot in context.get("market_snapshots", [])
+        if snapshot.get("source_type") == "reviewed_live_data"
+    ]
+
+
+def _reviewed_live_rows(snapshots: list[dict[str, Any]]) -> str:
+    if not snapshots:
+        return (
+            "No reviewed live/API snapshots are attached to this source-backed report. "
+            "Unverified live/API previews remain outside the public report."
+        )
+    rows = [
+        "| Date | Lowest price | Listings | Source type | Review note |",
+        "|---|---:|---:|---|---|",
+    ]
+    for snapshot in snapshots:
+        rows.append(
+            f"| {snapshot.get('snapshot_date', 'n/a')} | "
+            f"${snapshot.get('lowest_price', 'n/a')} | "
+            f"{snapshot.get('listings', 'n/a')} | "
+            f"{snapshot.get('source_type', 'n/a')} | "
+            f"{snapshot.get('notes', '')} |"
+        )
+    return "\n".join(rows)
 
 
 def _bullet_summaries(sources: list[dict[str, Any]]) -> str:

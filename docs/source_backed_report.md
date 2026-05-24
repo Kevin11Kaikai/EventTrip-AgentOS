@@ -83,6 +83,8 @@ Phase 7.9 polishes the HTML report for client-facing review:
 
 Phase 8.0 adds an `Opt-In Live Data Status` section. By default it states that no live API payload is attached. Future reviewed live snapshots can be displayed only when they carry source metadata and pass the opt-in provider path.
 
+Phase 8.2 displays reviewed live/API snapshots in the HTML report only when their snapshot `source_type` is `reviewed_live_data`. Unreviewed API previews and ordinary mock/manual snapshots are not shown in the public live-data table.
+
 ## Latest Report CLI
 
 Print the latest source-backed report path:

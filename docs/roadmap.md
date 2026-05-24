@@ -35,6 +35,7 @@
 - Phase 7.9: client-facing HTML visual polish.
 - Phase 8.0: opt-in HTTP JSON provider and live data preview CLI.
 - Phase 8.1: reviewed live data import with `--save --reviewed` write gate.
+- Phase 8.2: reviewed live/API snapshot display in source-backed HTML reports.
 
 ## Phase 3 Status
 
@@ -65,15 +66,15 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Keep web scraping deferred.
 - Preserve manual snapshot mode as the default fallback.
 
-### Phase 8.2: Compliant Public Web Collection
+### Phase 8.3: Compliant Public Web Collection
 
 - Use single-page public collection with robots.txt checks and conservative rate limits.
 - Do not bypass login, paywalls, CAPTCHA, bot detection, or access controls.
 - Keep tests fixture-based and offline.
 
-### Phase 8.3: Source-Backed Live Snapshot Display
+### Phase 8.4: Source Citation Detail
 
-- Attach reviewed live/API snapshots to the source-backed HTML report only after source metadata is registered.
+- Add per-field citation detail beside ticket prices, listing counts, and travel facts.
 - Keep unsourced live values out of public-facing totals.
 - If a real value cannot be verified, mark it as unknown rather than inventing it.
 
@@ -124,6 +125,7 @@ Phase 7.0 adds a safe web evidence layer without changing default demo behavior.
 - Phase 7.9 polishes the static HTML report with navigation, summary cards, color-coded evidence statuses, and print-friendly CSS.
 - Phase 8.0 adds `OptInHttpJsonProvider` and `live_data_cli preview` for fixture-based or explicitly enabled HTTP JSON snapshot previews.
 - Phase 8.1 adds `live_data_cli import`, which validates opt-in live/API previews and writes them to snapshot CSV only with `--save --reviewed`.
+- Phase 8.2 displays only `reviewed_live_data` snapshots in the source-backed HTML live-data table.
 
 ## Later Phase 3 Work
 

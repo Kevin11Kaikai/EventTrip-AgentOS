@@ -200,6 +200,8 @@ python -m eventtrip.live_data_cli preview --endpoint-url https://api.example.com
 
 If a real value cannot be verified, the reports keep it unknown rather than inventing or backfilling data.
 
+The source-backed HTML report displays reviewed live/API snapshots only when they were saved as `reviewed_live_data`. Unreviewed previews remain outside the public live-data table.
+
 Print or open the latest source-backed report:
 
 ```powershell
