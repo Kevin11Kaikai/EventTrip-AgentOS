@@ -22,6 +22,11 @@ def test_source_backed_report_agent_writes_no_mock_report(tmp_path):
 
     assert output.name == "10_source_backed_final_report.md"
     assert "Source-Backed Final Report" in text
+    assert "## Citation Groups" in text
+    assert "### Match facts" in text
+    assert "### Ticket safety" in text
+    assert "### Houston logistics" in text
+    assert "### Unknown or not source-backed yet" in text
     assert "Axios" in text
     assert "FIFA" in text
     assert "mock" not in text.lower()

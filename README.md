@@ -155,6 +155,13 @@ runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\10_source_backed_final_repor
 
 Use `10_source_backed_final_report.md` for public sharing when you want only official/news/web-backed statements. It intentionally excludes unsourced flight, hotel, ticket, and total budget estimates.
 
+Print or open the latest source-backed report:
+
+```powershell
+python -m eventtrip.source_report_cli latest
+python -m eventtrip.source_report_cli latest --open
+```
+
 Example CLI summary:
 
 ```text

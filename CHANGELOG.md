@@ -18,6 +18,7 @@
 - Added reviewed evidence to snapshot conversion CLI with dry-run and duplicate protection.
 - Added official-first ticket link registry, Ticket Link Agent, report section, dashboard section, and MCP link recommendation tools.
 - Added source-backed public report generated from official/news evidence registry.
+- Added grouped source-backed citation sections and a CLI for printing/opening the latest public source-backed report.
 
 ## v0.1.0 - 2026-05-23
 

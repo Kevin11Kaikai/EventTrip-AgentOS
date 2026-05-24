@@ -6,7 +6,12 @@ from pathlib import Path
 from typing import Any
 
 from eventtrip.agents.base_agent import BaseAgent
-from eventtrip.source_evidence import citation_label, get_match_sources, sources_by_tag
+from eventtrip.source_evidence import (
+    SOURCE_CITATION_GROUPS,
+    citation_label,
+    get_match_sources,
+    grouped_citations,
+)
 
 
 class SourceBackedReportAgent(BaseAgent):
@@ -25,11 +30,7 @@ class SourceBackedReportAgent(BaseAgent):
         checklist_rows = "\n".join(
             f"- {item}" for item in ticket_links.get("manual_purchase_checklist", [])
         )
-        match_sources = sources_by_tag(source_data, "match")
-        safety_sources = sources_by_tag(source_data, "ticket_safety")
-        transport_sources = sources_by_tag(source_data, "local_transport")
-        venue_sources = sources_by_tag(source_data, "venue_readiness")
-        base_camp_sources = sources_by_tag(source_data, "team_base_camp")
+        citation_groups = grouped_citations(source_data)
 
         body = f"""# Source-Backed Final Report
 
@@ -43,13 +44,28 @@ This report uses only curated public web, official, and news sources listed belo
 - Ticket purchase stance: use official FIFA ticketing or official FIFA resale/exchange; do not use social-media or unofficial resale offers as a primary path.
 - Travel-cost stance: no source-backed flight, hotel, or local-transport price estimates are included yet, so this report does not claim a sourced total trip budget.
 
-## Source-Backed Match Evidence
+## Citation Groups
 
-{_bullet_summaries(match_sources)}
+### Match facts
 
-## Source-Backed Ticket Safety Evidence
+{_grouped_source_list(citation_groups["match_facts"])}
 
-{_bullet_summaries(safety_sources)}
+### Ticket safety
+
+{_grouped_source_list(citation_groups["ticket_safety"])}
+
+### Houston logistics
+
+{_grouped_source_list(citation_groups["houston_logistics"])}
+
+### Unknown or not source-backed yet
+
+- Exact all-in ticket price for Portugal vs DR Congo: no source-backed citation registered yet.
+- Traveler A airfare from PIT: no source-backed citation registered yet.
+- Traveler B airfare from SEA: no source-backed citation registered yet.
+- Shared hotel quote for a two-bed room: no source-backed citation registered yet.
+- Local transportation cost estimate: no source-backed citation registered yet.
+- Total trip budget per traveler: no source-backed citation registered yet.
 
 ## Official Ticket Links For Manual Purchase
 
@@ -62,14 +78,6 @@ This report uses only curated public web, official, and news sources listed belo
 ## Manual Checklist Before Buying
 
 {checklist_rows}
-
-## Houston / Venue / Local Context
-
-{_section_or_empty("Team base camp", base_camp_sources)}
-
-{_section_or_empty("Venue readiness", venue_sources)}
-
-{_section_or_empty("Local transportation evidence", transport_sources)}
 
 ## What This Report Does Not Claim
 
@@ -121,5 +129,12 @@ def _bullet_summaries(sources: list[dict[str, Any]]) -> str:
     )
 
 
-def _section_or_empty(title: str, sources: list[dict[str, Any]]) -> str:
-    return f"### {title}\n\n{_bullet_summaries(sources)}"
+def _grouped_source_list(sources: list[dict[str, Any]]) -> str:
+    return _bullet_summaries(sources)
+
+
+def citation_group_titles() -> list[str]:
+    """Return human-readable citation group titles used in source-backed reports."""
+    return [str(config["title"]) for config in SOURCE_CITATION_GROUPS.values()] + [
+        "Unknown or not source-backed yet"
+    ]

@@ -1,5 +1,6 @@
 from eventtrip.source_evidence import (
     get_match_sources,
+    grouped_citations,
     sources_by_tag,
     validate_source_evidence,
 )
@@ -23,3 +24,12 @@ def test_source_evidence_uses_public_https_sources():
     assert all(source["url"].startswith("https://") for source in sources["sources"])
     assert any(source["source_type"] == "news" for source in sources["sources"])
     assert any(source["source_type"] == "official" for source in sources["sources"])
+
+
+def test_source_evidence_grouped_citations_cover_expected_sections():
+    sources = get_match_sources("portugal_dr_congo")
+    groups = grouped_citations(sources)
+
+    assert groups["match_facts"]
+    assert groups["ticket_safety"]
+    assert groups["houston_logistics"]

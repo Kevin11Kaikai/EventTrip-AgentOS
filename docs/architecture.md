@@ -198,6 +198,20 @@ SourceBackedReportAgent
 
 The deterministic `08_final_report.md` remains useful for regression and internal planning logic. The shareable source-backed report uses only registered public web, official, and news sources. If airfare, hotel, ticket price, or total trip budget data is not source-backed, the report explicitly omits those claims.
 
+Phase 7.4 groups source-backed citations into reader-facing categories:
+
+- Match facts
+- Ticket safety
+- Houston logistics
+- Unknown or not source-backed yet
+
+The helper CLI can print or open the newest generated source-backed report:
+
+```powershell
+python -m eventtrip.source_report_cli latest
+python -m eventtrip.source_report_cli latest --open
+```
+
 ## Ticket Link Recommendation Layer
 
 Phase 7.2 adds official-first ticket link recommendations without purchase automation.

@@ -23,6 +23,33 @@ The registry currently includes:
 - Axios Houston reporting on DR Congo's Houston base camp and Houston World Cup readiness
 - Kiplinger and MoneyWeek reporting on World Cup ticket scam risks
 
+## Citation Grouping
+
+`10_source_backed_final_report.md` groups citations into reader-facing sections:
+
+- Match facts
+- Ticket safety
+- Houston logistics
+- Unknown or not source-backed yet
+
+The final group is deliberate. If a claim such as exact airfare, exact hotel quote, exact ticket price, local transportation price, or total trip budget does not have a registered public citation, the source-backed report lists it as not source-backed instead of filling the gap with local estimates.
+
+## Latest Report CLI
+
+Print the latest source-backed report path:
+
+```powershell
+python -m eventtrip.source_report_cli latest
+```
+
+Print and open the latest source-backed report with the local default application:
+
+```powershell
+python -m eventtrip.source_report_cli latest --open
+```
+
+The CLI scans timestamped run directories under `runs/` and never generates or modifies report content.
+
 ## Rules
 
 - Do not include local planning estimates unless a public source is registered.

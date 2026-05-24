@@ -11,6 +11,26 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_EVIDENCE_PATH = PROJECT_ROOT / "data" / "source_evidence.yaml"
 ALLOWED_SOURCE_TYPES = {"official", "news", "government", "transportation"}
+SOURCE_CITATION_GROUPS: dict[str, dict[str, Any]] = {
+    "match_facts": {
+        "title": "Match facts",
+        "tags": {"match", "date", "venue"},
+    },
+    "ticket_safety": {
+        "title": "Ticket safety",
+        "tags": {
+            "tickets",
+            "official_purchase",
+            "official_resale",
+            "ticket_safety",
+            "resale_risk",
+        },
+    },
+    "houston_logistics": {
+        "title": "Houston logistics",
+        "tags": {"houston", "local_transport", "venue_readiness", "team_base_camp"},
+    },
+}
 
 
 def load_source_evidence(path: str | Path = SOURCE_EVIDENCE_PATH) -> dict[str, Any]:
@@ -57,6 +77,24 @@ def sources_by_tag(match_sources: dict[str, Any], tag: str) -> list[dict[str, An
         for source in match_sources.get("sources", [])
         if tag in source.get("evidence_tags", [])
     ]
+
+
+def sources_by_any_tag(match_sources: dict[str, Any], tags: set[str]) -> list[dict[str, Any]]:
+    """Return sources that include at least one tag from a tag group."""
+    grouped: list[dict[str, Any]] = []
+    for source in match_sources.get("sources", []):
+        source_tags = set(source.get("evidence_tags", []))
+        if source_tags.intersection(tags):
+            grouped.append(dict(source))
+    return grouped
+
+
+def grouped_citations(match_sources: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    """Return report-ready citation groups for source-backed public reports."""
+    return {
+        group_key: sources_by_any_tag(match_sources, set(group_config["tags"]))
+        for group_key, group_config in SOURCE_CITATION_GROUPS.items()
+    }
 
 
 def citation_label(source: dict[str, Any]) -> str:
