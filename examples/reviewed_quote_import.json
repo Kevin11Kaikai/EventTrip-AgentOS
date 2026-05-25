@@ -1,0 +1,28 @@
+[
+  {
+    "quote_date": "2026-05-20",
+    "match_id": "portugal_dr_congo",
+    "component": "ticket",
+    "amount": 640,
+    "currency": "USD",
+    "source_id": "example_ticket_quote",
+    "source_url": "https://example.com/reviewed-ticket-quote",
+    "source_label": "Example reviewed ticket quote",
+    "origin": "",
+    "confidence": "medium",
+    "notes": "Example fixture row for CLI validation only; not used by the default customer report."
+  },
+  {
+    "quote_date": "2026-05-20",
+    "match_id": "portugal_dr_congo",
+    "component": "pit_flight",
+    "amount": 420,
+    "currency": "USD",
+    "source_id": "example_pit_flight_quote",
+    "source_url": "https://example.com/reviewed-pit-flight",
+    "source_label": "Example reviewed PIT flight quote",
+    "origin": "PIT",
+    "confidence": "medium",
+    "notes": "Example fixture row for CLI validation only; not used by the default customer report."
+  }
+]

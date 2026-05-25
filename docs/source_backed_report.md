@@ -117,6 +117,10 @@ The HTML report also includes a quantitative analysis panel for customer review:
 
 This panel is intentionally strict. It gives the customer numbers where the system can defend them, but does not convert unsupported ticket, flight, hotel, transportation, or total-budget estimates into public facts.
 
+Phase 8.8 adds `真实审核报价与总成本曲线`, a stricter dollar-value section for customer presentation. It uses only reviewed quote rows with a source URL and `source_id`. If no reviewed rows exist, the HTML explicitly says no verified quote data is available and does not generate a dollar chart. If reviewed rows exist, it can show ticket, PIT flight, SEA flight, hotel, local transport, and PIT/SEA total-cost curves.
+
+Reviewed quote intake is documented in [`docs/reviewed_quantitative_quotes.md`](reviewed_quantitative_quotes.md).
+
 ## Reviewed Source Intake
 
 Phase 8.6 adds `eventtrip.source_intake_cli`, a guarded workflow for adding new public sources to `data/source_evidence.yaml`.

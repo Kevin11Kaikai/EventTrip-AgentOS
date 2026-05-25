@@ -89,6 +89,7 @@ Phase 1 core demo remains compatible with Python 3.9+. Phase 3+ development and 
 - [Ticket Link Recommendations](docs/ticket_links.md)
 - [Reviewed Source Intake Workflow](docs/source_intake_workflow.md)
 - [Source Registry Review Packaging](docs/source_registry_review_packaging.md)
+- [Reviewed Quantitative Quotes](docs/reviewed_quantitative_quotes.md)
 - [Opt-In Live Data Integration](docs/live_data_integration.md)
 - [Release v0.1.0 Draft](docs/release_v0_1_0.md)
 - [Verified MCP client output](examples/mcp_client_validation_output.txt)
@@ -211,6 +212,20 @@ Phase 8.4 adds field-level source attribution to the same Chinese HTML report. E
 Phase 8.5 polishes the customer-facing HTML presentation with cleaner spacing, screenshot-friendly summary badges, responsive tables, and print-specific layout rules. It does not change ticket timing, budget values, source validation, or recommendation logic.
 
 The HTML report now also includes a quantitative analysis panel. It separates registered public-source counts, reviewed live/API rows, model pressure-index tables, trigger-policy thresholds, and still-unknown real prices. If a true ticket, flight, hotel, or total-cost quote cannot be verified, the HTML says `unknown` instead of filling the gap with unsupported numbers.
+
+Phase 8.8 adds a reviewed quantitative quote layer for client-facing dollar analysis. The HTML now has a `真实审核报价与总成本曲线` section. It only draws ticket, flight, hotel, local-transport, and PIT/SEA total-cost dollar charts when rows have been manually reviewed and include source URLs. If no such rows exist, the report clearly says there is no verified quote data yet.
+
+Preview a reviewed quote import file:
+
+```powershell
+python -m eventtrip.reviewed_quotes_cli import --input examples\reviewed_quote_import.csv --match portugal_dr_congo --dry-run
+```
+
+Summarize local reviewed quotes:
+
+```powershell
+python -m eventtrip.reviewed_quotes_cli summary --match portugal_dr_congo
+```
 
 Print or open the latest source-backed report:
 

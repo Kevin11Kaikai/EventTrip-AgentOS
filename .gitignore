@@ -28,6 +28,11 @@ runs/*
 !/data/web_evidence/.gitkeep
 !/data/web_evidence/raw/.gitkeep
 
+# Locally reviewed quote rows
+/data/reviewed_quotes/*.csv
+/data/reviewed_quotes/*.json
+!/data/reviewed_quotes/.gitkeep
+
 # Optional local dashboard screenshots
 docs/assets/dashboard_screenshot.png
 

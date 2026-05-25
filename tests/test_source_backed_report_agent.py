@@ -33,6 +33,8 @@ def test_source_backed_report_agent_writes_no_mock_report(tmp_path):
     assert "## What Is Still Unknown" in text
     assert "## Reviewed Live/API Snapshot Status" in text
     assert "No reviewed live/API snapshots are attached" in text
+    assert "## Reviewed Quantitative Quote Status" in text
+    assert "No reviewed source-backed quote rows are attached" in text
     assert "Exact all-in ticket price for Portugal vs DR Congo." in text
     assert "EventTrip-AgentOS does not log in" in text
     assert "## Citation Groups" in text
@@ -47,6 +49,8 @@ def test_source_backed_report_agent_writes_no_mock_report(tmp_path):
     assert "mock" not in text.lower()
     assert "EventTrip-AgentOS 中文来源报告" in html
     assert "定量分析：哪些数字是真的，哪些还不能声称是真的" in html
+    assert "真实审核报价与总成本曲线" in html
+    assert "目前没有经过人工审核且可引用的真实报价" in html
     assert "成本压力指数变化表" in html
     assert "仍然未知的内容" in html
     assert "二级市场候选渠道" in html
@@ -103,3 +107,43 @@ def test_source_backed_report_agent_includes_reviewed_live_snapshots(tmp_path):
     assert "355 listings" in html
     assert "Human-reviewed API response." in html
     assert "Should not appear in source-backed live section." not in text
+
+
+def test_source_backed_report_agent_includes_reviewed_quotes_from_context(tmp_path):
+    trip_request = {
+        "match": {
+            "match_id": "portugal_dr_congo",
+            "name": "Portugal vs DR Congo",
+            "date": "2026-06-17",
+            "venue": "NRG Stadium",
+            "city": "Houston",
+        }
+    }
+    base_quote = {
+        "quote_date": "2026-05-20",
+        "match_id": "portugal_dr_congo",
+        "currency": "USD",
+        "confidence": "medium",
+        "notes": "Reviewed row.",
+    }
+    context = {
+        "ticket_links": recommend_ticket_links("portugal_dr_congo", "monitor_with_wait_bias"),
+        "reviewed_quotes": [
+            {**base_quote, "component": "ticket", "amount": 640, "source_id": "ticket_quote", "source_url": "https://example.com/ticket", "source_label": "Ticket quote", "origin": ""},
+            {**base_quote, "component": "pit_flight", "amount": 420, "source_id": "pit_quote", "source_url": "https://example.com/pit", "source_label": "PIT quote", "origin": "PIT"},
+            {**base_quote, "component": "sea_flight", "amount": 520, "source_id": "sea_quote", "source_url": "https://example.com/sea", "source_label": "SEA quote", "origin": "SEA"},
+            {**base_quote, "component": "hotel", "amount": 95, "source_id": "hotel_quote", "source_url": "https://example.com/hotel", "source_label": "Hotel quote", "origin": ""},
+            {**base_quote, "component": "local_transport", "amount": 35, "source_id": "transport_quote", "source_url": "https://example.com/transport", "source_label": "Transport quote", "origin": ""},
+        ],
+    }
+
+    result = SourceBackedReportAgent().run(trip_request, tmp_path, context)
+    text = result["source_backed_report_path"].read_text(encoding="utf-8")
+    html = result["source_backed_html_report_path"].read_text(encoding="utf-8")
+
+    assert result["reviewed_quote_analysis"]["latest_totals"]["pit"] == 1190
+    assert "$1190" in text
+    assert "$1290" in text
+    assert "ticket_quote" in text
+    assert "PIT 来源支持总成本" in html
+    assert "已审核美元报价折线图" in html

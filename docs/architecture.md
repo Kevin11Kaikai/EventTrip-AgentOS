@@ -364,6 +364,26 @@ The HTML report is a presentation artifact for client demos. It is generated fro
 
 Phase 7.9 keeps the HTML layer presentation-only while improving client readability with section navigation, decision summary cards, color-coded traceability statuses, and print styles. It still reads only local generated evidence and does not call live APIs.
 
+Phase 8.8 adds a reviewed quote path for quantitative customer charts:
+
+```text
+Reviewed quote CSV/JSON with source URLs
+   |
+   v
+reviewed_quotes_cli import --dry-run / import
+   |
+   v
+data/reviewed_quotes/*.csv
+   |
+   v
+SourceBackedReportAgent
+   |
+   v
+11_source_backed_final_report.html reviewed dollar-cost table/chart
+```
+
+This path is deliberately stricter than the older pressure-index chart. It only displays dollar values when quote rows have been manually reviewed and include `source_id` plus an HTTPS source URL. If ticket, flight, hotel, transportation, or total-cost quotes are missing, the HTML says they are unknown.
+
 Phase 7.5 adds a citation-summary bridge back into the internal deterministic report:
 
 ```text

@@ -1,0 +1,6 @@
+quote_date,match_id,component,amount,currency,source_id,source_url,source_label,origin,confidence,notes
+2026-05-20,portugal_dr_congo,ticket,640,USD,example_ticket_quote,https://example.com/reviewed-ticket-quote,Example reviewed ticket quote,,medium,Example fixture row for CLI validation only; not used by the default customer report.
+2026-05-20,portugal_dr_congo,pit_flight,420,USD,example_pit_flight_quote,https://example.com/reviewed-pit-flight,Example reviewed PIT flight quote,PIT,medium,Example fixture row for CLI validation only; not used by the default customer report.
+2026-05-20,portugal_dr_congo,sea_flight,520,USD,example_sea_flight_quote,https://example.com/reviewed-sea-flight,Example reviewed SEA flight quote,SEA,medium,Example fixture row for CLI validation only; not used by the default customer report.
+2026-05-20,portugal_dr_congo,hotel,95,USD,example_hotel_quote,https://example.com/reviewed-hotel,Example reviewed hotel quote,,medium,Per-person shared hotel estimate fixture; not used by the default customer report.
+2026-05-20,portugal_dr_congo,local_transport,35,USD,example_transport_quote,https://example.com/reviewed-local-transport,Example reviewed local transport quote,,medium,Per-person shared local transport fixture; not used by the default customer report.

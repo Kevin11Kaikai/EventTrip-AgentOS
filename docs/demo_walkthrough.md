@@ -134,6 +134,13 @@ Phase 8.5 polishes the customer-facing HTML layout for cleaner screenshots, mobi
 
 The same HTML report now includes a quantitative analysis panel. It shows registered source counts, citation-group coverage, reviewed live/API rows, pressure-index trend tables, trigger thresholds, and a separate table for real prices that remain unknown because no public source supports them.
 
+Phase 8.8 adds reviewed quote intake for customer-facing dollar analysis. The HTML section `真实审核报价与总成本曲线` only uses manually reviewed rows with source URLs and source IDs. If reviewed ticket, flight, hotel, or transport quotes are missing, it says so directly instead of drawing a fake price curve.
+
+```powershell
+python -m eventtrip.reviewed_quotes_cli import --input examples\reviewed_quote_import.csv --match portugal_dr_congo --dry-run
+python -m eventtrip.reviewed_quotes_cli summary --match portugal_dr_congo
+```
+
 Phase 8.6 adds a reviewed source intake workflow for adding new public evidence metadata:
 
 ```powershell

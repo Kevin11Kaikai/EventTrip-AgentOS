@@ -6,6 +6,7 @@ import re
 from html import escape
 from typing import Any
 
+from eventtrip.reviewed_quotes import COMPONENT_LABELS, ReviewedQuote, analyze_reviewed_quotes
 from eventtrip.source_evidence import FieldSourceAttribution, build_field_source_attributions
 from eventtrip.source_traceability import EvidenceTraceabilityItem
 
@@ -19,6 +20,7 @@ def build_source_backed_html_report(
     traceability_items: list[EvidenceTraceabilityItem],
     live_snapshot_preview: dict[str, Any] | None = None,
     reviewed_live_snapshots: list[dict[str, Any]] | None = None,
+    reviewed_quotes: list[dict[str, Any]] | None = None,
 ) -> str:
     """Build a static, dependency-free HTML report for client-facing review."""
     primary_links = ticket_links.get("primary_links", [])
@@ -27,6 +29,8 @@ def build_source_backed_html_report(
     all_ticket_links = [*primary_links, *info_links]
     sources = source_data.get("sources", [])
     reviewed_snapshots = reviewed_live_snapshots or []
+    quote_rows = reviewed_quotes or []
+    quote_analysis = analyze_reviewed_quotes(_quote_dicts_to_objects(quote_rows))
     forecast = _forecast_model(reviewed_snapshots)
     source_attributions = build_field_source_attributions(source_data)
     coverage = _source_coverage_metrics(citation_groups, sources, traceability_items)
@@ -281,6 +285,7 @@ def build_source_backed_html_report(
     </div>
     <nav class="report-nav" aria-label="报告章节">
       <a href="#quantitative-analysis">定量分析</a>
+      <a href="#real-quote-analysis">真实报价</a>
       <a href="#next-actions">下一步</a>
       <a href="#official-paths">官方路径</a>
       <a href="#secondary-market">二级市场</a>
@@ -308,6 +313,11 @@ def build_source_backed_html_report(
       <h2>定量分析：哪些数字是真的，哪些还不能声称是真的</h2>
       <p class="section-lead">这部分补足客户最关心的量化信息。公开来源能支撑的数字、人工审核价格行、模型压力指数和仍未找到来源的真实价格被拆开列出。</p>
       {_quantitative_analysis_section(coverage, forecast, reviewed_snapshots, source_attributions)}
+    </section>
+
+    <section id="real-quote-analysis">
+      <h2>真实审核报价与总成本曲线</h2>
+      {_reviewed_quote_analysis_section(quote_analysis, quote_rows)}
     </section>
 
     <section id="next-actions">
@@ -516,6 +526,187 @@ def _quantitative_facts_table(
         ("真实全量预算", "未知", "未找到来源", "缺少门票、机票、酒店和交通完整报价链"),
     ]
     return _simple_table(["指标", "数值", "状态", "说明"], rows)
+
+
+def _reviewed_quote_analysis_section(
+    analysis: dict[str, Any],
+    quote_rows: list[dict[str, Any]],
+) -> str:
+    if analysis["quote_count"] == 0:
+        return (
+            '<p class="note unknown">'
+            "目前没有经过人工审核且可引用的真实报价，因此不生成美元价格曲线。"
+            "门票、PIT 机票、SEA 机票、酒店、本地交通和每位旅客总成本继续显示为未知；"
+            "这比用未核验估算冒充真实报价更适合客户决策。"
+            "</p>"
+            + _simple_table(
+                ["项目", "当前状态", "下一步"],
+                [
+                    ("门票真实含税费价格", "暂无已审核报价", "人工登记官方或可信市场页面的含税费报价"),
+                    ("PIT 出发机票", "暂无已审核报价", "人工登记具体航班/日期/总价与来源链接"),
+                    ("SEA 出发机票", "暂无已审核报价", "人工登记具体航班/日期/总价与来源链接"),
+                    ("酒店人均分摊", "暂无已审核报价", "人工登记双床房总价、入住日期和分摊口径"),
+                    ("本地交通人均分摊", "暂无已审核报价", "人工登记交通估价来源或实际报价"),
+                    ("PIT / SEA 总成本曲线", "暂不生成", "集齐组件后自动显示美元总成本曲线"),
+                ],
+            )
+        )
+
+    pit_total = analysis["latest_totals"]["pit"]
+    sea_total = analysis["latest_totals"]["sea"]
+    return (
+        '<p class="note">'
+        "以下只展示已经人工审核、带来源 URL 和 source_id 的报价行。"
+        "每个金额都应能追溯到人工登记的公开来源；未登记的组件不会被自动补全。"
+        "</p>"
+        '<div class="metrics">'
+        f'<div class="metric"><span>已审核真实报价行</span><strong>{analysis["quote_count"]} 条</strong></div>'
+        f'<div class="metric"><span>PIT 来源支持总成本</span><strong>{escape(_format_currency(pit_total))}</strong></div>'
+        f'<div class="metric"><span>SEA 来源支持总成本</span><strong>{escape(_format_currency(sea_total))}</strong></div>'
+        f'<div class="metric"><span>已覆盖组件</span><strong>{len(analysis["components_present"])} / 5</strong></div>'
+        "</div>"
+        "<h3>最新组件报价</h3>"
+        f"{_reviewed_quote_component_table(analysis)}"
+        "<h3>报价来源明细</h3>"
+        f"{_reviewed_quote_source_table(quote_rows)}"
+        "<h3>美元成本曲线</h3>"
+        f"{_reviewed_quote_dollar_chart(analysis)}"
+    )
+
+
+def _reviewed_quote_component_table(analysis: dict[str, Any]) -> str:
+    rows: list[tuple[Any, ...]] = []
+    for component in sorted(COMPONENT_LABELS):
+        quote = analysis["latest_by_component"].get(component)
+        if quote:
+            source = (
+                f'<a href="{escape(str(quote["source_url"]), quote=True)}">'
+                f'<code>{escape(str(quote["source_id"]))}</code></a>'
+            )
+            rows.append(
+                (
+                    COMPONENT_LABELS[component],
+                    _format_currency(float(quote["amount"])),
+                    quote["quote_date"],
+                    source,
+                    quote.get("confidence", "n/a"),
+                )
+            )
+        else:
+            rows.append((COMPONENT_LABELS[component], "未知", "n/a", "无已审核来源", "n/a"))
+    return _simple_table(["组件", "最新金额", "日期", "来源", "可信度"], rows, escape_cells=False)
+
+
+def _reviewed_quote_source_table(quote_rows: list[dict[str, Any]]) -> str:
+    rows = []
+    for quote in sorted(quote_rows, key=lambda item: (item.get("quote_date", ""), item.get("component", ""))):
+        component = str(quote.get("component", ""))
+        source_url = str(quote.get("source_url", ""))
+        rows.append(
+            (
+                quote.get("quote_date", ""),
+                COMPONENT_LABELS.get(component, component),
+                _format_currency(_float_or_none(quote.get("amount"))),
+                f'<a href="{escape(source_url, quote=True)}">{escape(str(quote.get("source_label", source_url)))}</a>',
+                f'<code>{escape(str(quote.get("source_id", "")))}</code>',
+                quote.get("notes", ""),
+            )
+        )
+    return _simple_table(["日期", "组件", "金额", "来源页面", "source_id", "审核说明"], rows, escape_cells=False)
+
+
+def _reviewed_quote_dollar_chart(analysis: dict[str, Any]) -> str:
+    timeline = analysis.get("timeline", [])
+    series = {
+        "门票": [(item["quote_date"], item.get("ticket")) for item in timeline if item.get("ticket") is not None],
+        "PIT机票": [(item["quote_date"], item.get("pit_flight")) for item in timeline if item.get("pit_flight") is not None],
+        "SEA机票": [(item["quote_date"], item.get("sea_flight")) for item in timeline if item.get("sea_flight") is not None],
+        "酒店": [(item["quote_date"], item.get("hotel")) for item in timeline if item.get("hotel") is not None],
+        "PIT总成本": [(item["quote_date"], item.get("pit_total")) for item in timeline if item.get("pit_total") is not None],
+        "SEA总成本": [(item["quote_date"], item.get("sea_total")) for item in timeline if item.get("sea_total") is not None],
+    }
+    series = {name: points for name, points in series.items() if points}
+    if not series:
+        return '<p class="note unknown">已审核报价不足，暂时不能生成美元成本曲线。</p>'
+    return (
+        '<p class="section-lead">这张图只使用人工审核报价行。缺失组件不会被补齐；总成本线只有在门票、对应机票、酒店和本地交通都存在时才显示。</p>'
+        + _dollar_line_chart(series)
+    )
+
+
+def _dollar_line_chart(series: dict[str, list[tuple[str, float]]]) -> str:
+    width = 860
+    height = 360
+    left = 68
+    top = 30
+    chart_width = 720
+    chart_height = 245
+    labels = sorted({date for points in series.values() for date, _ in points})
+    values = [float(value) for points in series.values() for _, value in points]
+    min_value = max(0, min(values) - 40)
+    max_value = max(values) + 40
+    if max_value == min_value:
+        max_value += 1
+    palette = ["#0f766e", "#2563eb", "#7c3aed", "#ca8a04", "#dc2626", "#0891b2"]
+    x_step = chart_width / max(1, len(labels) - 1)
+
+    def point(label: str, value: float) -> tuple[float, float]:
+        x = left + labels.index(label) * x_step
+        y = top + (max_value - value) / (max_value - min_value) * chart_height
+        return x, y
+
+    grid_lines = []
+    for ratio in [0, 0.25, 0.5, 0.75, 1]:
+        value = min_value + (max_value - min_value) * ratio
+        y = top + (max_value - value) / (max_value - min_value) * chart_height
+        grid_lines.append(
+            f'<line x1="{left}" y1="{y:.1f}" x2="{left + chart_width}" y2="{y:.1f}" stroke="#d8dee8"/>'
+            f'<text x="12" y="{y + 4:.1f}" font-size="12" fill="#5d6878">${value:.0f}</text>'
+        )
+
+    paths = []
+    legend = []
+    for idx, (name, points) in enumerate(series.items()):
+        color = palette[idx % len(palette)]
+        if len(points) == 1:
+            x, y = point(points[0][0], float(points[0][1]))
+            paths.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="5" fill="{color}"/>')
+        else:
+            d = " ".join(
+                ("M" if point_index == 0 else "L")
+                + f" {point(date, float(value))[0]:.1f} {point(date, float(value))[1]:.1f}"
+                for point_index, (date, value) in enumerate(points)
+            )
+            paths.append(f'<path d="{d}" fill="none" stroke="{color}" stroke-width="3"/>')
+            for date, value in points:
+                x, y = point(date, float(value))
+                paths.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4" fill="{color}"/>')
+        legend_y = top + idx * 22
+        legend.append(
+            f'<rect x="650" y="{legend_y - 10}" width="12" height="12" fill="{color}"/>'
+            f'<text x="668" y="{legend_y}" font-size="12" fill="#172033">{escape(name)}</text>'
+        )
+
+    x_labels = []
+    for idx, label in enumerate(labels):
+        x = left + idx * x_step
+        x_labels.append(
+            f'<text x="{x:.1f}" y="{top + chart_height + 26}" font-size="12" text-anchor="middle" fill="#5d6878">{escape(label)}</text>'
+        )
+
+    return (
+        '<div class="card">'
+        '<h3>已审核美元报价折线图</h3>'
+        f'<svg viewBox="0 0 {width} {height}" role="img" aria-label="已审核美元报价折线图">'
+        f'<rect x="0" y="0" width="{width}" height="{height}" fill="#ffffff"/>'
+        + "".join(grid_lines)
+        + f'<line x1="{left}" y1="{top}" x2="{left}" y2="{top + chart_height}" stroke="#172033"/>'
+        + f'<line x1="{left}" y1="{top + chart_height}" x2="{left + chart_width}" y2="{top + chart_height}" stroke="#172033"/>'
+        + "".join(paths)
+        + "".join(x_labels)
+        + "".join(legend)
+        + "</svg></div>"
+    )
 
 
 def _forecast_numeric_table(labels: list[str], series: dict[str, list[int]]) -> str:
@@ -899,6 +1090,46 @@ def _reviewed_live_snapshot_table(snapshots: list[dict[str, Any]]) -> str:
         + "".join(rows)
         + "</tbody></table>"
     )
+
+
+def _quote_dicts_to_objects(rows: list[dict[str, Any]]) -> list[ReviewedQuote]:
+    quotes: list[ReviewedQuote] = []
+    for row in rows:
+        try:
+            amount = float(row.get("amount", 0))
+        except (TypeError, ValueError):
+            amount = 0.0
+        quotes.append(
+            ReviewedQuote(
+                quote_date=str(row.get("quote_date", "")),
+                match_id=str(row.get("match_id", "")),
+                component=str(row.get("component", "")),
+                amount=amount,
+                currency=str(row.get("currency", "USD")),
+                source_id=str(row.get("source_id", "")),
+                source_url=str(row.get("source_url", "")),
+                source_label=str(row.get("source_label", "")),
+                origin=str(row.get("origin", "")),
+                confidence=str(row.get("confidence", "medium")),
+                notes=str(row.get("notes", "")),
+            )
+        )
+    return quotes
+
+
+def _format_currency(value: float | None) -> str:
+    if value is None:
+        return "未知"
+    return f"${value:.0f}" if float(value).is_integer() else f"${value:.2f}"
+
+
+def _float_or_none(value: Any) -> float | None:
+    if value is None:
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
 
 
 def _format_number(value: Any) -> str:

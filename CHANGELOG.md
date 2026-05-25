@@ -35,6 +35,7 @@
 - Added reviewed source intake CLI with source tag, citation group, duplicate ID, and field-level attribution checks.
 - Added source registry review packet export with Markdown/JSON validation summary and PR checklist.
 - Added quantitative analysis tables to the customer-facing source-backed HTML report while keeping unverifiable real prices marked as unknown.
+- Added reviewed quote intake and source-backed dollar-cost HTML charts that only render from manually reviewed quote rows.
 
 ## v0.1.0 - 2026-05-23
 

@@ -7,6 +7,12 @@ from typing import Any
 
 from eventtrip.agents.base_agent import BaseAgent
 from eventtrip.html_report import build_source_backed_html_report
+from eventtrip.reviewed_quotes import (
+    analyze_reviewed_quotes,
+    default_reviewed_quotes_path,
+    load_reviewed_quotes,
+    quote_to_dict,
+)
 from eventtrip.source_evidence import (
     SOURCE_CITATION_GROUPS,
     citation_label,
@@ -42,6 +48,9 @@ class SourceBackedReportAgent(BaseAgent):
         traceability_items = build_evidence_traceability(source_data)
         reviewed_live_snapshots = _reviewed_live_snapshots(context)
         reviewed_live_rows = _reviewed_live_rows(reviewed_live_snapshots)
+        reviewed_quotes = _reviewed_quotes(context, match_id)
+        reviewed_quote_analysis = analyze_reviewed_quotes(reviewed_quotes)
+        reviewed_quote_rows = _reviewed_quote_rows(reviewed_quote_analysis)
 
         body = f"""# Source-Backed Final Report
 
@@ -80,6 +89,10 @@ The following values are not source-backed yet. If they cannot be verified from 
 ## Reviewed Live/API Snapshot Status
 
 {reviewed_live_rows}
+
+## Reviewed Quantitative Quote Status
+
+{reviewed_quote_rows}
 
 ## Citation Groups
 
@@ -154,6 +167,7 @@ The following values are not source-backed yet. If they cannot be verified from 
                 source_data=source_data,
                 traceability_items=traceability_items,
                 reviewed_live_snapshots=reviewed_live_snapshots,
+                reviewed_quotes=[quote_to_dict(quote) for quote in reviewed_quotes],
             ),
             encoding="utf-8",
         )
@@ -162,6 +176,8 @@ The following values are not source-backed yet. If they cannot be verified from 
             "source_backed_html_report_path": html_path,
             "source_evidence": source_data,
             "reviewed_live_snapshots": reviewed_live_snapshots,
+            "reviewed_quotes": [quote_to_dict(quote) for quote in reviewed_quotes],
+            "reviewed_quote_analysis": reviewed_quote_analysis,
         }
 
 
@@ -246,6 +262,56 @@ def _reviewed_live_rows(snapshots: list[dict[str, Any]]) -> str:
             f"{snapshot.get('notes', '')} |"
         )
     return "\n".join(rows)
+
+
+def _reviewed_quotes(context: dict[str, Any], match_id: str) -> list[Any]:
+    if "reviewed_quotes" in context:
+        from eventtrip.reviewed_quotes import ReviewedQuote
+
+        return [
+            quote
+            if isinstance(quote, ReviewedQuote)
+            else ReviewedQuote(
+                quote_date=str(quote.get("quote_date", "")),
+                match_id=str(quote.get("match_id", "")),
+                component=str(quote.get("component", "")),
+                amount=float(quote.get("amount", 0)),
+                currency=str(quote.get("currency", "USD")),
+                source_id=str(quote.get("source_id", "")),
+                source_url=str(quote.get("source_url", "")),
+                source_label=str(quote.get("source_label", "")),
+                origin=str(quote.get("origin", "")),
+                confidence=str(quote.get("confidence", "medium")),
+                notes=str(quote.get("notes", "")),
+            )
+            for quote in context["reviewed_quotes"]
+        ]
+    return load_reviewed_quotes(default_reviewed_quotes_path(match_id), match_id=match_id)
+
+
+def _reviewed_quote_rows(analysis: dict[str, Any]) -> str:
+    if analysis["quote_count"] == 0:
+        return (
+            "No reviewed source-backed quote rows are attached. Ticket, flight, "
+            "hotel, local-transport, and source-backed total costs remain unknown."
+        )
+    rows = [
+        "| Component | Latest amount | Source ID | Source URL |",
+        "|---|---:|---|---|",
+    ]
+    for component, quote in analysis["latest_by_component"].items():
+        rows.append(
+            f"| {component} | ${quote['amount']:.0f} | {quote['source_id']} | {quote['source_url']} |"
+        )
+    pit_total = analysis["latest_totals"]["pit"]
+    sea_total = analysis["latest_totals"]["sea"]
+    rows.append(f"| PIT source-backed total | {_format_total(pit_total)} | reviewed_quotes | n/a |")
+    rows.append(f"| SEA source-backed total | {_format_total(sea_total)} | reviewed_quotes | n/a |")
+    return "\n".join(rows)
+
+
+def _format_total(value: float | None) -> str:
+    return f"${value:.0f}" if value is not None else "unknown"
 
 
 def _bullet_summaries(sources: list[dict[str, Any]]) -> str:
