@@ -31,10 +31,10 @@ def test_source_backed_report_agent_writes_no_mock_report(tmp_path):
     assert "StubHub World Cup Tickets" in text
     assert "not treated as an official FIFA source" in text
     assert "## What Is Still Unknown" in text
-    assert "## Reviewed Live/API Snapshot Status" in text
-    assert "No reviewed live/API snapshots are attached" in text
-    assert "## Reviewed Quantitative Quote Status" in text
-    assert "No reviewed source-backed quote rows are attached" in text
+    assert "## Source-Backed Live/API Snapshot Status" in text
+    assert "No source-backed live/API snapshots are attached" in text
+    assert "## Source-Backed Quantitative Quote Status" in text
+    assert "No source-backed quote rows are attached" in text
     assert "Exact all-in ticket price for Portugal vs DR Congo." in text
     assert "EventTrip-AgentOS does not log in" in text
     assert "## Citation Groups" in text
@@ -49,18 +49,19 @@ def test_source_backed_report_agent_writes_no_mock_report(tmp_path):
     assert "mock" not in text.lower()
     assert "EventTrip-AgentOS 中文来源报告" in html
     assert "定量分析：哪些数字是真的，哪些还不能声称是真的" in html
-    assert "真实审核报价与总成本曲线" in html
-    assert "目前没有经过人工审核且可引用的真实报价" in html
-    assert "成本压力指数变化表" in html
+    assert "来源支撑报价与总成本曲线" in html
+    assert "目前没有可引用的来源支撑真实报价" in html
+    assert "来源支撑美元预测区间" in html
     assert "仍然未知的内容" in html
     assert "二级市场候选渠道" in html
     assert "StubHub World Cup Tickets" in html
     assert "claim-match-facts" in html
     assert "claim-secondary-marketplace-stubhub" in html
-    assert "价格趋势图与购买窗口预测" in html
+    assert "美元价格预测与购买窗口" in html
     assert "字段级来源标注" in html
     assert "forecast_chart" in html
     assert "官方购票路径" in html
+    assert "成本压力指数" not in html
     assert "mock" not in html.lower()
 
 
@@ -104,7 +105,7 @@ def test_source_backed_report_agent_includes_reviewed_live_snapshots(tmp_path):
     assert "$640.0" in text
     assert "Human-reviewed API response." in text
     assert "$640" in html
-    assert "355 listings" in html
+    assert "355" in html
     assert "Human-reviewed API response." in html
     assert "Should not appear in source-backed live section." not in text
 
@@ -146,4 +147,4 @@ def test_source_backed_report_agent_includes_reviewed_quotes_from_context(tmp_pa
     assert "$1290" in text
     assert "ticket_quote" in text
     assert "PIT 来源支持总成本" in html
-    assert "已审核美元报价折线图" in html
+    assert "来源支撑美元报价折线图" in html

@@ -41,8 +41,8 @@
 - Phase 8.5: customer-facing HTML spacing, screenshot, mobile, and print polish.
 - Phase 8.6: reviewed source intake workflow with citation group, source tag, and field attribution validation.
 - Phase 8.7: source registry review packaging with Markdown/JSON validation summaries and PR checklist.
-- Phase 8.7a: customer-facing HTML quantitative analysis tables for source counts, reviewed rows, pressure indices, trigger thresholds, and still-unknown real prices.
-- Phase 8.8: reviewed quantitative quote intake and source-backed dollar-cost HTML charts.
+- Phase 8.7a: customer-facing HTML quantitative analysis tables for source counts, source-backed rows, trigger thresholds, USD forecast ranges, and still-unknown real prices.
+- Phase 8.8: source-backed quantitative quote intake and source-backed dollar-cost HTML charts.
 
 ## Phase 3 Status
 
@@ -127,13 +127,14 @@ Phase 7.0 adds a safe web evidence layer without changing default demo behavior.
 - Phase 8.0 adds `OptInHttpJsonProvider` and `live_data_cli preview` for fixture-based or explicitly enabled HTTP JSON snapshot previews.
 - Phase 8.1 adds `live_data_cli import`, which validates opt-in live/API previews and writes them to snapshot CSV only with `--save --reviewed`.
 - Phase 8.2 displays only `reviewed_live_data` snapshots in the source-backed HTML live-data table.
-- Phase 8.3 switches the client HTML to Chinese, adds inline SVG cost-pressure forecast charts, adds PIT/SEA timing guidance, and hardens the web collection policy output.
+- Phase 8.3 switches the client HTML to Chinese, adds USD quote/forecast sections, adds PIT/SEA timing guidance, and hardens the web collection policy output.
 - Phase 8.4 adds field-level source badges and a `字段级来源标注` audit table to the Chinese HTML report.
 - Phase 8.5 improves customer-facing HTML spacing, screenshot readiness, responsive tables, and print layout without changing source-of-truth values.
 - Phase 8.6 adds a reviewed source intake CLI and validator for new public-source metadata. It checks source tags, citation group mapping, duplicate source IDs, and field-level attribution coverage before saving to `data/source_evidence.yaml`.
 - Phase 8.7 adds `source_review_cli` for exporting a Markdown or JSON source registry review packet with citation group coverage, source tag counts, field-level attribution coverage, validation errors, and a PR review checklist.
 - Phase 8.7a adds a quantitative analysis panel to `11_source_backed_final_report.html`. It shows numbers the project can defend, and keeps unverifiable ticket, flight, hotel, transportation, and total-cost prices explicitly unknown.
-- Phase 8.8 adds `reviewed_quotes_cli` and a reviewed quote data model. Customer HTML now shows dollar-value ticket, PIT/SEA flight, hotel, transport, and total-cost charts only when each row has a reviewed source URL and `source_id`; otherwise those values remain unknown.
+- Phase 8.8 adds `source_backed_quotes_cli` and a source-backed quote data model. Customer HTML now shows dollar-value ticket, PIT/SEA flight, hotel, transport, and total-cost charts only when each row has a source URL and `source_id`; otherwise those values remain unknown.
+- Phase 8.9 removes customer-facing pressure-index charts from the source-backed HTML and lets saved WebEvidence with public HTTPS source URLs feed source-backed quote rows directly.
 
 ## Later Phase 3 Work
 

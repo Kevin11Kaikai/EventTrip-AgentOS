@@ -13,6 +13,10 @@ from eventtrip.reviewed_quotes import (
     load_reviewed_quotes,
     quote_to_dict,
 )
+from eventtrip.source_backed_quotes import (
+    load_source_backed_quotes_from_web_evidence,
+    merge_quote_rows,
+)
 from eventtrip.source_evidence import (
     SOURCE_CITATION_GROUPS,
     citation_label,
@@ -76,7 +80,7 @@ These are manual navigation links only. EventTrip-AgentOS does not log in, bypas
 
 ## Secondary Marketplace Candidate
 
-StubHub is included as a manually reviewed secondary-market option because public StubHub pages list World Cup ticket marketplace access. It is not treated as an official FIFA source, and this report does not verify any StubHub listing, all-in price, transfer method, or seller inventory for this exact match.
+StubHub is included as a registered secondary-market option because public StubHub pages list World Cup ticket marketplace access. It is not treated as an official FIFA source, and this report does not verify any StubHub listing, all-in price, transfer method, or seller inventory for this exact match.
 
 {secondary_ticket_rows}
 
@@ -86,11 +90,11 @@ The following values are not source-backed yet. If they cannot be verified from 
 
 {still_unknown_rows}
 
-## Reviewed Live/API Snapshot Status
+## Source-Backed Live/API Snapshot Status
 
 {reviewed_live_rows}
 
-## Reviewed Quantitative Quote Status
+## Source-Backed Quantitative Quote Status
 
 {reviewed_quote_rows}
 
@@ -246,8 +250,8 @@ def _reviewed_live_snapshots(context: dict[str, Any]) -> list[dict[str, Any]]:
 def _reviewed_live_rows(snapshots: list[dict[str, Any]]) -> str:
     if not snapshots:
         return (
-            "No reviewed live/API snapshots are attached to this source-backed report. "
-            "Unverified live/API previews remain outside the public report."
+            "No source-backed live/API snapshots are attached to this source-backed report. "
+            "Unverified previews remain outside the public report."
         )
     rows = [
         "| Date | Lowest price | Listings | Source type | Review note |",
@@ -268,7 +272,7 @@ def _reviewed_quotes(context: dict[str, Any], match_id: str) -> list[Any]:
     if "reviewed_quotes" in context:
         from eventtrip.reviewed_quotes import ReviewedQuote
 
-        return [
+        context_quotes = [
             quote
             if isinstance(quote, ReviewedQuote)
             else ReviewedQuote(
@@ -286,13 +290,17 @@ def _reviewed_quotes(context: dict[str, Any], match_id: str) -> list[Any]:
             )
             for quote in context["reviewed_quotes"]
         ]
-    return load_reviewed_quotes(default_reviewed_quotes_path(match_id), match_id=match_id)
+    else:
+        context_quotes = load_reviewed_quotes(default_reviewed_quotes_path(match_id), match_id=match_id)
+
+    evidence_quotes = load_source_backed_quotes_from_web_evidence(match_id)
+    return merge_quote_rows([*context_quotes, *evidence_quotes])
 
 
 def _reviewed_quote_rows(analysis: dict[str, Any]) -> str:
     if analysis["quote_count"] == 0:
         return (
-            "No reviewed source-backed quote rows are attached. Ticket, flight, "
+            "No source-backed quote rows are attached. Ticket, flight, "
             "hotel, local-transport, and source-backed total costs remain unknown."
         )
     rows = [

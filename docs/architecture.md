@@ -170,7 +170,7 @@ Manual snapshot CSV
 
 The import command refuses to write live/API-derived snapshots unless the user explicitly passes `--reviewed`. Duplicate match/date rows still require `--overwrite`.
 
-Phase 8.2 connects reviewed rows to the source-backed HTML report:
+Phase 8.2 connects source-backed live rows to the source-backed HTML report:
 
 ```text
 Manual snapshot CSV rows with source_type=reviewed_live_data
@@ -187,19 +187,19 @@ SourceBackedReportAgent
 
 Rows without `source_type=reviewed_live_data` remain out of that public live-data table.
 
-Phase 8.3 adds a Chinese client-facing forecast layer to the HTML output:
+Phase 8.3 adds a Chinese client-facing USD forecast layer to the HTML output:
 
 ```text
-Registered source evidence + reviewed snapshots
+Registered source evidence + source-backed quote rows
    |
    v
 Chinese HTML forecast section
    |
    v
-Inline SVG cost-pressure charts + PIT/SEA timing guidance
+USD quote tables + USD forecast ranges + PIT/SEA timing guidance
 ```
 
-The chart is a model pressure index when exact reviewed dollar prices are unavailable. It explicitly says unverifiable values remain unknown.
+The customer view does not display substitute indices. Exact dollar prices and forecast ranges appear only when source-backed quote rows exist; unverifiable values remain unknown.
 
 Phase 8.4 adds field-level source attribution to the Chinese HTML report:
 
@@ -210,7 +210,7 @@ Visible report field
 FieldSourceAttribution
    |
    +-- public-source-backed fact
-   +-- human-reviewed live/API data
+   +-- source-backed live/API data
    +-- model inference
    +-- internal trigger policy
    +-- unknown / not source-backed
@@ -364,13 +364,14 @@ The HTML report is a presentation artifact for client demos. It is generated fro
 
 Phase 7.9 keeps the HTML layer presentation-only while improving client readability with section navigation, decision summary cards, color-coded traceability statuses, and print styles. It still reads only local generated evidence and does not call live APIs.
 
-Phase 8.8 adds a reviewed quote path for quantitative customer charts:
+Phase 8.8 adds a source-backed quote path for quantitative customer charts:
 
 ```text
-Reviewed quote CSV/JSON with source URLs
+Source-backed quote CSV/JSON or saved WebEvidence with source URLs
    |
    v
-reviewed_quotes_cli import --dry-run / import
+source_backed_quotes_cli import --dry-run / import
+or WebEvidence -> source-backed quote conversion
    |
    v
 data/reviewed_quotes/*.csv
@@ -379,10 +380,10 @@ data/reviewed_quotes/*.csv
 SourceBackedReportAgent
    |
    v
-11_source_backed_final_report.html reviewed dollar-cost table/chart
+11_source_backed_final_report.html source-backed dollar-cost table/chart
 ```
 
-This path is deliberately stricter than the older pressure-index chart. It only displays dollar values when quote rows have been manually reviewed and include `source_id` plus an HTTPS source URL. If ticket, flight, hotel, transportation, or total-cost quotes are missing, the HTML says they are unknown.
+This path only displays dollar values when quote rows include `source_id` plus an HTTPS source URL. If ticket, flight, hotel, transportation, or total-cost quotes are missing, the HTML says they are unknown.
 
 Phase 7.5 adds a citation-summary bridge back into the internal deterministic report:
 

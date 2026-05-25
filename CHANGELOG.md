@@ -28,14 +28,17 @@
 - Added StubHub as a separated secondary-market ticket candidate while keeping FIFA official paths first.
 - Added reviewed live/API snapshot import requiring explicit `--save --reviewed` before writing.
 - Added source-backed HTML display for reviewed live/API snapshots only.
-- Added Chinese HTML forecast charts with PIT/SEA purchase timing guidance.
+- Added Chinese HTML USD forecast sections with PIT/SEA purchase timing guidance.
 - Hardened web collection policy output and live HTTP response-size limits.
 - Added field-level source attribution badges and an audit table to the Chinese source-backed HTML report.
 - Polished customer-facing HTML spacing, screenshot-friendly summary badges, responsive tables, and print layout.
 - Added reviewed source intake CLI with source tag, citation group, duplicate ID, and field-level attribution checks.
 - Added source registry review packet export with Markdown/JSON validation summary and PR checklist.
 - Added quantitative analysis tables to the customer-facing source-backed HTML report while keeping unverifiable real prices marked as unknown.
-- Added reviewed quote intake and source-backed dollar-cost HTML charts that only render from manually reviewed quote rows.
+- Added source-backed quote intake and dollar-cost HTML charts that render only from quote rows with source URLs.
+- Added `source_backed_quotes_cli` as the customer-facing source-backed quote CLI alias.
+- Removed customer-facing pressure-index charts from the source-backed HTML report and replaced them with source-backed USD quote and forecast-range tables.
+- Added automatic conversion from saved WebEvidence with public HTTPS source URLs into source-backed quote rows.
 
 ## v0.1.0 - 2026-05-23
 

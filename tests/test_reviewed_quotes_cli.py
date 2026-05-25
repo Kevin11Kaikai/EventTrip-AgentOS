@@ -1,4 +1,4 @@
-from eventtrip import reviewed_quotes_cli
+from eventtrip import reviewed_quotes_cli, source_backed_quotes_cli
 from eventtrip.reviewed_quotes import load_reviewed_quotes
 
 
@@ -9,8 +9,8 @@ def test_reviewed_quotes_summary_handles_empty_file(tmp_path, capsys):
     output = capsys.readouterr().out
 
     assert code == 0
-    assert "Reviewed quote count: 0" in output
-    assert "No reviewed source-backed quotes are available yet." in output
+    assert "Source-backed quote count: 0" in output
+    assert "No source-backed quotes are available yet." in output
 
 
 def test_reviewed_quotes_import_dry_run_does_not_write(tmp_path, capsys):
@@ -31,7 +31,7 @@ def test_reviewed_quotes_import_dry_run_does_not_write(tmp_path, capsys):
     output = capsys.readouterr().out
 
     assert code == 0
-    assert "Dry run: validated 5 reviewed quote rows" in output
+    assert "Dry run: validated 5 source-backed quote rows" in output
     assert not destination.exists()
 
 
@@ -78,4 +78,16 @@ def test_reviewed_quotes_import_duplicate_without_overwrite_fails(tmp_path, caps
     output = capsys.readouterr().out
 
     assert duplicate_code == 1
-    assert "Duplicate reviewed quote rows" in output
+    assert "Duplicate source-backed quote rows" in output
+
+
+def test_source_backed_quotes_cli_alias_runs_summary(tmp_path, capsys):
+    path = tmp_path / "missing.csv"
+
+    code = source_backed_quotes_cli.main(
+        ["summary", "--match", "portugal_dr_congo", "--path", str(path)]
+    )
+    output = capsys.readouterr().out
+
+    assert code == 0
+    assert "Source-backed quote count: 0" in output

@@ -138,3 +138,5 @@ python -m eventtrip.evidence_review_cli convert --evidence examples\sample_web_e
 ```
 
 The conversion requires explicit human-provided fields that web evidence cannot reliably infer, including Category 3 range, hotel availability proxy, flight pressure, social buzz, and days before event. Duplicate match/date rows fail safely unless `--overwrite` is supplied.
+
+For customer-facing dollar charts, saved `WebEvidence` with a public HTTPS `source_url` can also feed source-backed quote rows directly. Local fixtures and evidence without a public URL are ignored so example files are not mistaken for real prices.

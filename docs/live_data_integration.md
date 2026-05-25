@@ -66,7 +66,7 @@ are shown in that section. Unreviewed live/API previews, local fixture previews,
 
 If no reviewed live/API snapshots exist, the HTML report says no opt-in live API payload is attached.
 
-The Chinese HTML report also includes a forecast section. Exact dollar prices are displayed only when reviewed source-backed data exists. Otherwise the page uses pressure-index charts and says that unverifiable values remain unknown.
+The Chinese HTML report also includes a forecast section. Exact dollar prices and forecast ranges are displayed only when source-backed quote data exists. Otherwise the page says that unverifiable values remain unknown.
 
 ## Live HTTP Preview
 

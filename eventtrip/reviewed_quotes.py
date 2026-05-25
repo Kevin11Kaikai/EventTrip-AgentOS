@@ -1,8 +1,8 @@
-"""Reviewed source-backed quote intake and analysis utilities.
+"""Source-backed quote intake and analysis utilities.
 
 This module is intentionally conservative. It only works with local,
-human-reviewed rows that include source metadata. It does not collect live data,
-call APIs, scrape websites, or infer prices from unreviewed text.
+source-backed rows that include source metadata. It does not collect live data,
+call APIs, scrape websites, or infer prices from text without a public source.
 """
 
 from __future__ import annotations
@@ -53,7 +53,7 @@ SUPPORTED_CONFIDENCE = {"high", "medium", "low"}
 
 @dataclass(frozen=True)
 class ReviewedQuote:
-    """One human-reviewed quote row with field-level source metadata."""
+    """One source-backed quote row with field-level source metadata."""
 
     quote_date: str
     match_id: str
@@ -69,12 +69,12 @@ class ReviewedQuote:
 
 
 def default_reviewed_quotes_path(match_id: str = "portugal_dr_congo") -> Path:
-    """Return the default local reviewed quote CSV path for a match."""
+    """Return the default local source-backed quote CSV path for a match."""
     return DATA_DIR / f"{match_id}_quotes.csv"
 
 
 def quote_to_dict(quote: ReviewedQuote) -> dict[str, Any]:
-    """Return a JSON-serializable dictionary for a reviewed quote."""
+    """Return a JSON-serializable dictionary for a source-backed quote."""
     return {
         "quote_date": quote.quote_date,
         "match_id": quote.match_id,
@@ -94,7 +94,7 @@ def load_reviewed_quotes(
     path: str | Path | None = None,
     match_id: str | None = None,
 ) -> list[ReviewedQuote]:
-    """Load reviewed quote rows from CSV or JSON.
+    """Load source-backed quote rows from CSV or JSON.
 
     Missing files return an empty list. Invalid rows raise ``ValueError`` so bad
     data cannot silently enter customer-facing reports.
@@ -109,7 +109,7 @@ def load_reviewed_quotes(
     elif suffix == ".json":
         rows = _read_json_rows(quote_path)
     else:
-        raise ValueError(f"Unsupported reviewed quote file type: {quote_path.suffix}")
+        raise ValueError(f"Unsupported source-backed quote file type: {quote_path.suffix}")
 
     quotes: list[ReviewedQuote] = []
     for row_number, row in enumerate(rows, start=2):
@@ -117,14 +117,14 @@ def load_reviewed_quotes(
         errors = validate_reviewed_quote(quote)
         if errors:
             joined = "; ".join(errors)
-            raise ValueError(f"Invalid reviewed quote row {row_number}: {joined}")
+            raise ValueError(f"Invalid source-backed quote row {row_number}: {joined}")
         if match_id is None or quote.match_id == match_id:
             quotes.append(quote)
     return sorted(quotes, key=lambda item: (item.quote_date, item.component, item.origin))
 
 
 def save_reviewed_quotes(path: str | Path, quotes: list[ReviewedQuote]) -> None:
-    """Save reviewed quotes to CSV with stable column order."""
+    """Save source-backed quotes to CSV with stable column order."""
     quote_path = Path(path)
     quote_path.parent.mkdir(parents=True, exist_ok=True)
     ordered = sorted(quotes, key=lambda item: (item.quote_date, item.component, item.origin))
@@ -136,7 +136,7 @@ def save_reviewed_quotes(path: str | Path, quotes: list[ReviewedQuote]) -> None:
 
 
 def validate_reviewed_quote(quote: ReviewedQuote) -> list[str]:
-    """Return validation errors for one reviewed quote."""
+    """Return validation errors for one source-backed quote."""
     errors: list[str] = []
     if not quote.match_id.strip():
         errors.append("match_id is required.")
@@ -187,7 +187,7 @@ def upsert_reviewed_quote(
     quote: ReviewedQuote,
     overwrite: bool = False,
 ) -> dict[str, Any]:
-    """Append or replace one reviewed quote row."""
+    """Append or replace one source-backed quote row."""
     errors = validate_reviewed_quote(quote)
     if errors:
         return {"status": "validation_error", "saved": False, "errors": errors}
@@ -206,7 +206,7 @@ def upsert_reviewed_quote(
             "status": "duplicate",
             "saved": False,
             "errors": [
-                "Reviewed quote already exists for "
+                "Source-backed quote already exists for "
                 f"{quote.match_id} {quote.quote_date} {quote.component} {quote.origin}; "
                 "use --overwrite to replace it."
             ],
@@ -228,14 +228,14 @@ def import_reviewed_quotes(
     overwrite: bool = False,
     dry_run: bool = True,
 ) -> dict[str, Any]:
-    """Validate and optionally import reviewed quote rows into a local CSV."""
+    """Validate and optionally import source-backed quote rows into a local CSV."""
     incoming = load_reviewed_quotes(input_path, match_id=match_id)
     if not incoming:
         return {
             "status": "no_data",
             "saved": False,
             "quote_count": 0,
-            "errors": ["No reviewed quotes matched the requested match_id."],
+            "errors": ["No source-backed quotes matched the requested match_id."],
             "quotes": [],
         }
 
@@ -262,7 +262,7 @@ def import_reviewed_quotes(
             "status": "duplicate",
             "saved": False,
             "quote_count": len(incoming),
-            "errors": ["Duplicate reviewed quote rows: " + ", ".join(duplicate_errors)],
+            "errors": ["Duplicate source-backed quote rows: " + ", ".join(duplicate_errors)],
             "quotes": [quote_to_dict(quote) for quote in incoming],
         }
 
@@ -295,7 +295,7 @@ def import_reviewed_quotes(
 
 
 def analyze_reviewed_quotes(quotes: list[ReviewedQuote]) -> dict[str, Any]:
-    """Analyze reviewed quotes for component coverage and traveler totals."""
+    """Analyze source-backed quotes for component coverage and traveler totals."""
     ordered = sorted(quotes, key=lambda item: (item.quote_date, item.component, item.origin))
     latest_by_component = _latest_by_component(ordered)
     required_pit = ["ticket", "pit_flight", "hotel", "local_transport"]
@@ -396,7 +396,7 @@ def _read_csv_rows(path: Path) -> list[dict[str, Any]]:
 def _read_json_rows(path: Path) -> list[dict[str, Any]]:
     data = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(data, list):
-        raise ValueError("Reviewed quote JSON must contain a list of objects.")
+        raise ValueError("Source-backed quote JSON must contain a list of objects.")
     if not all(isinstance(item, dict) for item in data):
-        raise ValueError("Reviewed quote JSON rows must be objects.")
+        raise ValueError("Source-backed quote JSON rows must be objects.")
     return [dict(item) for item in data]

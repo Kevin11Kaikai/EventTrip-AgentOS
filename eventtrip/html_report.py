@@ -31,7 +31,7 @@ def build_source_backed_html_report(
     reviewed_snapshots = reviewed_live_snapshots or []
     quote_rows = reviewed_quotes or []
     quote_analysis = analyze_reviewed_quotes(_quote_dicts_to_objects(quote_rows))
-    forecast = _forecast_model(reviewed_snapshots)
+    forecast = _forecast_model(quote_analysis)
     source_attributions = build_field_source_attributions(source_data)
     coverage = _source_coverage_metrics(citation_groups, sources, traceability_items)
 
@@ -208,7 +208,7 @@ def build_source_backed_html_report(
     }}
     .source-backed-badge {{ background: var(--ok-bg); color: var(--ok); }}
     .model-inference-badge {{ background: #eff6ff; color: #1d4ed8; }}
-    .human-reviewed-badge {{ background: #ecfeff; color: #0e7490; }}
+    .source-backed-data-badge {{ background: #ecfeff; color: #0e7490; }}
     .internal-policy-badge {{ background: var(--danger-bg); color: var(--warn); }}
     .unknown-badge {{ background: var(--unknown-bg); color: var(--unknown); }}
     .source-backed, .internal-estimate, .not-found {{
@@ -270,7 +270,7 @@ def build_source_backed_html_report(
   <header>
     <span class="eyebrow">静态客户展示报告</span>
     <h1>EventTrip-AgentOS 中文来源报告</h1>
-    <p class="subtitle">这个 HTML 页面只把已登记的公开来源、人工审核数据和明确标注的模型指数展示给客户。没有公开来源支持的门票、机票、酒店、本地交通和总预算数值会保持“未知”，不会伪装成真实报价。</p>
+    <p class="subtitle">这个 HTML 页面只展示已登记公开来源支撑的事实、美元报价和基于报价的预测区间。没有公开来源支持的门票、机票、酒店、本地交通和总预算数值会保持“未知”，不会用本地估算冒充真实报价。</p>
     <div class="client-summary-strip screenshot-friendly">
       <span>客户展示版</span>
       <span>静态 HTML / 可截图</span>
@@ -285,13 +285,13 @@ def build_source_backed_html_report(
     </div>
     <nav class="report-nav" aria-label="报告章节">
       <a href="#quantitative-analysis">定量分析</a>
-      <a href="#real-quote-analysis">真实报价</a>
+      <a href="#real-quote-analysis">来源报价</a>
       <a href="#next-actions">下一步</a>
       <a href="#official-paths">官方路径</a>
       <a href="#secondary-market">二级市场</a>
       <a href="#unknowns">未知项</a>
       <a href="#live-data">审核数据</a>
-      <a href="#forecast">趋势预测</a>
+      <a href="#forecast">美元预测</a>
       <a href="#field-attribution">字段来源</a>
       <a href="#citations">来源分组</a>
       <a href="#traceability">证据追踪</a>
@@ -301,7 +301,7 @@ def build_source_backed_html_report(
   <main>
     <section id="decision-summary">
       <h2>决策摘要</h2>
-      <p class="section-lead">本页用于客户查看：有来源支持的事实、仍未知的真实价格、人工审核数据和模型指数分开展示。关键原则是：查不到真实公开数据就明确承认未知。</p>
+      <p class="section-lead">本页用于客户查看：有来源支持的事实、来源支撑报价、仍未知的真实价格和基于报价的预测区间分开展示。关键原则是：查不到真实公开数据就明确承认未知。</p>
       <div class="status-strip">
         <div class="status-card"><strong>购票路径</strong>先看 FIFA 官方票务或 FIFA 官方转售/换票；StubHub 只作为二级市场监控渠道。{_field_source_badge("official_ticket_path", source_attributions)}</div>
         <div class="status-card"><strong>价格真实性</strong>精确门票、机票、酒店、交通和总预算目前没有完整公开来源支持，因此不写成已验证报价。{_field_source_badge("unknown_exact_prices", source_attributions)}</div>
@@ -311,12 +311,12 @@ def build_source_backed_html_report(
 
     <section id="quantitative-analysis">
       <h2>定量分析：哪些数字是真的，哪些还不能声称是真的</h2>
-      <p class="section-lead">这部分补足客户最关心的量化信息。公开来源能支撑的数字、人工审核价格行、模型压力指数和仍未找到来源的真实价格被拆开列出。</p>
-      {_quantitative_analysis_section(coverage, forecast, reviewed_snapshots, source_attributions)}
+      <p class="section-lead">这部分补足客户最关心的量化信息：哪些是公开来源支撑的美元报价，哪些是基于这些报价的预测区间，哪些仍然未知。</p>
+      {_quantitative_analysis_section(coverage, forecast, quote_analysis, source_attributions)}
     </section>
 
     <section id="real-quote-analysis">
-      <h2>真实审核报价与总成本曲线</h2>
+      <h2>来源支撑报价与总成本曲线</h2>
       {_reviewed_quote_analysis_section(quote_analysis, quote_rows)}
     </section>
 
@@ -346,18 +346,18 @@ def build_source_backed_html_report(
     </section>
 
     <section id="live-data">
-      <h2>人工审核 Live/API 数据状态</h2>
+      <h2>来源支撑 Live/API 数据状态</h2>
       {_live_data_status(live_snapshot_preview, reviewed_snapshots, source_attributions)}
     </section>
 
     <section id="forecast">
-      <h2>价格趋势图与购买窗口预测</h2>
+      <h2>美元价格预测与购买窗口</h2>
       {_forecast_section(forecast, source_attributions)}
     </section>
 
     <section id="field-attribution">
       <h2>字段级来源标注</h2>
-      <p class="note">本表说明每个关键展示字段来自公开来源、人工审核数据、模型推断、内部策略，还是尚未找到来源支持。</p>
+      <p class="note">本表说明每个关键展示字段来自公开来源、来源支撑数据、模型推断、内部策略，还是尚未找到来源支持。</p>
       {_field_attribution_table(source_attributions, sources)}
     </section>
 
@@ -480,28 +480,27 @@ def _source_coverage_metrics(
 def _quantitative_analysis_section(
     coverage: dict[str, int],
     forecast: dict[str, Any],
-    reviewed_live_snapshots: list[dict[str, Any]],
+    quote_analysis: dict[str, Any],
     attributions: dict[str, FieldSourceAttribution],
 ) -> str:
-    latest = forecast.get("latest_reviewed_ticket")
-    latest_ticket_value = (
-        f"${_format_number(latest['lowest_price'])} / {_format_number(latest['listings'])} listings"
-        if latest
-        else "0 条已审核真实报价行"
-    )
+    latest_ticket = quote_analysis["latest_by_component"].get("ticket")
+    latest_ticket_value = _format_currency(_float_or_none(latest_ticket.get("amount"))) if latest_ticket else "未知"
+    pit_total = quote_analysis["latest_totals"]["pit"]
+    sea_total = quote_analysis["latest_totals"]["sea"]
     return (
         '<div class="metrics">'
         f'<div class="metric"><span>已登记公开来源</span><strong>{coverage["source_count"]} 个</strong></div>'
         f'<div class="metric"><span>已覆盖来源分组</span><strong>{coverage["covered_groups"]}/{coverage["total_groups"]}</strong></div>'
         f'<div class="metric"><span>有来源支持的主张</span><strong>{coverage["source_backed_claims"]} 条</strong></div>'
         f'<div class="metric"><span>仍未知价格类主张</span><strong>{coverage["unknown_claims"]} 条</strong></div>'
-        f'<div class="metric"><span>已审核门票报价行</span><strong>{escape(latest_ticket_value)}</strong></div>'
+        f'<div class="metric"><span>来源支撑门票报价</span><strong>{escape(latest_ticket_value)}</strong></div>'
+        f'<div class="metric"><span>PIT 来源支撑总成本</span><strong>{escape(_format_currency(pit_total))}</strong></div>'
+        f'<div class="metric"><span>SEA 来源支撑总成本</span><strong>{escape(_format_currency(sea_total))}</strong></div>'
         '</div>'
         '<h3>量化结论表</h3>'
-        f'{_quantitative_facts_table(coverage, latest, reviewed_live_snapshots)}'
-        '<h3>成本压力指数变化表</h3>'
-        '<p class="section-lead">指数 100 代表当前基准。这里的数字是模型压力指数，不是未核验的美元报价；它用于比较方向和相对压力。</p>'
-        f'{_forecast_numeric_table(forecast["labels"], forecast["series"])}'
+        f'{_quantitative_facts_table(coverage, quote_analysis)}'
+        '<h3>来源支撑美元预测区间</h3>'
+        f'{_forecast_range_table(forecast)}'
         '<h3>触发规则与真实报价缺口</h3>'
         f'{_trigger_policy_table(attributions)}'
     )
@@ -509,21 +508,22 @@ def _quantitative_analysis_section(
 
 def _quantitative_facts_table(
     coverage: dict[str, int],
-    latest: dict[str, Any] | None,
-    reviewed_live_snapshots: list[dict[str, Any]],
+    quote_analysis: dict[str, Any],
 ) -> str:
-    latest_snapshot = (
-        f"{latest['date']}：最低价 ${_format_number(latest['lowest_price'])}，挂票数 {_format_number(latest['listings'])}"
-        if latest
-        else "暂无已审核真实报价"
+    latest_ticket = quote_analysis["latest_by_component"].get("ticket")
+    latest_ticket_text = (
+        f"{latest_ticket['quote_date']}：{_format_currency(_float_or_none(latest_ticket.get('amount')))}"
+        if latest_ticket
+        else "暂无来源支撑真实报价"
     )
     rows = [
         ("比赛日期", "2026-06-17", "公开来源支持", "FIFA / 公开新闻来源登记"),
         ("比赛场馆", "NRG Stadium / Houston Stadium", "公开来源支持", "FIFA 与休斯顿公开报道来源登记"),
         ("来源样本量", f'{coverage["source_count"]} 个来源', "来源注册表", "用于引用覆盖，不等于价格样本"),
-        ("已审核 live/API 快照", f"{len(reviewed_live_snapshots)} 条", "人工审核数据", "只有 source_type=reviewed_live_data 才进入公开表"),
-        ("最新已审核门票点", latest_snapshot, "人工审核数据" if latest else "未找到来源", "没有则保持未知"),
-        ("真实全量预算", "未知", "未找到来源", "缺少门票、机票、酒店和交通完整报价链"),
+        ("来源支撑报价行", f'{quote_analysis["quote_count"]} 条', "公开来源支撑", "来自已保存 WebEvidence 或本地 source-backed quote 文件"),
+        ("最新来源支撑门票点", latest_ticket_text, "公开来源支撑" if latest_ticket else "未找到来源", "没有则保持未知"),
+        ("PIT 真实全量预算", _format_currency(quote_analysis["latest_totals"]["pit"]), "公开来源支撑" if quote_analysis["latest_totals"]["pit"] else "未找到来源", "缺少组件则保持未知"),
+        ("SEA 真实全量预算", _format_currency(quote_analysis["latest_totals"]["sea"]), "公开来源支撑" if quote_analysis["latest_totals"]["sea"] else "未找到来源", "缺少组件则保持未知"),
     ]
     return _simple_table(["指标", "数值", "状态", "说明"], rows)
 
@@ -535,18 +535,18 @@ def _reviewed_quote_analysis_section(
     if analysis["quote_count"] == 0:
         return (
             '<p class="note unknown">'
-            "目前没有经过人工审核且可引用的真实报价，因此不生成美元价格曲线。"
+            "目前没有可引用的来源支撑真实报价，因此不生成美元价格曲线。"
             "门票、PIT 机票、SEA 机票、酒店、本地交通和每位旅客总成本继续显示为未知；"
             "这比用未核验估算冒充真实报价更适合客户决策。"
             "</p>"
             + _simple_table(
                 ["项目", "当前状态", "下一步"],
                 [
-                    ("门票真实含税费价格", "暂无已审核报价", "人工登记官方或可信市场页面的含税费报价"),
-                    ("PIT 出发机票", "暂无已审核报价", "人工登记具体航班/日期/总价与来源链接"),
-                    ("SEA 出发机票", "暂无已审核报价", "人工登记具体航班/日期/总价与来源链接"),
-                    ("酒店人均分摊", "暂无已审核报价", "人工登记双床房总价、入住日期和分摊口径"),
-                    ("本地交通人均分摊", "暂无已审核报价", "人工登记交通估价来源或实际报价"),
+                    ("门票真实含税费价格", "暂无来源支撑报价", "登记官方或可信市场页面的含税费报价"),
+                    ("PIT 出发机票", "暂无来源支撑报价", "登记具体航班/日期/总价与来源链接"),
+                    ("SEA 出发机票", "暂无来源支撑报价", "登记具体航班/日期/总价与来源链接"),
+                    ("酒店人均分摊", "暂无来源支撑报价", "登记双床房总价、入住日期和分摊口径"),
+                    ("本地交通人均分摊", "暂无来源支撑报价", "登记交通估价来源或实际报价"),
                     ("PIT / SEA 总成本曲线", "暂不生成", "集齐组件后自动显示美元总成本曲线"),
                 ],
             )
@@ -556,11 +556,11 @@ def _reviewed_quote_analysis_section(
     sea_total = analysis["latest_totals"]["sea"]
     return (
         '<p class="note">'
-        "以下只展示已经人工审核、带来源 URL 和 source_id 的报价行。"
-        "每个金额都应能追溯到人工登记的公开来源；未登记的组件不会被自动补全。"
+        "以下只展示带来源 URL 和 source_id 的 source-backed 报价行。"
+        "每个金额都必须能追溯到公开来源；未登记的组件不会被自动补全。"
         "</p>"
         '<div class="metrics">'
-        f'<div class="metric"><span>已审核真实报价行</span><strong>{analysis["quote_count"]} 条</strong></div>'
+        f'<div class="metric"><span>来源支撑真实报价行</span><strong>{analysis["quote_count"]} 条</strong></div>'
         f'<div class="metric"><span>PIT 来源支持总成本</span><strong>{escape(_format_currency(pit_total))}</strong></div>'
         f'<div class="metric"><span>SEA 来源支持总成本</span><strong>{escape(_format_currency(sea_total))}</strong></div>'
         f'<div class="metric"><span>已覆盖组件</span><strong>{len(analysis["components_present"])} / 5</strong></div>'
@@ -593,7 +593,7 @@ def _reviewed_quote_component_table(analysis: dict[str, Any]) -> str:
                 )
             )
         else:
-            rows.append((COMPONENT_LABELS[component], "未知", "n/a", "无已审核来源", "n/a"))
+            rows.append((COMPONENT_LABELS[component], "未知", "n/a", "无来源支撑报价", "n/a"))
     return _simple_table(["组件", "最新金额", "日期", "来源", "可信度"], rows, escape_cells=False)
 
 
@@ -612,7 +612,7 @@ def _reviewed_quote_source_table(quote_rows: list[dict[str, Any]]) -> str:
                 quote.get("notes", ""),
             )
         )
-    return _simple_table(["日期", "组件", "金额", "来源页面", "source_id", "审核说明"], rows, escape_cells=False)
+    return _simple_table(["日期", "组件", "金额", "来源页面", "source_id", "来源说明"], rows, escape_cells=False)
 
 
 def _reviewed_quote_dollar_chart(analysis: dict[str, Any]) -> str:
@@ -627,9 +627,9 @@ def _reviewed_quote_dollar_chart(analysis: dict[str, Any]) -> str:
     }
     series = {name: points for name, points in series.items() if points}
     if not series:
-        return '<p class="note unknown">已审核报价不足，暂时不能生成美元成本曲线。</p>'
+        return '<p class="note unknown">来源支撑报价不足，暂时不能生成美元成本曲线。</p>'
     return (
-        '<p class="section-lead">这张图只使用人工审核报价行。缺失组件不会被补齐；总成本线只有在门票、对应机票、酒店和本地交通都存在时才显示。</p>'
+        '<p class="section-lead">这张图只使用来源支撑报价行。缺失组件不会被补齐；总成本线只有在门票、对应机票、酒店和本地交通都存在时才显示。</p>'
         + _dollar_line_chart(series)
     )
 
@@ -696,8 +696,8 @@ def _dollar_line_chart(series: dict[str, list[tuple[str, float]]]) -> str:
 
     return (
         '<div class="card">'
-        '<h3>已审核美元报价折线图</h3>'
-        f'<svg viewBox="0 0 {width} {height}" role="img" aria-label="已审核美元报价折线图">'
+        '<h3>来源支撑美元报价折线图</h3>'
+        f'<svg viewBox="0 0 {width} {height}" role="img" aria-label="来源支撑美元报价折线图">'
         f'<rect x="0" y="0" width="{width}" height="{height}" fill="#ffffff"/>'
         + "".join(grid_lines)
         + f'<line x1="{left}" y1="{top}" x2="{left}" y2="{top + chart_height}" stroke="#172033"/>'
@@ -709,38 +709,34 @@ def _dollar_line_chart(series: dict[str, list[tuple[str, float]]]) -> str:
     )
 
 
-def _forecast_numeric_table(labels: list[str], series: dict[str, list[int]]) -> str:
-    rows: list[tuple[str, ...]] = []
-    for name, points in series.items():
-        first = points[0]
-        last = points[-1]
-        delta = last - first
-        delta_html = (
-            f'<span class="delta-up">+{delta}</span>'
-            if delta > 0
-            else f'<span class="delta-down">{delta}</span>'
+def _forecast_range_table(forecast: dict[str, Any]) -> str:
+    if not forecast.get("has_source_backed_quotes"):
+        return (
+            '<p class="note unknown">'
+            "没有来源支撑的当前美元报价，因此不生成预测美元价格。"
+            "本报告不会用示例数据或无来源估算替代真实报价。"
+            "</p>"
         )
-        row = (
-            escape(name),
-            *[escape(str(point)) for point in points],
-            delta_html,
-            _pressure_guidance(name, delta),
+    rows: list[tuple[Any, ...]] = []
+    for item in forecast["component_ranges"]:
+        rows.append(
+            (
+                item["label"],
+                _format_currency(item["current"]),
+                f'{_format_currency(item["low"])} - {_format_currency(item["high"])}',
+                item["basis"],
+            )
         )
-        rows.append(row)
-    headers = ["项目", *labels, "到比赛周变化", "解读"]
-    return _simple_table(headers, rows, escape_cells=False)
-
-
-def _pressure_guidance(name: str, delta: int) -> str:
-    if "门票" in name and delta < 0:
-        return "模型认为门票压力下降，适合继续监控，不应恐慌购买。"
-    if "机票" in name and delta > 0:
-        return "模型认为越接近出发成本压力越高，应设置提醒并避免拖到最后。"
-    if "酒店" in name and delta > 0:
-        return "大型赛事附近酒店风险仍在，优先可取消预订。"
-    if "总成本" in name and delta > 0:
-        return "整体成本压力上行，门票等待需要和机票/酒店风险平衡。"
-    return "用于方向判断，不是美元报价。"
+    for item in forecast["traveler_ranges"]:
+        rows.append(
+            (
+                item["label"],
+                _format_currency(item["current"]),
+                f'{_format_currency(item["low"])} - {_format_currency(item["high"])}',
+                item["basis"],
+            )
+        )
+    return _simple_table(["项目", "当前来源支撑价格", "预测区间", "依据"], rows)
 
 
 def _trigger_policy_table(attributions: dict[str, FieldSourceAttribution]) -> str:
@@ -886,7 +882,7 @@ def _field_status_class(status: str) -> str:
     return {
         "source_backed": "source-backed-badge",
         "model_inference": "model-inference-badge",
-        "human_reviewed_data": "human-reviewed-badge",
+        "human_reviewed_data": "source-backed-data-badge",
         "internal_policy": "internal-policy-badge",
         "no_source_backed_data_found": "unknown-badge",
     }.get(status, "")
@@ -896,7 +892,7 @@ def _field_status_label(status: str) -> str:
     return {
         "source_backed": "公开来源支持",
         "model_inference": "模型推断",
-        "human_reviewed_data": "人工审核数据",
+        "human_reviewed_data": "来源支撑数据",
         "internal_policy": "内部策略",
         "no_source_backed_data_found": "未找到来源支持",
     }.get(status, status)
@@ -919,14 +915,14 @@ def _live_data_status(
     source_badge = _field_source_badge("reviewed_live_snapshots", attributions or {})
     if reviewed:
         return (
-            '<p class="note">以下是已人工审核的 live/API snapshot。'
+            '<p class="note">以下是来源支撑的 live/API snapshot。'
             "这些数据只有在显式审核后才会显示，并且与未解决的公开来源未知项分开展示。"
             f"{source_badge}</p>"
             + _reviewed_live_snapshot_table(reviewed)
         )
     if not preview:
         return (
-            '<p class="note">本报告没有附加已审核的 live/API 数据。'
+            '<p class="note">本报告没有附加来源支撑 live/API 数据。'
             f"默认演示仍然是离线、可复现的流程。{source_badge}</p>"
         )
     rows = [
@@ -937,137 +933,107 @@ def _live_data_status(
     return source_badge + "<ul>" + "".join(rows) + "</ul>"
 
 
-def _forecast_model(reviewed_live_snapshots: list[dict[str, Any]]) -> dict[str, Any]:
-    """Return source-backed trend guidance and model index data for the Chinese HTML report."""
-    ticket_point = _latest_reviewed_ticket_point(reviewed_live_snapshots)
-    labels = ["现在", "出发前15天", "出发前10天", "出发前5天", "比赛周"]
-    series = {
-        "球票压力指数": [100, 96, 92, 88, 84],
-        "PIT机票压力指数": [100, 102, 106, 111, 122],
-        "SEA机票压力指数": [100, 103, 108, 115, 128],
-        "酒店压力指数": [100, 101, 103, 106, 113],
-        "PIT总成本压力指数": [100, 99, 99, 100, 106],
-        "SEA总成本压力指数": [100, 100, 101, 103, 111],
+def _forecast_model(quote_analysis: dict[str, Any]) -> dict[str, Any]:
+    """Return source-backed current prices and deterministic USD forecast ranges."""
+    latest = quote_analysis.get("latest_by_component", {})
+    component_ranges: list[dict[str, Any]] = []
+    factors = {
+        "ticket": (0.90, 1.05, "基于当前来源支撑票价；等待偏向只给区间，不保证降价。"),
+        "pit_flight": (1.00, 1.18, "PIT 航班价格可能随出发临近上行；需继续看实际航空报价。"),
+        "sea_flight": (1.02, 1.22, "SEA 航程更长，临近出发的票价上行风险更高。"),
+        "hotel": (1.00, 1.15, "大型赛事酒店可订性不确定；预测只基于已登记酒店报价。"),
+        "local_transport": (1.00, 1.30, "比赛日交通可能受拥堵和 surge pricing 影响。"),
     }
+    for component in sorted(COMPONENT_LABELS):
+        quote = latest.get(component)
+        if not quote:
+            continue
+        current = _float_or_none(quote.get("amount"))
+        if current is None:
+            continue
+        low_factor, high_factor, basis = factors[component]
+        component_ranges.append(
+            {
+                "component": component,
+                "label": COMPONENT_LABELS[component],
+                "current": current,
+                "low": round(current * low_factor, 2),
+                "high": round(current * high_factor, 2),
+                "basis": basis,
+            }
+        )
+
+    traveler_ranges = _traveler_forecast_ranges(latest, factors)
     return {
-        "labels": labels,
-        "series": series,
-        "latest_reviewed_ticket": ticket_point,
-        "claim_20_percent_unsold_supported": False,
-        "best_window": "先锁定可取消酒店；机票重点观察出发前15-30天；门票继续监控官方转售和二级市场，触发价到达再买。",
-        "pit_plan": "PIT 出发建议采用 Option A：提前锁定可取消双床酒店，机票设置价格提醒，若出发前15-30天出现时间可靠且价格合理的航班再购买；门票等官方转售或二级市场含税价触发。",
-        "sea_plan": "SEA 出发航程更长、延误成本更高，仍建议 Option A；如果30-45天前出现时间可靠且价格合理的航班，可以比 PIT 更早锁定机票。",
+        "has_source_backed_quotes": bool(component_ranges),
+        "component_ranges": component_ranges,
+        "traveler_ranges": traveler_ranges,
+        "best_window": "只在真实来源报价齐全后给购买窗口；当前策略是继续收集来源报价，价格低于触发价再行动。",
+        "pit_plan": "PIT 方案只使用 PIT 来源支撑航班报价、门票、酒店和本地交通报价计算；缺失项保持未知。",
+        "sea_plan": "SEA 方案只使用 SEA 来源支撑航班报价、门票、酒店和本地交通报价计算；缺失项保持未知。",
     }
 
 
-def _latest_reviewed_ticket_point(snapshots: list[dict[str, Any]]) -> dict[str, Any] | None:
-    if not snapshots:
-        return None
-    ordered = sorted(snapshots, key=lambda item: str(item.get("snapshot_date", "")))
-    latest = ordered[-1]
-    return {
-        "date": latest.get("snapshot_date"),
-        "lowest_price": latest.get("lowest_price"),
-        "listings": latest.get("listings"),
-        "notes": latest.get("notes", ""),
+def _traveler_forecast_ranges(
+    latest: dict[str, dict[str, Any]],
+    factors: dict[str, tuple[float, float, str]],
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    traveler_components = {
+        "PIT 旅客总成本": ["ticket", "pit_flight", "hotel", "local_transport"],
+        "SEA 旅客总成本": ["ticket", "sea_flight", "hotel", "local_transport"],
     }
+    for label, components in traveler_components.items():
+        if any(component not in latest for component in components):
+            continue
+        current_values = [_float_or_none(latest[component].get("amount")) for component in components]
+        if any(value is None for value in current_values):
+            continue
+        current = round(sum(value for value in current_values if value is not None), 2)
+        low = round(
+            sum(
+                (_float_or_none(latest[component].get("amount")) or 0) * factors[component][0]
+                for component in components
+            ),
+            2,
+        )
+        high = round(
+            sum(
+                (_float_or_none(latest[component].get("amount")) or 0) * factors[component][1]
+                for component in components
+            ),
+            2,
+        )
+        rows.append(
+            {
+                "label": label,
+                "current": current,
+                "low": low,
+                "high": high,
+                "basis": "由已登记来源报价逐项相加；预测区间不补齐缺失组件。",
+            }
+        )
+    return rows
 
 
 def _forecast_section(
     forecast: dict[str, Any],
     attributions: dict[str, FieldSourceAttribution],
 ) -> str:
-    ticket = forecast.get("latest_reviewed_ticket")
-    ticket_note = (
-        f"最近一条已审核 live/API 门票数据：{escape(str(ticket['date']))}，"
-        f"最低价 ${escape(_format_number(ticket['lowest_price']))}，"
-        f"挂票数 {escape(_format_number(ticket['listings']))}。"
-        if ticket
-        else "目前没有已审核 live/API 门票价格，因此图表使用来源趋势做压力指数预测，不伪装成真实美元报价。"
-    )
     unsupported_note = (
         "未找到可靠公开来源支持“美国黄牛手中约20%的票卖不出去”这个具体数字；"
         "因此该数字没有进入预测模型。"
     )
     return (
-        f'<p class="note">{ticket_note}</p>'
+        '<p class="note">本节只展示美元价格和预测区间；如果没有来源支撑当前报价，就显示未知。</p>'
         f'<p class="note unknown">{unsupported_note}</p>'
-        f"{_line_chart(forecast['labels'], forecast['series'], _field_source_badge('forecast_chart', attributions))}"
+        f"{_forecast_range_table(forecast)}"
         "<div class=\"grid\">"
         f"<article class=\"card\"><h3>推荐购买窗口</h3><p>{escape(str(forecast['best_window']))}</p>{_field_source_badge('trigger_policy', attributions)}</article>"
         f"<article class=\"card\"><h3>从 Pittsburgh / PIT 出发</h3><p>{escape(str(forecast['pit_plan']))}</p>{_field_source_badge('pit_recommendation', attributions)}</article>"
         f"<article class=\"card\"><h3>从 Seattle / SEA 出发</h3><p>{escape(str(forecast['sea_plan']))}</p>{_field_source_badge('sea_recommendation', attributions)}</article>"
         "</div>"
-        "<p class=\"section-lead\">预测依据：Expedia 2026 Air Hacks 的国内机票窗口、KAYAK 2026 酒店预订趋势、AP 关于部分世界杯小组赛仍在售但价格偏高的报道，以及 Houston 当地住宿/交通报道。这里展示的是模型压力指数，不是未核验的真实报价。</p>"
-    )
-
-
-def _line_chart(labels: list[str], series: dict[str, list[int]], source_badge: str = "") -> str:
-    width = 860
-    height = 360
-    left = 58
-    top = 30
-    chart_width = 740
-    chart_height = 250
-    values = [value for points in series.values() for value in points]
-    min_value = min(values)
-    max_value = max(values)
-    palette = ["#0f766e", "#2563eb", "#7c3aed", "#ca8a04", "#dc2626", "#0891b2"]
-    x_step = chart_width / (len(labels) - 1)
-
-    def point(index: int, value: int) -> tuple[float, float]:
-        x = left + index * x_step
-        y = top + (max_value - value) / (max_value - min_value) * chart_height
-        return x, y
-
-    grid_lines = []
-    for value in [80, 90, 100, 110, 120, 130]:
-        if value < min_value or value > max_value:
-            continue
-        y = top + (max_value - value) / (max_value - min_value) * chart_height
-        grid_lines.append(
-            f'<line x1="{left}" y1="{y:.1f}" x2="{left + chart_width}" y2="{y:.1f}" stroke="#d8dee8"/>'
-            f'<text x="12" y="{y + 4:.1f}" font-size="12" fill="#5d6878">{value}</text>'
-        )
-
-    paths = []
-    legend = []
-    for idx, (name, points) in enumerate(series.items()):
-        color = palette[idx % len(palette)]
-        d = " ".join(
-            ("M" if point_index == 0 else "L") + f" {point(point_index, value)[0]:.1f} {point(point_index, value)[1]:.1f}"
-            for point_index, value in enumerate(points)
-        )
-        paths.append(f'<path d="{d}" fill="none" stroke="{color}" stroke-width="3"/>')
-        for point_index, value in enumerate(points):
-            x, y = point(point_index, value)
-            paths.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4" fill="{color}"/>')
-        legend_y = top + idx * 22
-        legend.append(
-            f'<rect x="650" y="{legend_y - 10}" width="12" height="12" fill="{color}"/>'
-            f'<text x="668" y="{legend_y}" font-size="12" fill="#172033">{escape(name)}</text>'
-        )
-
-    x_labels = []
-    for idx, label in enumerate(labels):
-        x = left + idx * x_step
-        x_labels.append(
-            f'<text x="{x:.1f}" y="{top + chart_height + 26}" font-size="12" text-anchor="middle" fill="#5d6878">{escape(label)}</text>'
-        )
-
-    return (
-        '<div class="card">'
-        '<h3>成本压力指数折线图</h3>'
-        '<p class="section-lead">指数 100 代表当前基准。高于 100 表示成本压力上升，低于 100 表示模型认为价格压力下降。没有审核报价时，不显示伪造美元价格。</p>'
-        f'<svg viewBox="0 0 {width} {height}" role="img" aria-label="成本压力指数折线图">'
-        f'<rect x="0" y="0" width="{width}" height="{height}" fill="#ffffff"/>'
-        + "".join(grid_lines)
-        + f'<line x1="{left}" y1="{top}" x2="{left}" y2="{top + chart_height}" stroke="#172033"/>'
-        + f'<line x1="{left}" y1="{top + chart_height}" x2="{left + chart_width}" y2="{top + chart_height}" stroke="#172033"/>'
-        + "".join(paths)
-        + "".join(x_labels)
-        + "".join(legend)
-        + f'</svg>{source_badge}</div>'
+        "<p class=\"section-lead\">预测依据：已登记的来源支撑美元报价、Expedia 2026 Air Hacks 的国内机票窗口、KAYAK 2026 酒店预订趋势、AP 关于部分世界杯小组赛仍在售但价格偏高的报道，以及 Houston 当地住宿/交通报道。预测区间是决策辅助，不是保证价格。</p>"
     )
 
 

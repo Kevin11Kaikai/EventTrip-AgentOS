@@ -83,15 +83,15 @@ Phase 7.9 polishes the HTML report for client-facing review:
 
 Phase 8.0 adds an `Opt-In Live Data Status` section. By default it states that no live API payload is attached. Future reviewed live snapshots can be displayed only when they carry source metadata and pass the opt-in provider path.
 
-Phase 8.2 displays reviewed live/API snapshots in the HTML report only when their snapshot `source_type` is `reviewed_live_data`. Unreviewed API previews and ordinary mock/manual snapshots are not shown in the public live-data table.
+Phase 8.2 displays source-backed live/API snapshots in the HTML report only when their snapshot `source_type` is `reviewed_live_data`. API previews and ordinary mock/manual snapshots are not shown in the public live-data table.
 
-Phase 8.3 switches the source-backed HTML report to a Chinese client-facing presentation and adds an inline SVG forecast section. The chart uses pressure indices for ticket, flight, hotel, and total-cost direction. If exact reviewed dollar prices are unavailable, the report says so directly and does not invent values.
+Phase 8.3 switches the source-backed HTML report to a Chinese client-facing presentation and adds a USD forecast section. Exact dollar prices and forecast ranges are shown only from source-backed quote rows; if those prices are unavailable, the report says so directly and does not invent values.
 
 Phase 8.4 adds field-level source attribution to the Chinese HTML report. Key fields now carry visible badges that distinguish:
 
 - public-source-backed facts,
-- human-reviewed live/API data,
-- model-inferred pressure indices,
+- source-backed live/API data,
+- model-inferred forecast ranges,
 - internal trigger policies,
 - values that remain unknown because no registered public source supports them.
 
@@ -110,16 +110,16 @@ The HTML report also includes a quantitative analysis panel for customer review:
 
 - registered public-source count and citation-group coverage,
 - count of source-backed claims and still-unknown price claims,
-- reviewed live/API quote rows when explicitly saved as `reviewed_live_data`,
-- numeric cost-pressure index tables for ticket, PIT airfare, SEA airfare, hotel, and total-cost pressure,
+- source-backed live/API quote rows when explicitly saved as `reviewed_live_data`,
+- source-backed USD quote tables and forecast ranges for ticket, PIT airfare, SEA airfare, hotel, local transport, and total costs,
 - trigger-policy thresholds such as `$550`, `$600`, and `$680-$700`,
 - explicit tables for values that remain unknown because no registered public source supports them.
 
 This panel is intentionally strict. It gives the customer numbers where the system can defend them, but does not convert unsupported ticket, flight, hotel, transportation, or total-budget estimates into public facts.
 
-Phase 8.8 adds `真实审核报价与总成本曲线`, a stricter dollar-value section for customer presentation. It uses only reviewed quote rows with a source URL and `source_id`. If no reviewed rows exist, the HTML explicitly says no verified quote data is available and does not generate a dollar chart. If reviewed rows exist, it can show ticket, PIT flight, SEA flight, hotel, local transport, and PIT/SEA total-cost curves.
+Phase 8.8 adds `来源支撑报价与总成本曲线`, a stricter dollar-value section for customer presentation. It uses only quote rows with a public source URL and `source_id`; saved WebEvidence with a public HTTPS source URL can be converted into quote rows directly. If no source-backed rows exist, the HTML explicitly says no verified quote data is available and does not generate a dollar chart. If rows exist, it can show ticket, PIT flight, SEA flight, hotel, local transport, and PIT/SEA total-cost curves.
 
-Reviewed quote intake is documented in [`docs/reviewed_quantitative_quotes.md`](reviewed_quantitative_quotes.md).
+Source-backed quote intake is documented in [`docs/reviewed_quantitative_quotes.md`](reviewed_quantitative_quotes.md).
 
 ## Reviewed Source Intake
 

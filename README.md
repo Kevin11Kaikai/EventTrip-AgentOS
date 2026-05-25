@@ -89,7 +89,7 @@ Phase 1 core demo remains compatible with Python 3.9+. Phase 3+ development and 
 - [Ticket Link Recommendations](docs/ticket_links.md)
 - [Reviewed Source Intake Workflow](docs/source_intake_workflow.md)
 - [Source Registry Review Packaging](docs/source_registry_review_packaging.md)
-- [Reviewed Quantitative Quotes](docs/reviewed_quantitative_quotes.md)
+- [Source-Backed Quantitative Quotes](docs/reviewed_quantitative_quotes.md)
 - [Opt-In Live Data Integration](docs/live_data_integration.md)
 - [Release v0.1.0 Draft](docs/release_v0_1_0.md)
 - [Verified MCP client output](examples/mcp_client_validation_output.txt)
@@ -203,28 +203,28 @@ python -m eventtrip.live_data_cli preview --endpoint-url https://api.example.com
 
 If a real value cannot be verified, the reports keep it unknown rather than inventing or backfilling data.
 
-The source-backed HTML report displays reviewed live/API snapshots only when they were saved as `reviewed_live_data`. Unreviewed previews remain outside the public live-data table.
+The source-backed HTML report displays source-backed live/API snapshots only when they were saved as `reviewed_live_data`. Previews remain outside the public live-data table.
 
-Phase 8.3 also adds a Chinese client-facing forecast section to the HTML report. It includes inline SVG trend charts for ticket, flight, hotel, and total-cost pressure indices, plus separate PIT and SEA timing guidance. Exact dollar charts are shown only when reviewed source-backed data exists; otherwise the page clearly labels the chart as a model pressure index and leaves unverifiable prices unknown.
+Phase 8.3 also adds a Chinese client-facing forecast section to the HTML report. The customer view now focuses on real USD quotes and forecast ranges. If exact source-backed ticket, flight, hotel, transport, or total-cost quotes are unavailable, the page leaves those values unknown instead of showing substitute indices.
 
-Phase 8.4 adds field-level source attribution to the same Chinese HTML report. Each critical field can now be labeled as public-source-backed, human-reviewed data, model inference, internal policy, or unknown/not source-backed. The `字段级来源标注` table gives customers a compact audit trail without turning unsupported values into facts.
+Phase 8.4 adds field-level source attribution to the same Chinese HTML report. Each critical field can now be labeled as public-source-backed, source-backed data, model inference, internal policy, or unknown/not source-backed. The `字段级来源标注` table gives customers a compact audit trail without turning unsupported values into facts.
 
 Phase 8.5 polishes the customer-facing HTML presentation with cleaner spacing, screenshot-friendly summary badges, responsive tables, and print-specific layout rules. It does not change ticket timing, budget values, source validation, or recommendation logic.
 
-The HTML report now also includes a quantitative analysis panel. It separates registered public-source counts, reviewed live/API rows, model pressure-index tables, trigger-policy thresholds, and still-unknown real prices. If a true ticket, flight, hotel, or total-cost quote cannot be verified, the HTML says `unknown` instead of filling the gap with unsupported numbers.
+The HTML report now also includes a quantitative analysis panel. It separates registered public-source counts, source-backed quote rows, trigger-policy thresholds, USD forecast ranges, and still-unknown real prices. If a true ticket, flight, hotel, or total-cost quote cannot be verified, the HTML says `unknown` instead of filling the gap with unsupported numbers.
 
-Phase 8.8 adds a reviewed quantitative quote layer for client-facing dollar analysis. The HTML now has a `真实审核报价与总成本曲线` section. It only draws ticket, flight, hotel, local-transport, and PIT/SEA total-cost dollar charts when rows have been manually reviewed and include source URLs. If no such rows exist, the report clearly says there is no verified quote data yet.
+Phase 8.8 adds a source-backed quantitative quote layer for client-facing dollar analysis. The HTML now has a `来源支撑报价与总成本曲线` section. It draws ticket, flight, hotel, local-transport, and PIT/SEA total-cost dollar charts when rows include public source URLs. Saved `WebEvidence` with public HTTPS source URLs can be converted into source-backed quote rows automatically; local fixtures without public URLs are ignored. If no such rows exist, the report clearly says there is no source-backed quote data yet.
 
-Preview a reviewed quote import file:
+Preview a source-backed quote import file:
 
 ```powershell
-python -m eventtrip.reviewed_quotes_cli import --input examples\reviewed_quote_import.csv --match portugal_dr_congo --dry-run
+python -m eventtrip.source_backed_quotes_cli import --input examples\reviewed_quote_import.csv --match portugal_dr_congo --dry-run
 ```
 
-Summarize local reviewed quotes:
+Summarize local source-backed quotes:
 
 ```powershell
-python -m eventtrip.reviewed_quotes_cli summary --match portugal_dr_congo
+python -m eventtrip.source_backed_quotes_cli summary --match portugal_dr_congo
 ```
 
 Print or open the latest source-backed report:

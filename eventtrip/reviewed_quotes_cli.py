@@ -1,7 +1,7 @@
-"""CLI for source-backed reviewed quote intake.
+"""CLI for source-backed quote intake.
 
 The CLI never collects prices by itself. It only validates local CSV/JSON rows
-that a human has reviewed and tied to a public source URL.
+that are tied to a public source URL.
 """
 
 from __future__ import annotations
@@ -20,16 +20,16 @@ from eventtrip.reviewed_quotes import (
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Manage reviewed source-backed quote rows.")
+    parser = argparse.ArgumentParser(description="Manage source-backed quote rows.")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    summary = subparsers.add_parser("summary", help="Summarize reviewed quotes for one match.")
+    summary = subparsers.add_parser("summary", help="Summarize source-backed quotes for one match.")
     _add_match_argument(summary)
-    summary.add_argument("--path", type=Path, help="Optional reviewed quote CSV/JSON path.")
+    summary.add_argument("--path", type=Path, help="Optional source-backed quote CSV/JSON path.")
 
     import_parser = subparsers.add_parser(
         "import",
-        help="Import reviewed quote rows from a local CSV or JSON file.",
+        help="Import source-backed quote rows from a local CSV or JSON file.",
     )
     _add_match_argument(import_parser)
     import_parser.add_argument("--input", required=True, type=Path, help="Local CSV or JSON file.")
@@ -49,15 +49,15 @@ def run_summary(args: argparse.Namespace) -> int:
     try:
         quotes = load_reviewed_quotes(path, match_id=args.match_id)
     except Exception as exc:
-        print(f"Reviewed quote summary failed: {exc}")
+        print(f"Source-backed quote summary failed: {exc}")
         return 2
     analysis = analyze_reviewed_quotes(quotes)
 
-    print(f"Reviewed quote file: {path}")
+    print(f"Source-backed quote file: {path}")
     print(f"Match ID: {args.match_id}")
-    print(f"Reviewed quote count: {analysis['quote_count']}")
+    print(f"Source-backed quote count: {analysis['quote_count']}")
     if not quotes:
-        print("No reviewed source-backed quotes are available yet.")
+        print("No source-backed quotes are available yet.")
         print("Customer-facing reports should keep ticket, flight, hotel, transport, and total costs unknown.")
         return 0
 
@@ -91,22 +91,22 @@ def run_import(args: argparse.Namespace) -> int:
             dry_run=dry_run,
         )
     except Exception as exc:
-        print(f"Reviewed quote import failed: {exc}")
+        print(f"Source-backed quote import failed: {exc}")
         return 2
 
     if result["errors"]:
-        print(f"Reviewed quote import status: {result['status']}")
+        print(f"Source-backed quote import status: {result['status']}")
         for error in result["errors"]:
             print(f"- {error}")
         return 1
 
     if dry_run:
         print(
-            f"Dry run: validated {result['quote_count']} reviewed quote rows; "
+            f"Dry run: validated {result['quote_count']} source-backed quote rows; "
             f"would import into {destination}."
         )
     else:
-        print(f"Imported {result['quote_count']} reviewed quote rows into {destination}.")
+        print(f"Imported {result['quote_count']} source-backed quote rows into {destination}.")
 
     for quote in result["quotes"]:
         label = COMPONENT_LABELS.get(quote["component"], quote["component"])

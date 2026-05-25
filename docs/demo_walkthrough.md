@@ -124,21 +124,21 @@ Only after a human review, write explicitly:
 python -m eventtrip.live_data_cli import --input examples\live_api_snapshot_response.json --match portugal_dr_congo --save --reviewed
 ```
 
-Reviewed rows saved with `source_type=reviewed_live_data` are the only live/API rows shown in the source-backed HTML live-data table.
+Rows saved with `source_type=reviewed_live_data` are the only live/API rows shown in the source-backed HTML live-data table.
 
-Phase 8.3 changes the client-facing HTML report to Chinese and adds inline SVG cost-pressure charts. The chart uses a pressure-index forecast when exact reviewed dollar prices are unavailable, so unverifiable values remain unknown.
+Phase 8.3 changes the client-facing HTML report to Chinese and adds quantitative source-backed price sections. The customer view now focuses on real USD quotes and forecast ranges; unverifiable values remain unknown.
 
-Phase 8.4 adds field-level source attribution to the Chinese HTML report. The report now labels key customer-visible fields as public-source-backed, human-reviewed, model-inferred, internal policy, or still unknown.
+Phase 8.4 adds field-level source attribution to the Chinese HTML report. The report now labels key customer-visible fields as public-source-backed, source-backed data, model-inferred, internal policy, or still unknown.
 
 Phase 8.5 polishes the customer-facing HTML layout for cleaner screenshots, mobile viewing, and print/PDF export. It is a presentation-only pass and does not change the underlying recommendation logic.
 
-The same HTML report now includes a quantitative analysis panel. It shows registered source counts, citation-group coverage, reviewed live/API rows, pressure-index trend tables, trigger thresholds, and a separate table for real prices that remain unknown because no public source supports them.
+The same HTML report now includes a quantitative analysis panel. It shows registered source counts, citation-group coverage, source-backed quote rows, USD forecast ranges, trigger thresholds, and a separate table for real prices that remain unknown because no public source supports them.
 
-Phase 8.8 adds reviewed quote intake for customer-facing dollar analysis. The HTML section `真实审核报价与总成本曲线` only uses manually reviewed rows with source URLs and source IDs. If reviewed ticket, flight, hotel, or transport quotes are missing, it says so directly instead of drawing a fake price curve.
+Phase 8.8 adds source-backed quote intake for customer-facing dollar analysis. The HTML section `来源支撑报价与总成本曲线` only uses rows with public source URLs and source IDs. Saved WebEvidence with a public HTTPS source URL can feed the section directly. If ticket, flight, hotel, or transport quotes are missing, it says so directly instead of drawing a fake price curve.
 
 ```powershell
-python -m eventtrip.reviewed_quotes_cli import --input examples\reviewed_quote_import.csv --match portugal_dr_congo --dry-run
-python -m eventtrip.reviewed_quotes_cli summary --match portugal_dr_congo
+python -m eventtrip.source_backed_quotes_cli import --input examples\reviewed_quote_import.csv --match portugal_dr_congo --dry-run
+python -m eventtrip.source_backed_quotes_cli summary --match portugal_dr_congo
 ```
 
 Phase 8.6 adds a reviewed source intake workflow for adding new public evidence metadata:
