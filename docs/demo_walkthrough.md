@@ -128,6 +128,8 @@ Reviewed rows saved with `source_type=reviewed_live_data` are the only live/API 
 
 Phase 8.3 changes the client-facing HTML report to Chinese and adds inline SVG cost-pressure charts. The chart uses a pressure-index forecast when exact reviewed dollar prices are unavailable, so unverifiable values remain unknown.
 
+Phase 8.4 adds field-level source attribution to the Chinese HTML report. The report now labels key customer-visible fields as public-source-backed, human-reviewed, model-inferred, internal policy, or still unknown.
+
 ## Expected Decision Output
 
 - Travel plan: Option A: One-night balanced plan

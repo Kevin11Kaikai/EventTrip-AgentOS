@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from dataclasses import dataclass
 from typing import Any
 
 import yaml
@@ -43,6 +44,28 @@ SOURCE_CITATION_GROUPS: dict[str, dict[str, Any]] = {
         "tags": {"airfare_trend", "hotel_trend", "ticket_market_pressure"},
     },
 }
+
+
+@dataclass(frozen=True)
+class FieldSourceAttribution:
+    """Field-level source status for customer-facing report values."""
+
+    field_id: str
+    label: str
+    status: str
+    source_group: str
+    source_ids: list[str]
+    note: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "field_id": self.field_id,
+            "label": self.label,
+            "status": self.status,
+            "source_group": self.source_group,
+            "source_ids": list(self.source_ids),
+            "note": self.note,
+        }
 
 
 def load_source_evidence(path: str | Path = SOURCE_EVIDENCE_PATH) -> dict[str, Any]:
@@ -109,6 +132,139 @@ def grouped_citations(match_sources: dict[str, Any]) -> dict[str, list[dict[str,
     }
 
 
+def build_field_source_attributions(
+    match_sources: dict[str, Any],
+) -> dict[str, FieldSourceAttribution]:
+    """Return source status for individual visible report fields.
+
+    These attributions are more granular than citation groups. They keep exact
+    sourced facts, reviewed data, model indices, internal policy, and unknown
+    values visually separate in the client-facing HTML report.
+    """
+    groups = grouped_citations(match_sources)
+    match_source_ids = _source_ids(groups.get("match_facts", []))
+    ticket_source_ids = _source_ids(groups.get("ticket_safety", []))
+    official_ticket_source_ids = _source_ids(
+        [
+            source
+            for source in groups.get("ticket_safety", [])
+            if "secondary_market" not in source.get("evidence_tags", [])
+        ]
+    )
+    secondary_ticket_source_ids = _source_ids(
+        [
+            source
+            for source in groups.get("ticket_safety", [])
+            if "secondary_market" in source.get("evidence_tags", [])
+        ]
+    )
+    logistics_source_ids = _source_ids(groups.get("houston_logistics", []))
+    trend_source_ids = _source_ids(groups.get("cost_trends", []))
+
+    return {
+        "match_name": FieldSourceAttribution(
+            field_id="match_name",
+            label="比赛名称",
+            status="source_backed",
+            source_group="比赛事实",
+            source_ids=match_source_ids,
+            note="比赛名称来自已登记的公开来源。",
+        ),
+        "match_date": FieldSourceAttribution(
+            field_id="match_date",
+            label="比赛日期",
+            status="source_backed",
+            source_group="比赛事实",
+            source_ids=match_source_ids,
+            note="比赛日期来自已登记的公开来源。",
+        ),
+        "match_venue": FieldSourceAttribution(
+            field_id="match_venue",
+            label="比赛场馆",
+            status="source_backed",
+            source_group="比赛事实",
+            source_ids=match_source_ids,
+            note="场馆名称来自已登记的公开来源；Houston Stadium 是 FIFA 场馆命名，NRG Stadium 是本地常用名称。",
+        ),
+        "official_ticket_path": FieldSourceAttribution(
+            field_id="official_ticket_path",
+            label="官方购票路径",
+            status="source_backed",
+            source_group="购票安全",
+            source_ids=official_ticket_source_ids or ticket_source_ids,
+            note="官方优先路径由 FIFA 票务/支持页面和公开购票安全来源支持。",
+        ),
+        "secondary_market_stubhub": FieldSourceAttribution(
+            field_id="secondary_market_stubhub",
+            label="StubHub 二级市场候选",
+            status="source_backed",
+            source_group="购票安全",
+            source_ids=secondary_ticket_source_ids,
+            note="StubHub 是二级市场候选渠道，不是 FIFA 官方票务来源。",
+        ),
+        "unknown_exact_prices": FieldSourceAttribution(
+            field_id="unknown_exact_prices",
+            label="精确价格与总预算",
+            status="no_source_backed_data_found",
+            source_group="未知或尚无来源支持",
+            source_ids=[],
+            note="精确含税费门票、机票、酒店和总预算没有登记公开来源支持，因此保持未知。",
+        ),
+        "reviewed_live_snapshots": FieldSourceAttribution(
+            field_id="reviewed_live_snapshots",
+            label="人工审核 Live/API snapshot",
+            status="human_reviewed_data",
+            source_group="人工审核数据",
+            source_ids=[],
+            note="只显示 source_type=reviewed_live_data 的行；未审核预览和普通手工行不会进入公开表格。",
+        ),
+        "forecast_chart": FieldSourceAttribution(
+            field_id="forecast_chart",
+            label="成本压力指数折线图",
+            status="model_inference",
+            source_group="价格趋势依据",
+            source_ids=trend_source_ids,
+            note="折线图是基于公开趋势来源和本地规则的压力指数，不是未核验的真实美元报价。",
+        ),
+        "pit_recommendation": FieldSourceAttribution(
+            field_id="pit_recommendation",
+            label="PIT 出发建议",
+            status="model_inference",
+            source_group="价格趋势依据 + 内部规划",
+            source_ids=trend_source_ids,
+            note="PIT 建议结合公开趋势来源、已审核 snapshot（如有）和内部旅行风险规则。",
+        ),
+        "sea_recommendation": FieldSourceAttribution(
+            field_id="sea_recommendation",
+            label="SEA 出发建议",
+            status="model_inference",
+            source_group="价格趋势依据 + 内部规划",
+            source_ids=trend_source_ids,
+            note="SEA 建议结合公开趋势来源、已审核 snapshot（如有）和更长航程风险。",
+        ),
+        "trigger_policy": FieldSourceAttribution(
+            field_id="trigger_policy",
+            label="触发价策略",
+            status="internal_policy",
+            source_group="内部确定性策略",
+            source_ids=[],
+            note="触发价是项目内置决策规则，不是公开市场价格事实。",
+        ),
+        "houston_logistics": FieldSourceAttribution(
+            field_id="houston_logistics",
+            label="休斯顿本地后勤",
+            status="source_backed",
+            source_group="休斯顿交通与住宿",
+            source_ids=logistics_source_ids,
+            note="本地交通、场馆和住宿压力背景来自已登记公开报道。",
+        ),
+    }
+
+
 def citation_label(source: dict[str, Any]) -> str:
     """Return a concise Markdown citation label."""
     return f"[{source['publisher']}: {source['title']}]({source['url']})"
+
+
+def _source_ids(sources: list[dict[str, Any]]) -> list[str]:
+    return [str(source["source_id"]) for source in sources if source.get("source_id")]

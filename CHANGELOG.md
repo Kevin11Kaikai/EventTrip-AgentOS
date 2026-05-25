@@ -30,6 +30,7 @@
 - Added source-backed HTML display for reviewed live/API snapshots only.
 - Added Chinese HTML forecast charts with PIT/SEA purchase timing guidance.
 - Hardened web collection policy output and live HTTP response-size limits.
+- Added field-level source attribution badges and an audit table to the Chinese source-backed HTML report.
 
 ## v0.1.0 - 2026-05-23
 

@@ -87,6 +87,16 @@ Phase 8.2 displays reviewed live/API snapshots in the HTML report only when thei
 
 Phase 8.3 switches the source-backed HTML report to a Chinese client-facing presentation and adds an inline SVG forecast section. The chart uses pressure indices for ticket, flight, hotel, and total-cost direction. If exact reviewed dollar prices are unavailable, the report says so directly and does not invent values.
 
+Phase 8.4 adds field-level source attribution to the Chinese HTML report. Key fields now carry visible badges that distinguish:
+
+- public-source-backed facts,
+- human-reviewed live/API data,
+- model-inferred pressure indices,
+- internal trigger policies,
+- values that remain unknown because no registered public source supports them.
+
+The full `字段级来源标注` table links each visible field to source IDs where available. This keeps customer-facing recommendations readable while preserving a conservative audit trail.
+
 ## Latest Report CLI
 
 Print the latest source-backed report path:

@@ -33,6 +33,15 @@ def test_source_backed_html_report_is_static_and_client_readable():
     assert "本报告没有附加已审核的 live/API 数据" in html
     assert "价格趋势图与购买窗口预测" in html
     assert "成本压力指数折线图" in html
+    assert "字段级来源标注" in html
+    assert "公开来源支持" in html
+    assert "模型推断" in html
+    assert "人工审核数据" in html
+    assert "未找到来源支持" in html
+    assert "forecast_chart" in html
+    assert "pit_recommendation" in html
+    assert "sea_recommendation" in html
+    assert "official_ticket_path" in html
     assert "未找到可靠公开来源支持" in html
     assert "report-nav" in html
     assert "@media print" in html
@@ -71,6 +80,7 @@ def test_html_report_displays_reviewed_live_snapshots():
     )
 
     assert "以下是已人工审核的 live/API snapshot" in html
+    assert "reviewed_live_snapshots" in html
     assert "$640" in html
     assert "reviewed_live_data" in html
     assert "Human-reviewed fixture preview." in html

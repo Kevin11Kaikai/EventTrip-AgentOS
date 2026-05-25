@@ -52,6 +52,9 @@ def test_source_backed_report_agent_writes_no_mock_report(tmp_path):
     assert "claim-match-facts" in html
     assert "claim-secondary-marketplace-stubhub" in html
     assert "价格趋势图与购买窗口预测" in html
+    assert "字段级来源标注" in html
+    assert "forecast_chart" in html
+    assert "官方购票路径" in html
     assert "mock" not in html.lower()
 
 

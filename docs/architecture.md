@@ -201,6 +201,23 @@ Inline SVG cost-pressure charts + PIT/SEA timing guidance
 
 The chart is a model pressure index when exact reviewed dollar prices are unavailable. It explicitly says unverifiable values remain unknown.
 
+Phase 8.4 adds field-level source attribution to the Chinese HTML report:
+
+```text
+Visible report field
+   |
+   v
+FieldSourceAttribution
+   |
+   +-- public-source-backed fact
+   +-- human-reviewed live/API data
+   +-- model inference
+   +-- internal trigger policy
+   +-- unknown / not source-backed
+```
+
+This layer does not change recommendations or prices. It makes the provenance of each customer-visible field explicit through source badges and a `字段级来源标注` audit table.
+
 The seed file is `data/market_snapshots/portugal_dr_congo_snapshots.csv`. It records deterministic mock snapshots for lowest ticket price, listings, Category 3 range, hotel availability proxy, flight price pressure, social buzz, and days before event.
 
 `python -m eventtrip.snapshots_cli` provides safe manual commands to analyze snapshots, validate proposed rows, dry-run appends, and overwrite duplicate match/date rows only when explicitly requested. These manual snapshots feed the SnapshotAgent and final trend analysis.

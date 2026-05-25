@@ -204,6 +204,8 @@ The source-backed HTML report displays reviewed live/API snapshots only when the
 
 Phase 8.3 also adds a Chinese client-facing forecast section to the HTML report. It includes inline SVG trend charts for ticket, flight, hotel, and total-cost pressure indices, plus separate PIT and SEA timing guidance. Exact dollar charts are shown only when reviewed source-backed data exists; otherwise the page clearly labels the chart as a model pressure index and leaves unverifiable prices unknown.
 
+Phase 8.4 adds field-level source attribution to the same Chinese HTML report. Each critical field can now be labeled as public-source-backed, human-reviewed data, model inference, internal policy, or unknown/not source-backed. The `字段级来源标注` table gives customers a compact audit trail without turning unsupported values into facts.
+
 Print or open the latest source-backed report:
 
 ```powershell

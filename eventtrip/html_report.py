@@ -6,6 +6,7 @@ import re
 from html import escape
 from typing import Any
 
+from eventtrip.source_evidence import FieldSourceAttribution, build_field_source_attributions
 from eventtrip.source_traceability import EvidenceTraceabilityItem
 
 
@@ -26,6 +27,7 @@ def build_source_backed_html_report(
     all_ticket_links = [*primary_links, *info_links]
     sources = source_data.get("sources", [])
     forecast = _forecast_model(reviewed_live_snapshots or [])
+    source_attributions = build_field_source_attributions(source_data)
 
     return f"""<!doctype html>
 <html lang="zh-CN">
@@ -146,6 +148,25 @@ def build_source_backed_html_report(
       font-weight: 600;
       background: #eef2ff;
     }}
+    .field-source {{
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }}
+    .field-source strong {{ color: var(--ink); }}
+    .field-source code {{
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 1px 4px;
+      font-size: 11px;
+    }}
+    .source-backed-badge {{ background: var(--ok-bg); color: var(--ok); }}
+    .model-inference-badge {{ background: #eff6ff; color: #1d4ed8; }}
+    .human-reviewed-badge {{ background: #ecfeff; color: #0e7490; }}
+    .internal-policy-badge {{ background: var(--danger-bg); color: var(--warn); }}
+    .unknown-badge {{ background: var(--unknown-bg); color: var(--unknown); }}
     .source-backed, .internal-estimate, .not-found {{
       font-weight: 700;
       border-radius: 6px;
@@ -175,10 +196,10 @@ def build_source_backed_html_report(
     <h1>EventTrip-AgentOS 中文来源报告</h1>
     <p class="subtitle">这个 HTML 页面由已登记的官方、市场和新闻来源生成。没有公开来源支持的机票、酒店、门票和总预算数值不会被伪装成真实报价。</p>
     <div class="metrics">
-      <div class="metric"><span>比赛</span><strong>{escape(str(match["name"]))}</strong></div>
-      <div class="metric"><span>日期</span><strong>{escape(str(match["date"]))}</strong></div>
-      <div class="metric"><span>场馆</span><strong>{escape(str(match["venue"]))} / Houston Stadium</strong></div>
-      <div class="metric"><span>购票立场</span><strong>官方优先</strong></div>
+      <div class="metric"><span>比赛</span><strong>{escape(str(match["name"]))}</strong>{_field_source_badge("match_name", source_attributions)}</div>
+      <div class="metric"><span>日期</span><strong>{escape(str(match["date"]))}</strong>{_field_source_badge("match_date", source_attributions)}</div>
+      <div class="metric"><span>场馆</span><strong>{escape(str(match["venue"]))} / Houston Stadium</strong>{_field_source_badge("match_venue", source_attributions)}</div>
+      <div class="metric"><span>购票立场</span><strong>官方优先</strong>{_field_source_badge("official_ticket_path", source_attributions)}</div>
     </div>
     <nav class="report-nav" aria-label="报告章节">
       <a href="#next-actions">下一步</a>
@@ -187,6 +208,7 @@ def build_source_backed_html_report(
       <a href="#unknowns">未知项</a>
       <a href="#live-data">审核数据</a>
       <a href="#forecast">趋势预测</a>
+      <a href="#field-attribution">字段来源</a>
       <a href="#citations">来源分组</a>
       <a href="#traceability">证据追踪</a>
       <a href="#registry">来源清单</a>
@@ -197,9 +219,9 @@ def build_source_backed_html_report(
       <h2>决策摘要</h2>
       <p class="section-lead">本页用于客户查看：有来源支持的事实、仍未知的价格、以及模型预测会分开展示。</p>
       <div class="status-strip">
-        <div class="status-card"><strong>购票路径</strong>先看 FIFA 官方票务或 FIFA 官方转售/换票；StubHub 只作为二级市场监控。</div>
-        <div class="status-card"><strong>未知价格</strong>精确门票、机票、酒店、交通和总预算还没有完整公开来源支持。</div>
-        <div class="status-card"><strong>自动化边界</strong>不自动结账、不绕过登录、不处理 CAPTCHA、不执行付款。</div>
+        <div class="status-card"><strong>购票路径</strong>先看 FIFA 官方票务或 FIFA 官方转售/换票；StubHub 只作为二级市场监控。{_field_source_badge("official_ticket_path", source_attributions)}</div>
+        <div class="status-card"><strong>未知价格</strong>精确门票、机票、酒店、交通和总预算还没有完整公开来源支持。{_field_source_badge("unknown_exact_prices", source_attributions)}</div>
+        <div class="status-card"><strong>自动化边界</strong>不自动结账、不绕过登录、不处理 CAPTCHA、不执行付款。{_field_source_badge("trigger_policy", source_attributions)}</div>
       </div>
     </section>
 
@@ -212,29 +234,36 @@ def build_source_backed_html_report(
     <section id="official-paths">
       <h2>推荐官方购票路径</h2>
       <p class="note">这里只提供人工打开的链接。EventTrip-AgentOS 不登录、不绕过访问控制、不自动结账、不购票。</p>
-      {_link_cards(all_ticket_links)}
+      {_link_cards(all_ticket_links, "official_ticket_path", source_attributions)}
     </section>
 
     <section id="secondary-market">
       <h2>二级市场候选渠道</h2>
       <p class="note unknown">StubHub 可以作为二级市场监控渠道，但它不是 FIFA 官方票务来源。付款前必须人工核验具体比赛、总价含税费、交付时间、FIFA 转票方式、退款政策和买家保护。</p>
-      {_link_cards(secondary_links)}
+      {_link_cards(secondary_links, "secondary_market_stubhub", source_attributions)}
     </section>
 
     <section id="unknowns">
       <h2>仍然未知的内容</h2>
       <p class="note unknown">这些数值还没有公开来源支持。如果查不到，就保持未知，不用本地估算填充。</p>
+      {_field_source_badge("unknown_exact_prices", source_attributions)}
       {_html_list(_still_unknowns())}
     </section>
 
     <section id="live-data">
       <h2>人工审核 Live/API 数据状态</h2>
-      {_live_data_status(live_snapshot_preview, reviewed_live_snapshots)}
+      {_live_data_status(live_snapshot_preview, reviewed_live_snapshots, source_attributions)}
     </section>
 
     <section id="forecast">
       <h2>价格趋势图与购买窗口预测</h2>
-      {_forecast_section(forecast)}
+      {_forecast_section(forecast, source_attributions)}
+    </section>
+
+    <section id="field-attribution">
+      <h2>字段级来源标注</h2>
+      <p class="note">本表说明每个关键展示字段来自公开来源、人工审核数据、模型推断、内部策略，还是尚未找到来源支持。</p>
+      {_field_attribution_table(source_attributions, sources)}
     </section>
 
     <section id="citations">
@@ -297,17 +326,23 @@ def _html_list(items: list[str]) -> str:
     return f"      <ul>\n{rows}\n      </ul>"
 
 
-def _link_cards(links: list[dict[str, Any]]) -> str:
+def _link_cards(
+    links: list[dict[str, Any]],
+    field_id: str | None = None,
+    attributions: dict[str, FieldSourceAttribution] | None = None,
+) -> str:
     if not links:
         return '<p class="note">暂未配置相关购票链接。</p>'
     cards = []
     for link in links:
+        source_badge = _field_source_badge(field_id, attributions or {}) if field_id else ""
         cards.append(
             "        <article class=\"card\">"
             f"<h3><a href=\"{escape(str(link['url']), quote=True)}\">{escape(str(link['label']))}</a></h3>"
             f"<p>{escape(str(link['recommendation']))}</p>"
             f"<p><span class=\"badge\">{escape(_source_type_label(str(link['source_type'])))}</span> "
             f"<span class=\"badge\">风险：{escape(_risk_label(str(link['risk_level'])))}</span></p>"
+            f"{source_badge}"
             "</article>"
         )
     return "      <div class=\"grid\">\n" + "\n".join(cards) + "\n      </div>"
@@ -379,6 +414,86 @@ def _source_registry_table(sources: list[dict[str, Any]]) -> str:
     )
 
 
+def _field_source_badge(
+    field_id: str | None,
+    attributions: dict[str, FieldSourceAttribution],
+) -> str:
+    if not field_id:
+        return ""
+    attribution = attributions.get(field_id)
+    if not attribution:
+        return ""
+    class_name = _field_status_class(attribution.status)
+    source_ids = ", ".join(attribution.source_ids) if attribution.source_ids else "无直接来源 ID"
+    return (
+        f'<span class="field-source" data-field-id="{escape(attribution.field_id, quote=True)}">'
+        f'<span class="badge {class_name}">{escape(_field_status_label(attribution.status))}</span> '
+        f'<strong>{escape(attribution.label)}</strong> · {escape(attribution.source_group)} · '
+        f'<code>{escape(source_ids)}</code>'
+        "</span>"
+    )
+
+
+def _field_attribution_table(
+    attributions: dict[str, FieldSourceAttribution],
+    sources: list[dict[str, Any]],
+) -> str:
+    source_by_id = {str(source["source_id"]): source for source in sources if source.get("source_id")}
+    rows = []
+    for field_id in sorted(attributions):
+        attribution = attributions[field_id]
+        rows.append(
+            "<tr>"
+            f"<td><code>{escape(attribution.field_id)}</code><br>{escape(attribution.label)}</td>"
+            f"<td><span class=\"badge {_field_status_class(attribution.status)}\">{escape(_field_status_label(attribution.status))}</span></td>"
+            f"<td>{escape(attribution.source_group)}</td>"
+            f"<td>{_source_id_links(attribution.source_ids, source_by_id)}</td>"
+            f"<td>{escape(attribution.note)}</td>"
+            "</tr>"
+        )
+    return (
+        "<table><thead><tr><th>字段</th><th>状态</th><th>来源组</th>"
+        "<th>来源 ID</th><th>说明</th></tr></thead><tbody>"
+        + "".join(rows)
+        + "</tbody></table>"
+    )
+
+
+def _source_id_links(source_ids: list[str], source_by_id: dict[str, dict[str, Any]]) -> str:
+    if not source_ids:
+        return "无直接来源 ID"
+    rendered = []
+    for source_id in source_ids:
+        source = source_by_id.get(source_id)
+        if source:
+            rendered.append(
+                f'<a href="{escape(str(source["url"]), quote=True)}"><code>{escape(source_id)}</code></a>'
+            )
+        else:
+            rendered.append(f"<code>{escape(source_id)}</code>")
+    return "<br>".join(rendered)
+
+
+def _field_status_class(status: str) -> str:
+    return {
+        "source_backed": "source-backed-badge",
+        "model_inference": "model-inference-badge",
+        "human_reviewed_data": "human-reviewed-badge",
+        "internal_policy": "internal-policy-badge",
+        "no_source_backed_data_found": "unknown-badge",
+    }.get(status, "")
+
+
+def _field_status_label(status: str) -> str:
+    return {
+        "source_backed": "公开来源支持",
+        "model_inference": "模型推断",
+        "human_reviewed_data": "人工审核数据",
+        "internal_policy": "内部策略",
+        "no_source_backed_data_found": "未找到来源支持",
+    }.get(status, status)
+
+
 def _markdown_link_to_html(text: str) -> str:
     match = re.fullmatch(r"\[([^\]]+)\]\(([^)]+)\)", text)
     if not match:
@@ -390,25 +505,28 @@ def _markdown_link_to_html(text: str) -> str:
 def _live_data_status(
     preview: dict[str, Any] | None,
     reviewed_live_snapshots: list[dict[str, Any]] | None = None,
+    attributions: dict[str, FieldSourceAttribution] | None = None,
 ) -> str:
     reviewed = reviewed_live_snapshots or []
+    source_badge = _field_source_badge("reviewed_live_snapshots", attributions or {})
     if reviewed:
         return (
             '<p class="note">以下是已人工审核的 live/API snapshot。'
-            "这些数据只有在显式审核后才会显示，并且与未解决的公开来源未知项分开。</p>"
+            "这些数据只有在显式审核后才会显示，并且与未解决的公开来源未知项分开。"
+            f"{source_badge}</p>"
             + _reviewed_live_snapshot_table(reviewed)
         )
     if not preview:
         return (
             '<p class="note">本报告没有附加已审核的 live/API 数据。'
-            "默认演示仍然是离线、可复现的流程。</p>"
+            f"默认演示仍然是离线、可复现的流程。{source_badge}</p>"
         )
     rows = [
         f"<li>状态：{escape(str(preview.get('status', 'unknown')))}</li>",
         f"<li>Snapshot 数量：{escape(str(preview.get('snapshot_count', 0)))}</li>",
         f"<li>来源：{escape(str(preview.get('source', 'n/a')))}</li>",
     ]
-    return "<ul>" + "".join(rows) + "</ul>"
+    return source_badge + "<ul>" + "".join(rows) + "</ul>"
 
 
 def _forecast_model(reviewed_live_snapshots: list[dict[str, Any]]) -> dict[str, Any]:
@@ -447,7 +565,10 @@ def _latest_reviewed_ticket_point(snapshots: list[dict[str, Any]]) -> dict[str, 
     }
 
 
-def _forecast_section(forecast: dict[str, Any]) -> str:
+def _forecast_section(
+    forecast: dict[str, Any],
+    attributions: dict[str, FieldSourceAttribution],
+) -> str:
     ticket = forecast.get("latest_reviewed_ticket")
     ticket_note = (
         f"最近一条已审核 live/API 门票数据：{escape(str(ticket['date']))}，"
@@ -463,17 +584,17 @@ def _forecast_section(forecast: dict[str, Any]) -> str:
     return (
         f'<p class="note">{ticket_note}</p>'
         f'<p class="note unknown">{unsupported_note}</p>'
-        f"{_line_chart(forecast['labels'], forecast['series'])}"
+        f"{_line_chart(forecast['labels'], forecast['series'], _field_source_badge('forecast_chart', attributions))}"
         "<div class=\"grid\">"
-        f"<article class=\"card\"><h3>推荐购买窗口</h3><p>{escape(str(forecast['best_window']))}</p></article>"
-        f"<article class=\"card\"><h3>从 Pittsburgh / PIT 出发</h3><p>{escape(str(forecast['pit_plan']))}</p></article>"
-        f"<article class=\"card\"><h3>从 Seattle / SEA 出发</h3><p>{escape(str(forecast['sea_plan']))}</p></article>"
+        f"<article class=\"card\"><h3>推荐购买窗口</h3><p>{escape(str(forecast['best_window']))}</p>{_field_source_badge('trigger_policy', attributions)}</article>"
+        f"<article class=\"card\"><h3>从 Pittsburgh / PIT 出发</h3><p>{escape(str(forecast['pit_plan']))}</p>{_field_source_badge('pit_recommendation', attributions)}</article>"
+        f"<article class=\"card\"><h3>从 Seattle / SEA 出发</h3><p>{escape(str(forecast['sea_plan']))}</p>{_field_source_badge('sea_recommendation', attributions)}</article>"
         "</div>"
         "<p class=\"section-lead\">预测依据：Expedia 2026 Air Hacks 的国内机票窗口、KAYAK 2026 酒店预订趋势、AP 关于部分世界杯小组赛仍在售但价格偏高的报道，以及 Houston 当地住宿/交通报道。这里展示的是模型压力指数，不是未核验的真实报价。</p>"
     )
 
 
-def _line_chart(labels: list[str], series: dict[str, list[int]]) -> str:
+def _line_chart(labels: list[str], series: dict[str, list[int]], source_badge: str = "") -> str:
     width = 860
     height = 360
     left = 58
@@ -538,7 +659,7 @@ def _line_chart(labels: list[str], series: dict[str, list[int]]) -> str:
         + "".join(paths)
         + "".join(x_labels)
         + "".join(legend)
-        + '</svg></div>'
+        + f'</svg>{source_badge}</div>'
     )
 
 
