@@ -46,6 +46,8 @@ def test_source_backed_report_agent_writes_no_mock_report(tmp_path):
     assert "StubHub" in text
     assert "mock" not in text.lower()
     assert "EventTrip-AgentOS 中文来源报告" in html
+    assert "定量分析：哪些数字是真的，哪些还不能声称是真的" in html
+    assert "成本压力指数变化表" in html
     assert "仍然未知的内容" in html
     assert "二级市场候选渠道" in html
     assert "StubHub World Cup Tickets" in html
@@ -98,5 +100,6 @@ def test_source_backed_report_agent_includes_reviewed_live_snapshots(tmp_path):
     assert "$640.0" in text
     assert "Human-reviewed API response." in text
     assert "$640" in html
+    assert "355 listings" in html
     assert "Human-reviewed API response." in html
     assert "Should not appear in source-backed live section." not in text

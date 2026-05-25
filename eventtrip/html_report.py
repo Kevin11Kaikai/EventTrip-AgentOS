@@ -26,8 +26,10 @@ def build_source_backed_html_report(
     secondary_links = ticket_links.get("secondary_links", [])
     all_ticket_links = [*primary_links, *info_links]
     sources = source_data.get("sources", [])
-    forecast = _forecast_model(reviewed_live_snapshots or [])
+    reviewed_snapshots = reviewed_live_snapshots or []
+    forecast = _forecast_model(reviewed_snapshots)
     source_attributions = build_field_source_attributions(source_data)
+    coverage = _source_coverage_metrics(citation_groups, sources, traceability_items)
 
     return f"""<!doctype html>
 <html lang="zh-CN">
@@ -41,7 +43,6 @@ def build_source_backed_html_report(
       --muted: #5d6878;
       --line: #d8dee8;
       --panel: #f7f9fc;
-      --panel-strong: #eef6f5;
       --accent: #0f766e;
       --accent-strong: #0b5f59;
       --accent-soft: #e7f5f3;
@@ -51,7 +52,6 @@ def build_source_backed_html_report(
       --danger-bg: #fff7ed;
       --ok-bg: #eef8f1;
       --unknown-bg: #f5f3ff;
-      --shadow: 0 14px 34px rgba(23, 32, 51, 0.08);
     }}
     * {{ box-sizing: border-box; }}
     html {{ scroll-behavior: smooth; }}
@@ -86,7 +86,7 @@ def build_source_backed_html_report(
       scroll-margin-top: 18px;
     }}
     section:first-child {{ margin-top: 0; }}
-    #decision-summary {{
+    #decision-summary, #quantitative-analysis {{
       background: linear-gradient(135deg, #ffffff 0%, var(--accent-soft) 100%);
       border-color: rgba(15, 118, 110, 0.24);
     }}
@@ -94,7 +94,7 @@ def build_source_backed_html_report(
     h2 {{ margin: 0 0 14px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }}
     h3 {{ margin-bottom: 8px; }}
     a {{ color: #0b5cad; }}
-    .subtitle {{ color: var(--muted); max-width: 900px; }}
+    .subtitle {{ color: var(--muted); max-width: 920px; }}
     .eyebrow {{
       display: inline-block;
       margin-bottom: 14px;
@@ -140,45 +140,29 @@ def build_source_backed_html_report(
       font-size: 13px;
     }}
     .report-nav a:hover {{ border-color: var(--accent); color: var(--accent-strong); }}
-    .metrics {{
+    .metrics, .status-strip {{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 12px;
       margin-top: 22px;
     }}
-    .metric, .card {{
+    .metric, .card, .status-card {{
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 12px;
       padding: 16px;
       background: #fff;
       box-shadow: 0 6px 18px rgba(23, 32, 51, 0.055);
     }}
-    .metric {{
-      border-radius: 12px;
-      min-height: 118px;
-    }}
+    .metric {{ min-height: 118px; }}
     .metric span {{ display: block; color: var(--muted); font-size: 13px; }}
     .metric strong {{ display: block; font-size: 20px; margin-top: 4px; }}
-    .status-strip {{
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      margin: 18px 0 8px;
-    }}
-    .status-card {{
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 14px;
-      background: var(--panel);
-      min-height: 132px;
-    }}
+    .status-card {{ background: var(--panel); min-height: 132px; }}
     .status-card strong {{ display: block; margin-bottom: 4px; }}
     .grid {{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 16px;
     }}
-    .card {{ border-radius: 12px; }}
     .note {{
       border-left: 4px solid var(--accent);
       background: var(--panel);
@@ -190,7 +174,7 @@ def build_source_backed_html_report(
       border-left: 4px solid var(--warn);
       background: var(--danger-bg);
     }}
-    .section-lead {{ max-width: 900px; color: var(--muted); }}
+    .section-lead {{ max-width: 920px; color: var(--muted); }}
     ul {{ padding-left: 20px; }}
     table {{ width: 100%; min-width: 720px; border-collapse: collapse; margin-top: 12px; }}
     th, td {{ border: 1px solid var(--line); padding: 10px; text-align: left; vertical-align: top; }}
@@ -230,6 +214,8 @@ def build_source_backed_html_report(
     .source-backed {{ color: var(--ok); background: var(--ok-bg); }}
     .internal-estimate {{ color: var(--warn); background: var(--danger-bg); }}
     .not-found {{ color: var(--unknown); background: var(--unknown-bg); }}
+    .delta-up {{ color: var(--warn); font-weight: 700; }}
+    .delta-down {{ color: var(--ok); font-weight: 700; }}
     .print-note {{
       display: none;
       color: var(--muted);
@@ -280,7 +266,7 @@ def build_source_backed_html_report(
   <header>
     <span class="eyebrow">静态客户展示报告</span>
     <h1>EventTrip-AgentOS 中文来源报告</h1>
-    <p class="subtitle">这个 HTML 页面由已登记的官方、市场和新闻来源生成。没有公开来源支持的机票、酒店、门票和总预算数值不会被伪装成真实报价。</p>
+    <p class="subtitle">这个 HTML 页面只把已登记的公开来源、人工审核数据和明确标注的模型指数展示给客户。没有公开来源支持的门票、机票、酒店、本地交通和总预算数值会保持“未知”，不会伪装成真实报价。</p>
     <div class="client-summary-strip screenshot-friendly">
       <span>客户展示版</span>
       <span>静态 HTML / 可截图</span>
@@ -294,6 +280,7 @@ def build_source_backed_html_report(
       <div class="metric"><span>购票立场</span><strong>官方优先</strong>{_field_source_badge("official_ticket_path", source_attributions)}</div>
     </div>
     <nav class="report-nav" aria-label="报告章节">
+      <a href="#quantitative-analysis">定量分析</a>
       <a href="#next-actions">下一步</a>
       <a href="#official-paths">官方路径</a>
       <a href="#secondary-market">二级市场</a>
@@ -309,12 +296,18 @@ def build_source_backed_html_report(
   <main>
     <section id="decision-summary">
       <h2>决策摘要</h2>
-      <p class="section-lead">本页用于客户查看：有来源支持的事实、仍未知的价格、以及模型预测会分开展示。</p>
+      <p class="section-lead">本页用于客户查看：有来源支持的事实、仍未知的真实价格、人工审核数据和模型指数分开展示。关键原则是：查不到真实公开数据就明确承认未知。</p>
       <div class="status-strip">
-        <div class="status-card"><strong>购票路径</strong>先看 FIFA 官方票务或 FIFA 官方转售/换票；StubHub 只作为二级市场监控。{_field_source_badge("official_ticket_path", source_attributions)}</div>
-        <div class="status-card"><strong>未知价格</strong>精确门票、机票、酒店、交通和总预算还没有完整公开来源支持。{_field_source_badge("unknown_exact_prices", source_attributions)}</div>
+        <div class="status-card"><strong>购票路径</strong>先看 FIFA 官方票务或 FIFA 官方转售/换票；StubHub 只作为二级市场监控渠道。{_field_source_badge("official_ticket_path", source_attributions)}</div>
+        <div class="status-card"><strong>价格真实性</strong>精确门票、机票、酒店、交通和总预算目前没有完整公开来源支持，因此不写成已验证报价。{_field_source_badge("unknown_exact_prices", source_attributions)}</div>
         <div class="status-card"><strong>自动化边界</strong>不自动结账、不绕过登录、不处理 CAPTCHA、不执行付款。{_field_source_badge("trigger_policy", source_attributions)}</div>
       </div>
+    </section>
+
+    <section id="quantitative-analysis">
+      <h2>定量分析：哪些数字是真的，哪些还不能声称是真的</h2>
+      <p class="section-lead">这部分补足客户最关心的量化信息。公开来源能支撑的数字、人工审核价格行、模型压力指数和仍未找到来源的真实价格被拆开列出。</p>
+      {_quantitative_analysis_section(coverage, forecast, reviewed_snapshots, source_attributions)}
     </section>
 
     <section id="next-actions">
@@ -339,12 +332,12 @@ def build_source_backed_html_report(
       <h2>仍然未知的内容</h2>
       <p class="note unknown">这些数值还没有公开来源支持。如果查不到，就保持未知，不用本地估算填充。</p>
       {_field_source_badge("unknown_exact_prices", source_attributions)}
-      {_html_list(_still_unknowns())}
+      {_unknown_values_table()}
     </section>
 
     <section id="live-data">
       <h2>人工审核 Live/API 数据状态</h2>
-      {_live_data_status(live_snapshot_preview, reviewed_live_snapshots, source_attributions)}
+      {_live_data_status(live_snapshot_preview, reviewed_snapshots, source_attributions)}
     </section>
 
     <section id="forecast">
@@ -400,16 +393,16 @@ def _next_actions() -> list[str]:
     ]
 
 
-def _still_unknowns() -> list[str]:
+def _still_unknowns() -> list[tuple[str, str, str]]:
     return [
-        "Portugal vs DR Congo 的精确含税费门票价格。",
-        "Portugal vs DR Congo 在 StubHub 上的精确含税费价格。",
-        "本场比赛官方转售库存数量。",
-        "Traveler A 从 PIT 出发的真实机票报价。",
-        "Traveler B 从 SEA 出发的真实机票报价。",
-        "NRG Stadium / Houston Stadium 附近双床共享酒店真实报价。",
-        "比赛日本地交通真实估价。",
-        "每位旅客的完整来源支持总预算。",
+        ("官方或转售门票精确含税费价格", "未知", "没有登记到可核验的公开报价"),
+        ("StubHub 对本场比赛的精确含税费价格", "未知", "只有二级市场入口，没有核验到本场 all-in price"),
+        ("官方转售库存数量", "未知", "没有公开来源支持库存数字"),
+        ("PIT 出发机票真实报价", "未知", "没有登记到具体航班报价来源"),
+        ("SEA 出发机票真实报价", "未知", "没有登记到具体航班报价来源"),
+        ("NRG Stadium 附近双床酒店真实报价", "未知", "没有登记到具体酒店报价来源"),
+        ("比赛日本地交通真实估价", "未知", "没有登记到具体交通报价来源"),
+        ("每位旅客完整来源支持总预算", "未知", "门票、机票、酒店和交通缺少完整来源链"),
     ]
 
 
@@ -453,6 +446,138 @@ def _citation_card(title: str, sources: list[dict[str, Any]]) -> str:
             )
         body = "<ul>" + "".join(items) + "</ul>"
     return f"        <article class=\"card\"><h3>{escape(title)}</h3>{body}</article>"
+
+
+def _source_coverage_metrics(
+    citation_groups: dict[str, list[dict[str, Any]]],
+    sources: list[dict[str, Any]],
+    traceability_items: list[EvidenceTraceabilityItem],
+) -> dict[str, int]:
+    source_backed_claims = sum(1 for item in traceability_items if item.status == "source_backed")
+    internal_claims = sum(1 for item in traceability_items if item.status == "internal_estimate_not_source_backed")
+    unknown_claims = sum(1 for item in traceability_items if item.status == "no_source_backed_data_found")
+    covered_groups = sum(1 for group in citation_groups.values() if group)
+    return {
+        "source_count": len(sources),
+        "covered_groups": covered_groups,
+        "total_groups": len(citation_groups),
+        "source_backed_claims": source_backed_claims,
+        "internal_claims": internal_claims,
+        "unknown_claims": unknown_claims,
+    }
+
+
+def _quantitative_analysis_section(
+    coverage: dict[str, int],
+    forecast: dict[str, Any],
+    reviewed_live_snapshots: list[dict[str, Any]],
+    attributions: dict[str, FieldSourceAttribution],
+) -> str:
+    latest = forecast.get("latest_reviewed_ticket")
+    latest_ticket_value = (
+        f"${_format_number(latest['lowest_price'])} / {_format_number(latest['listings'])} listings"
+        if latest
+        else "0 条已审核真实报价行"
+    )
+    return (
+        '<div class="metrics">'
+        f'<div class="metric"><span>已登记公开来源</span><strong>{coverage["source_count"]} 个</strong></div>'
+        f'<div class="metric"><span>已覆盖来源分组</span><strong>{coverage["covered_groups"]}/{coverage["total_groups"]}</strong></div>'
+        f'<div class="metric"><span>有来源支持的主张</span><strong>{coverage["source_backed_claims"]} 条</strong></div>'
+        f'<div class="metric"><span>仍未知价格类主张</span><strong>{coverage["unknown_claims"]} 条</strong></div>'
+        f'<div class="metric"><span>已审核门票报价行</span><strong>{escape(latest_ticket_value)}</strong></div>'
+        '</div>'
+        '<h3>量化结论表</h3>'
+        f'{_quantitative_facts_table(coverage, latest, reviewed_live_snapshots)}'
+        '<h3>成本压力指数变化表</h3>'
+        '<p class="section-lead">指数 100 代表当前基准。这里的数字是模型压力指数，不是未核验的美元报价；它用于比较方向和相对压力。</p>'
+        f'{_forecast_numeric_table(forecast["labels"], forecast["series"])}'
+        '<h3>触发规则与真实报价缺口</h3>'
+        f'{_trigger_policy_table(attributions)}'
+    )
+
+
+def _quantitative_facts_table(
+    coverage: dict[str, int],
+    latest: dict[str, Any] | None,
+    reviewed_live_snapshots: list[dict[str, Any]],
+) -> str:
+    latest_snapshot = (
+        f"{latest['date']}：最低价 ${_format_number(latest['lowest_price'])}，挂票数 {_format_number(latest['listings'])}"
+        if latest
+        else "暂无已审核真实报价"
+    )
+    rows = [
+        ("比赛日期", "2026-06-17", "公开来源支持", "FIFA / 公开新闻来源登记"),
+        ("比赛场馆", "NRG Stadium / Houston Stadium", "公开来源支持", "FIFA 与休斯顿公开报道来源登记"),
+        ("来源样本量", f'{coverage["source_count"]} 个来源', "来源注册表", "用于引用覆盖，不等于价格样本"),
+        ("已审核 live/API 快照", f"{len(reviewed_live_snapshots)} 条", "人工审核数据", "只有 source_type=reviewed_live_data 才进入公开表"),
+        ("最新已审核门票点", latest_snapshot, "人工审核数据" if latest else "未找到来源", "没有则保持未知"),
+        ("真实全量预算", "未知", "未找到来源", "缺少门票、机票、酒店和交通完整报价链"),
+    ]
+    return _simple_table(["指标", "数值", "状态", "说明"], rows)
+
+
+def _forecast_numeric_table(labels: list[str], series: dict[str, list[int]]) -> str:
+    rows: list[tuple[str, ...]] = []
+    for name, points in series.items():
+        first = points[0]
+        last = points[-1]
+        delta = last - first
+        delta_html = (
+            f'<span class="delta-up">+{delta}</span>'
+            if delta > 0
+            else f'<span class="delta-down">{delta}</span>'
+        )
+        row = (
+            escape(name),
+            *[escape(str(point)) for point in points],
+            delta_html,
+            _pressure_guidance(name, delta),
+        )
+        rows.append(row)
+    headers = ["项目", *labels, "到比赛周变化", "解读"]
+    return _simple_table(headers, rows, escape_cells=False)
+
+
+def _pressure_guidance(name: str, delta: int) -> str:
+    if "门票" in name and delta < 0:
+        return "模型认为门票压力下降，适合继续监控，不应恐慌购买。"
+    if "机票" in name and delta > 0:
+        return "模型认为越接近出发成本压力越高，应设置提醒并避免拖到最后。"
+    if "酒店" in name and delta > 0:
+        return "大型赛事附近酒店风险仍在，优先可取消预订。"
+    if "总成本" in name and delta > 0:
+        return "整体成本压力上行，门票等待需要和机票/酒店风险平衡。"
+    return "用于方向判断，不是美元报价。"
+
+
+def _trigger_policy_table(attributions: dict[str, FieldSourceAttribution]) -> str:
+    rows = [
+        ("≤ $550", "如果是已验证官方转售", "立即购买", "内部触发策略，不是市场事实"),
+        ("< $600", "如果 all-in 价格可信", "强烈考虑购买", "内部触发策略，不是市场事实"),
+        ("$680-$700", "如果仍只有高价且挂票充足", "继续监控", "与当前报告未知项分开展示"),
+        ("任意价格", "如果来源无法验证、转票方式不清、费用不透明", "不建议付款", "购票安全优先"),
+    ]
+    return _simple_table(["价格/条件", "适用前提", "动作", "来源状态"], rows) + _field_source_badge(
+        "trigger_policy", attributions
+    )
+
+
+def _unknown_values_table() -> str:
+    return _simple_table(["项目", "当前状态", "原因"], _still_unknowns())
+
+
+def _simple_table(headers: list[str], rows: list[tuple[Any, ...]], escape_cells: bool = True) -> str:
+    head = "".join(f"<th>{escape(header)}</th>" for header in headers)
+    body_rows = []
+    for row in rows:
+        cells = []
+        for cell in row:
+            value = str(cell)
+            cells.append(f"<td>{escape(value) if escape_cells else value}</td>")
+        body_rows.append("<tr>" + "".join(cells) + "</tr>")
+    return f"<table><thead><tr>{head}</tr></thead><tbody>{''.join(body_rows)}</tbody></table>"
 
 
 def _traceability_table(items: list[EvidenceTraceabilityItem]) -> str:
@@ -604,7 +729,7 @@ def _live_data_status(
     if reviewed:
         return (
             '<p class="note">以下是已人工审核的 live/API snapshot。'
-            "这些数据只有在显式审核后才会显示，并且与未解决的公开来源未知项分开。"
+            "这些数据只有在显式审核后才会显示，并且与未解决的公开来源未知项分开展示。"
             f"{source_badge}</p>"
             + _reviewed_live_snapshot_table(reviewed)
         )
@@ -624,7 +749,7 @@ def _live_data_status(
 def _forecast_model(reviewed_live_snapshots: list[dict[str, Any]]) -> dict[str, Any]:
     """Return source-backed trend guidance and model index data for the Chinese HTML report."""
     ticket_point = _latest_reviewed_ticket_point(reviewed_live_snapshots)
-    labels = ["现在", "出发前45天", "出发前30天", "出发前15天", "比赛周"]
+    labels = ["现在", "出发前15天", "出发前10天", "出发前5天", "比赛周"]
     series = {
         "球票压力指数": [100, 96, 92, 88, 84],
         "PIT机票压力指数": [100, 102, 106, 111, 122],
@@ -639,7 +764,7 @@ def _forecast_model(reviewed_live_snapshots: list[dict[str, Any]]) -> dict[str, 
         "latest_reviewed_ticket": ticket_point,
         "claim_20_percent_unsold_supported": False,
         "best_window": "先锁定可取消酒店；机票重点观察出发前15-30天；门票继续监控官方转售和二级市场，触发价到达再买。",
-        "pit_plan": "PIT 出发建议采用 Option A：提前锁定可取消双床酒店，机票设置价格提醒，若出发前15-30天出现合理航班再购买；门票等官方转售或二级市场含税价触发。",
+        "pit_plan": "PIT 出发建议采用 Option A：提前锁定可取消双床酒店，机票设置价格提醒，若出发前15-30天出现时间可靠且价格合理的航班再购买；门票等官方转售或二级市场含税价触发。",
         "sea_plan": "SEA 出发航程更长、延误成本更高，仍建议 Option A；如果30-45天前出现时间可靠且价格合理的航班，可以比 PIT 更早锁定机票。",
     }
 

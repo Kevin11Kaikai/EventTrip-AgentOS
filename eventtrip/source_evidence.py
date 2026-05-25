@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 import yaml
@@ -135,12 +135,7 @@ def grouped_citations(match_sources: dict[str, Any]) -> dict[str, list[dict[str,
 def build_field_source_attributions(
     match_sources: dict[str, Any],
 ) -> dict[str, FieldSourceAttribution]:
-    """Return source status for individual visible report fields.
-
-    These attributions are more granular than citation groups. They keep exact
-    sourced facts, reviewed data, model indices, internal policy, and unknown
-    values visually separate in the client-facing HTML report.
-    """
+    """Return source status for individual visible report fields."""
     groups = grouped_citations(match_sources)
     match_source_ids = _source_ids(groups.get("match_facts", []))
     ticket_source_ids = _source_ids(groups.get("ticket_safety", []))

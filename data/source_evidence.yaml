@@ -1,7 +1,7 @@
 portugal_dr_congo:
   match_id: portugal_dr_congo
   evidence_verified_at: 2026-05-24
-  report_scope: Public web and news evidence only. No mock estimates are used in the source-backed report.
+  report_scope: Public web and news evidence only. Local planning estimates are excluded from source-backed claims.
   sources:
     - source_id: fifa_match_preview
       title: Portugal v Congo DR | World Cup | Match preview
@@ -13,7 +13,7 @@ portugal_dr_congo:
         - match
         - venue
         - date
-      summary: FIFA 将 Portugal vs Congo DR 标为 6 月 17 日在 Houston Stadium 举行的比赛。
+      summary: FIFA 将 Portugal vs Congo DR 标为 2026 年 6 月 17 日在 Houston Stadium 举行的比赛。
     - source_id: fifa_tickets
       title: Tickets - FIFA World Cup 2026
       publisher: FIFA
@@ -23,7 +23,7 @@ portugal_dr_congo:
       evidence_tags:
         - tickets
         - official_purchase
-      summary: FIFA 维护 2026 世界杯官方票务入口。
+      summary: FIFA 维护 2026 世界杯官方票务入口，应作为人工购票的第一检查路径。
     - source_id: fifa_resale_support
       title: FIFA Resale/Exchange Marketplace
       publisher: FIFA World Cup 2026 Customer Support
@@ -33,7 +33,7 @@ portugal_dr_congo:
       evidence_tags:
         - tickets
         - official_resale
-      summary: FIFA 支持页面列出 Resale/Exchange Marketplace 作为官方转售和换票支持区域。
+      summary: FIFA 支持页面列出 Resale/Exchange Marketplace，作为官方转售和换票支持区域。
     - source_id: axios_drc_base_camp
       title: Democratic Republic of Congo selects Houston for World Cup base camp
       publisher: Axios Houston
@@ -44,7 +44,7 @@ portugal_dr_congo:
         - team_base_camp
         - houston
         - match
-      summary: Axios 报道 DR Congo 将把 Houston 作为世界杯 base camp，并在 6 月 17 日于 Houston 对阵 Portugal。
+      summary: Axios 报道 DR Congo 将把 Houston 作为世界杯 base camp，并在 2026 年 6 月 17 日于 Houston 对阵 Portugal。
     - source_id: axios_houston_transport_waymo
       title: Waymo nearly doubles Houston service area before World Cup
       publisher: Axios Houston

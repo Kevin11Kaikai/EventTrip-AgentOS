@@ -132,6 +132,8 @@ Phase 8.4 adds field-level source attribution to the Chinese HTML report. The re
 
 Phase 8.5 polishes the customer-facing HTML layout for cleaner screenshots, mobile viewing, and print/PDF export. It is a presentation-only pass and does not change the underlying recommendation logic.
 
+The same HTML report now includes a quantitative analysis panel. It shows registered source counts, citation-group coverage, reviewed live/API rows, pressure-index trend tables, trigger thresholds, and a separate table for real prices that remain unknown because no public source supports them.
+
 Phase 8.6 adds a reviewed source intake workflow for adding new public evidence metadata:
 
 ```powershell
@@ -167,6 +169,7 @@ The review packet is useful for PRs, customer review, or advisor review because 
 - Budget Comparison Table
 - Risk Register
 - Mitigations
+- Source-backed HTML Quantitative Analysis
 
 ## Engineering Highlights
 

@@ -210,6 +210,8 @@ Phase 8.4 adds field-level source attribution to the same Chinese HTML report. E
 
 Phase 8.5 polishes the customer-facing HTML presentation with cleaner spacing, screenshot-friendly summary badges, responsive tables, and print-specific layout rules. It does not change ticket timing, budget values, source validation, or recommendation logic.
 
+The HTML report now also includes a quantitative analysis panel. It separates registered public-source counts, reviewed live/API rows, model pressure-index tables, trigger-policy thresholds, and still-unknown real prices. If a true ticket, flight, hotel, or total-cost quote cannot be verified, the HTML says `unknown` instead of filling the gap with unsupported numbers.
+
 Print or open the latest source-backed report:
 
 ```powershell

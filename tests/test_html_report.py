@@ -24,6 +24,14 @@ def test_source_backed_html_report_is_static_and_client_readable():
     assert "EventTrip-AgentOS 中文来源报告" in html
     assert "静态客户展示报告" in html
     assert "决策摘要" in html
+    assert "定量分析：哪些数字是真的，哪些还不能声称是真的" in html
+    assert "已登记公开来源" in html
+    assert "成本压力指数变化表" in html
+    assert "PIT机票压力指数" in html
+    assert "SEA机票压力指数" in html
+    assert "到比赛周变化" in html
+    assert "真实全量预算" in html
+    assert "未知" in html
     assert "下一步怎么做" in html
     assert "推荐官方购票路径" in html
     assert "二级市场候选渠道" in html
@@ -87,5 +95,6 @@ def test_html_report_displays_reviewed_live_snapshots():
     assert "以下是已人工审核的 live/API snapshot" in html
     assert "reviewed_live_snapshots" in html
     assert "$640" in html
+    assert "355 listings" in html
     assert "reviewed_live_data" in html
     assert "Human-reviewed fixture preview." in html

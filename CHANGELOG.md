@@ -34,6 +34,7 @@
 - Polished customer-facing HTML spacing, screenshot-friendly summary badges, responsive tables, and print layout.
 - Added reviewed source intake CLI with source tag, citation group, duplicate ID, and field-level attribution checks.
 - Added source registry review packet export with Markdown/JSON validation summary and PR checklist.
+- Added quantitative analysis tables to the customer-facing source-backed HTML report while keeping unverifiable real prices marked as unknown.
 
 ## v0.1.0 - 2026-05-23
 

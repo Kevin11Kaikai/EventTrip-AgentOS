@@ -106,6 +106,17 @@ Phase 8.5 polishes the same static HTML report for customer review:
 
 These changes are presentation-only and do not modify the source-backed evidence model, deterministic estimates, or recommendation logic.
 
+The HTML report also includes a quantitative analysis panel for customer review:
+
+- registered public-source count and citation-group coverage,
+- count of source-backed claims and still-unknown price claims,
+- reviewed live/API quote rows when explicitly saved as `reviewed_live_data`,
+- numeric cost-pressure index tables for ticket, PIT airfare, SEA airfare, hotel, and total-cost pressure,
+- trigger-policy thresholds such as `$550`, `$600`, and `$680-$700`,
+- explicit tables for values that remain unknown because no registered public source supports them.
+
+This panel is intentionally strict. It gives the customer numbers where the system can defend them, but does not convert unsupported ticket, flight, hotel, transportation, or total-budget estimates into public facts.
+
 ## Reviewed Source Intake
 
 Phase 8.6 adds `eventtrip.source_intake_cli`, a guarded workflow for adding new public sources to `data/source_evidence.yaml`.

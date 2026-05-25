@@ -41,6 +41,7 @@
 - Phase 8.5: customer-facing HTML spacing, screenshot, mobile, and print polish.
 - Phase 8.6: reviewed source intake workflow with citation group, source tag, and field attribution validation.
 - Phase 8.7: source registry review packaging with Markdown/JSON validation summaries and PR checklist.
+- Phase 8.7a: customer-facing HTML quantitative analysis tables for source counts, reviewed rows, pressure indices, trigger thresholds, and still-unknown real prices.
 
 ## Phase 3 Status
 
@@ -130,6 +131,7 @@ Phase 7.0 adds a safe web evidence layer without changing default demo behavior.
 - Phase 8.5 improves customer-facing HTML spacing, screenshot readiness, responsive tables, and print layout without changing source-of-truth values.
 - Phase 8.6 adds a reviewed source intake CLI and validator for new public-source metadata. It checks source tags, citation group mapping, duplicate source IDs, and field-level attribution coverage before saving to `data/source_evidence.yaml`.
 - Phase 8.7 adds `source_review_cli` for exporting a Markdown or JSON source registry review packet with citation group coverage, source tag counts, field-level attribution coverage, validation errors, and a PR review checklist.
+- Phase 8.7a adds a quantitative analysis panel to `11_source_backed_final_report.html`. It shows numbers the project can defend, and keeps unverifiable ticket, flight, hotel, transportation, and total-cost prices explicitly unknown.
 
 ## Later Phase 3 Work
 
