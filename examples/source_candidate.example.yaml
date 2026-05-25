@@ -1,0 +1,12 @@
+match_id: portugal_dr_congo
+source:
+  source_id: example_public_ticket_safety_source
+  title: Example Public Ticket Safety Source
+  publisher: Example Publisher
+  published_date: 2026-05-24
+  url: https://example.com/world-cup-ticket-safety
+  source_type: news
+  evidence_tags:
+    - tickets
+    - ticket_safety
+  summary: Example candidate only. Replace this with a human-reviewed public source summary before saving.

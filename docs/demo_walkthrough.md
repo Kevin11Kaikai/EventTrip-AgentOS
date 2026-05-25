@@ -132,6 +132,15 @@ Phase 8.4 adds field-level source attribution to the Chinese HTML report. The re
 
 Phase 8.5 polishes the customer-facing HTML layout for cleaner screenshots, mobile viewing, and print/PDF export. It is a presentation-only pass and does not change the underlying recommendation logic.
 
+Phase 8.6 adds a reviewed source intake workflow for adding new public evidence metadata:
+
+```powershell
+python -m eventtrip.source_intake_cli validate --match portugal_dr_congo
+python -m eventtrip.source_intake_cli preview --candidate examples\source_candidate.example.yaml --match portugal_dr_congo
+```
+
+The intake workflow checks source tags, citation groups, duplicate IDs, and field-level attribution coverage before any source can be saved.
+
 ## Expected Decision Output
 
 - Travel plan: Option A: One-night balanced plan
@@ -161,6 +170,7 @@ Phase 8.5 polishes the customer-facing HTML layout for cleaner screenshots, mobi
 - Manual snapshot tracker
 - Trend-based ticket timing
 - Safe CLI with dry-run and overwrite protection
+- Reviewed public-source intake validation
 - Deterministic offline tests
 - Optional OhMyGPT report-polishing layer with invariant validation
 

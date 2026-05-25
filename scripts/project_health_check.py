@@ -26,8 +26,10 @@ IMPORTANT_FILES = [
     "docs/web_collection.md",
     "docs/ticket_links.md",
     "docs/source_backed_report.md",
+    "docs/source_intake_workflow.md",
     "examples/mcp_client_validation_output.txt",
     "examples/external_snapshot_import.csv",
+    "examples/source_candidate.example.yaml",
     "examples/live_api_snapshot_response.json",
     "examples/sample_ticket_market_page.html",
     "examples/sample_web_evidence.json",
@@ -42,6 +44,8 @@ IMPORTANT_FILES = [
     "eventtrip/live_data_cli.py",
     "eventtrip/live_data_review.py",
     "eventtrip/source_evidence.py",
+    "eventtrip/source_intake.py",
+    "eventtrip/source_intake_cli.py",
     "eventtrip/source_report_cli.py",
     "eventtrip/source_traceability.py",
     "eventtrip/agents/ticket_link_agent.py",
@@ -57,6 +61,7 @@ README_REQUIRED_PHRASES = [
     "EventTrip-AgentOS Dashboard",
     "OhMyGPT",
     "MCP",
+    "source_intake_cli",
 ]
 
 

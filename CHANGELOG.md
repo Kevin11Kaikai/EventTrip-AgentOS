@@ -32,6 +32,7 @@
 - Hardened web collection policy output and live HTTP response-size limits.
 - Added field-level source attribution badges and an audit table to the Chinese source-backed HTML report.
 - Polished customer-facing HTML spacing, screenshot-friendly summary badges, responsive tables, and print layout.
+- Added reviewed source intake CLI with source tag, citation group, duplicate ID, and field-level attribution checks.
 
 ## v0.1.0 - 2026-05-23
 

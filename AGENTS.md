@@ -46,6 +46,8 @@
 - Ticket link recommendations must remain manual navigation only; never add automated checkout, login, payment handling, or CAPTCHA bypass.
 - Prefer official FIFA ticketing/resale links before any non-FIFA ticket source.
 - Public-facing source-backed reports must use `data/source_evidence.yaml` and must not include local planning estimates unless a public source is registered.
+- New public source metadata must go through the reviewed source intake workflow; validate source tags, citation groups, and field-level attribution before saving.
+- Source intake must remain metadata-only by default and must not fetch URLs or scrape pages.
 - Keep deterministic internal reports and source-backed public reports separate.
 - Generated web evidence cache files under `data/web_evidence/` must stay ignored except `.gitkeep`.
 - Keep `docs/web_collection.md` aligned with web collection behavior.

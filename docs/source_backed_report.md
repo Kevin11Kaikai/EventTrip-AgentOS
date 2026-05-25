@@ -106,6 +106,18 @@ Phase 8.5 polishes the same static HTML report for customer review:
 
 These changes are presentation-only and do not modify the source-backed evidence model, deterministic estimates, or recommendation logic.
 
+## Reviewed Source Intake
+
+Phase 8.6 adds `eventtrip.source_intake_cli`, a guarded workflow for adding new public sources to `data/source_evidence.yaml`.
+
+```powershell
+python -m eventtrip.source_intake_cli validate --match portugal_dr_congo
+python -m eventtrip.source_intake_cli preview --candidate examples\source_candidate.example.yaml --match portugal_dr_congo
+python -m eventtrip.source_intake_cli add --candidate examples\source_candidate.example.yaml --match portugal_dr_congo --dry-run
+```
+
+The workflow validates required fields, supported `source_type`, known `evidence_tags`, citation group coverage, duplicate source IDs, and field-level attribution coverage before a source can be saved. It never fetches URLs or scrapes websites; it only reviews local YAML/JSON metadata supplied by the user. Full details are in `docs/source_intake_workflow.md`.
+
 ## Latest Report CLI
 
 Print the latest source-backed report path:

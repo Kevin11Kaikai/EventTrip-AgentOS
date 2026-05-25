@@ -39,6 +39,7 @@
 - Phase 8.3: Chinese HTML forecast charts and conservative web collection policy hardening.
 - Phase 8.4: field-level source attribution in the Chinese source-backed HTML report.
 - Phase 8.5: customer-facing HTML spacing, screenshot, mobile, and print polish.
+- Phase 8.6: reviewed source intake workflow with citation group, source tag, and field attribution validation.
 
 ## Phase 3 Status
 
@@ -69,11 +70,11 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Keep web scraping deferred.
 - Preserve manual snapshot mode as the default fallback.
 
-### Phase 8.6: Reviewed Source Intake Workflow
+### Phase 8.7: Source Registry Review Packaging
 
-- Add a guided workflow for adding new public sources to `data/source_evidence.yaml`.
-- Validate source tags, citation groups, and field-level attribution coverage before publishing.
-- Keep live collection opt-in and human-reviewed.
+- Add a short reviewer checklist for source registry pull requests.
+- Add optional exported validation output for portfolio/review packets.
+- Keep source intake metadata-only and human-reviewed.
 
 ## Phase 5 Status
 
@@ -126,6 +127,7 @@ Phase 7.0 adds a safe web evidence layer without changing default demo behavior.
 - Phase 8.3 switches the client HTML to Chinese, adds inline SVG cost-pressure forecast charts, adds PIT/SEA timing guidance, and hardens the web collection policy output.
 - Phase 8.4 adds field-level source badges and a `字段级来源标注` audit table to the Chinese HTML report.
 - Phase 8.5 improves customer-facing HTML spacing, screenshot readiness, responsive tables, and print layout without changing source-of-truth values.
+- Phase 8.6 adds a reviewed source intake CLI and validator for new public-source metadata. It checks source tags, citation group mapping, duplicate source IDs, and field-level attribution coverage before saving to `data/source_evidence.yaml`.
 
 ## Later Phase 3 Work
 

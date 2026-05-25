@@ -87,6 +87,7 @@ Phase 1 core demo remains compatible with Python 3.9+. Phase 3+ development and 
 - [API Adapter Design](docs/api_adapter_design.md)
 - [Web Collection Layer](docs/web_collection.md)
 - [Ticket Link Recommendations](docs/ticket_links.md)
+- [Reviewed Source Intake Workflow](docs/source_intake_workflow.md)
 - [Opt-In Live Data Integration](docs/live_data_integration.md)
 - [Release v0.1.0 Draft](docs/release_v0_1_0.md)
 - [Verified MCP client output](examples/mcp_client_validation_output.txt)
@@ -483,6 +484,18 @@ runs\portugal_dr_congo_houston_demo_YYYYMMDD_HHMMSS\10_source_backed_final_repor
 ```
 
 The original deterministic `08_final_report.md` remains useful for internal regression tests and planning logic. The source-backed report is the safer public-facing artifact when you want no local placeholder data in the visible report.
+
+### Reviewed Source Intake
+
+Phase 8.6 adds a guarded workflow for adding new public sources to `data/source_evidence.yaml`.
+
+```powershell
+python -m eventtrip.source_intake_cli validate --match portugal_dr_congo
+python -m eventtrip.source_intake_cli preview --candidate examples\source_candidate.example.yaml --match portugal_dr_congo
+python -m eventtrip.source_intake_cli add --candidate examples\source_candidate.example.yaml --match portugal_dr_congo --dry-run
+```
+
+The intake CLI checks required fields, source tags, citation group coverage, duplicate `source_id` values, and field-level attribution coverage before any source is saved. It does not fetch URLs or scrape websites. See [Reviewed Source Intake Workflow](docs/source_intake_workflow.md).
 
 ## Project Health Check
 

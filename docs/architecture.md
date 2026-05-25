@@ -286,6 +286,26 @@ SourceBackedReportAgent
 
 The deterministic `08_final_report.md` remains useful for regression and internal planning logic. The shareable source-backed report uses only registered public web, official, marketplace, and news sources. If airfare, hotel, ticket price, or total trip budget data is not source-backed, the report explicitly omits those claims.
 
+Phase 8.6 adds a reviewed source intake workflow before the registry is changed:
+
+```text
+Local YAML/JSON source candidate
+   |
+   v
+source_intake_cli preview / add --dry-run
+   |
+   v
+Required fields + source tags + citation groups + field attribution checks
+   |
+   v
+Explicit reviewed save to data/source_evidence.yaml
+   |
+   v
+SourceBackedReportAgent / HTML source badges
+```
+
+The intake layer is metadata-only. It does not fetch URLs, scrape websites, or turn unsupported prices into sourced claims.
+
 Phase 7.4 groups source-backed citations into reader-facing categories:
 
 - Match facts
@@ -501,6 +521,7 @@ Invariant validation
 - Evidence review tests verify candidate snapshot construction, dry-run behavior, duplicate protection, overwrite, and safe writes to temporary CSV files.
 - Ticket link tests verify registry validation, official-first ordering, Ticket Link Agent output, MCP link tools, and dashboard rows.
 - Source-backed report tests verify public-source registry validation and ensure the shareable report excludes local placeholder estimates.
+- Source intake tests verify candidate validation, dry-run behavior, duplicate protection, citation group mapping, and field-level attribution coverage.
 - MCP server tests verify wrapper registration and direct mock outputs.
 - MCP client validation tests verify guard behavior and helper parsing.
 - Orchestrator smoke tests verify end-to-end report generation.
