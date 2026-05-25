@@ -130,6 +130,8 @@ Phase 8.3 changes the client-facing HTML report to Chinese and adds inline SVG c
 
 Phase 8.4 adds field-level source attribution to the Chinese HTML report. The report now labels key customer-visible fields as public-source-backed, human-reviewed, model-inferred, internal policy, or still unknown.
 
+Phase 8.5 polishes the customer-facing HTML layout for cleaner screenshots, mobile viewing, and print/PDF export. It is a presentation-only pass and does not change the underlying recommendation logic.
+
 ## Expected Decision Output
 
 - Travel plan: Option A: One-night balanced plan

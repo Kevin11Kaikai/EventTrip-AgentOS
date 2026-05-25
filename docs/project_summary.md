@@ -32,6 +32,7 @@ EventTrip-AgentOS coordinates specialized Python agents through Markdown shared 
 - Source-backed HTML display for reviewed live/API snapshots only
 - Chinese HTML forecast charts with PIT/SEA timing guidance
 - Field-level source attribution for customer-visible HTML fields
+- Customer-facing HTML polish for screenshots, mobile review, and print/PDF export
 - Conservative web collection policy command and response-size cap
 - Preview-only MCP web evidence tools
 - Project health check script

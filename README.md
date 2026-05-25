@@ -206,6 +206,8 @@ Phase 8.3 also adds a Chinese client-facing forecast section to the HTML report.
 
 Phase 8.4 adds field-level source attribution to the same Chinese HTML report. Each critical field can now be labeled as public-source-backed, human-reviewed data, model inference, internal policy, or unknown/not source-backed. The `字段级来源标注` table gives customers a compact audit trail without turning unsupported values into facts.
 
+Phase 8.5 polishes the customer-facing HTML presentation with cleaner spacing, screenshot-friendly summary badges, responsive tables, and print-specific layout rules. It does not change ticket timing, budget values, source validation, or recommendation logic.
+
 Print or open the latest source-backed report:
 
 ```powershell

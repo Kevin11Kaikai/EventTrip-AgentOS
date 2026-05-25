@@ -97,6 +97,15 @@ Phase 8.4 adds field-level source attribution to the Chinese HTML report. Key fi
 
 The full `字段级来源标注` table links each visible field to source IDs where available. This keeps customer-facing recommendations readable while preserving a conservative audit trail.
 
+Phase 8.5 polishes the same static HTML report for customer review:
+
+- cleaner spacing and stronger visual hierarchy,
+- a screenshot-friendly summary strip,
+- responsive table handling for narrow screens,
+- print-specific layout rules for cleaner PDF/export output.
+
+These changes are presentation-only and do not modify the source-backed evidence model, deterministic estimates, or recommendation logic.
+
 ## Latest Report CLI
 
 Print the latest source-backed report path:

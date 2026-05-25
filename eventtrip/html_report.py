@@ -43,29 +43,55 @@ def build_source_backed_html_report(
       --panel: #f7f9fc;
       --panel-strong: #eef6f5;
       --accent: #0f766e;
+      --accent-strong: #0b5f59;
+      --accent-soft: #e7f5f3;
       --warn: #9a3412;
       --ok: #166534;
       --unknown: #6b21a8;
       --danger-bg: #fff7ed;
       --ok-bg: #eef8f1;
       --unknown-bg: #f5f3ff;
+      --shadow: 0 14px 34px rgba(23, 32, 51, 0.08);
     }}
     * {{ box-sizing: border-box; }}
+    html {{ scroll-behavior: smooth; }}
     body {{
       margin: 0;
       font-family: "Segoe UI", Arial, sans-serif;
       color: var(--ink);
-      background: #ffffff;
+      background:
+        radial-gradient(circle at 8% -10%, rgba(15, 118, 110, 0.14), transparent 28%),
+        linear-gradient(180deg, #f8fbfd 0%, #ffffff 320px);
       line-height: 1.5;
     }}
     header {{
-      padding: 32px clamp(20px, 5vw, 64px);
+      padding: 36px clamp(20px, 5vw, 64px) 28px;
       border-bottom: 1px solid var(--line);
-      background: #f8fbfd;
+      background: linear-gradient(135deg, rgba(255,255,255,0.94), rgba(231,245,243,0.86));
     }}
-    main {{ padding: 28px clamp(20px, 5vw, 64px) 56px; }}
+    header > *, main {{
+      max-width: 1180px;
+      margin-left: auto;
+      margin-right: auto;
+    }}
+    main {{ padding: 28px clamp(20px, 5vw, 64px) 64px; }}
+    section {{
+      margin-top: 24px;
+      padding: 22px;
+      border: 1px solid rgba(216, 222, 232, 0.9);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 8px 22px rgba(23, 32, 51, 0.045);
+      overflow-x: auto;
+      scroll-margin-top: 18px;
+    }}
+    section:first-child {{ margin-top: 0; }}
+    #decision-summary {{
+      background: linear-gradient(135deg, #ffffff 0%, var(--accent-soft) 100%);
+      border-color: rgba(15, 118, 110, 0.24);
+    }}
     h1 {{ margin: 0 0 8px; font-size: clamp(28px, 4vw, 44px); }}
-    h2 {{ margin-top: 34px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }}
+    h2 {{ margin: 0 0 14px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }}
     h3 {{ margin-bottom: 8px; }}
     a {{ color: #0b5cad; }}
     .subtitle {{ color: var(--muted); max-width: 900px; }}
@@ -78,11 +104,31 @@ def build_source_backed_html_report(
       font-size: 12px;
       letter-spacing: .04em;
     }}
+    .client-summary-strip {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }}
+    .client-summary-strip span {{
+      border: 1px solid rgba(15, 118, 110, 0.24);
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: rgba(255, 255, 255, 0.84);
+      color: var(--accent-strong);
+      font-size: 13px;
+      font-weight: 700;
+    }}
     .report-nav {{
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       margin-top: 22px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      padding: 8px 0;
+      backdrop-filter: blur(10px);
     }}
     .report-nav a {{
       border: 1px solid var(--line);
@@ -93,6 +139,7 @@ def build_source_backed_html_report(
       text-decoration: none;
       font-size: 13px;
     }}
+    .report-nav a:hover {{ border-color: var(--accent); color: var(--accent-strong); }}
     .metrics {{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -104,6 +151,11 @@ def build_source_backed_html_report(
       border-radius: 8px;
       padding: 16px;
       background: #fff;
+      box-shadow: 0 6px 18px rgba(23, 32, 51, 0.055);
+    }}
+    .metric {{
+      border-radius: 12px;
+      min-height: 118px;
     }}
     .metric span {{ display: block; color: var(--muted); font-size: 13px; }}
     .metric strong {{ display: block; font-size: 20px; margin-top: 4px; }}
@@ -118,6 +170,7 @@ def build_source_backed_html_report(
       border-radius: 8px;
       padding: 14px;
       background: var(--panel);
+      min-height: 132px;
     }}
     .status-card strong {{ display: block; margin-bottom: 4px; }}
     .grid {{
@@ -125,11 +178,13 @@ def build_source_backed_html_report(
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 16px;
     }}
+    .card {{ border-radius: 12px; }}
     .note {{
       border-left: 4px solid var(--accent);
       background: var(--panel);
       padding: 12px 14px;
       margin: 16px 0;
+      border-radius: 0 10px 10px 0;
     }}
     .unknown {{
       border-left: 4px solid var(--warn);
@@ -137,9 +192,10 @@ def build_source_backed_html_report(
     }}
     .section-lead {{ max-width: 900px; color: var(--muted); }}
     ul {{ padding-left: 20px; }}
-    table {{ width: 100%; border-collapse: collapse; margin-top: 12px; }}
+    table {{ width: 100%; min-width: 720px; border-collapse: collapse; margin-top: 12px; }}
     th, td {{ border: 1px solid var(--line); padding: 10px; text-align: left; vertical-align: top; }}
-    th {{ background: var(--panel); }}
+    th {{ background: var(--panel); position: sticky; top: 0; z-index: 1; }}
+    tr:nth-child(even) td {{ background: #fbfcfe; }}
     .badge {{
       display: inline-block;
       border-radius: 999px;
@@ -180,11 +236,41 @@ def build_source_backed_html_report(
       font-size: 12px;
     }}
     footer {{ color: var(--muted); font-size: 13px; margin-top: 36px; }}
+    svg {{
+      width: 100%;
+      height: auto;
+      display: block;
+    }}
+    @media (max-width: 720px) {{
+      header {{ padding-top: 26px; }}
+      main {{ padding-left: 14px; padding-right: 14px; }}
+      section {{ padding: 16px; border-radius: 12px; }}
+      .metrics, .status-strip, .grid {{ grid-template-columns: 1fr; }}
+      .report-nav {{ position: static; }}
+      .client-summary-strip span {{ width: 100%; }}
+    }}
     @media print {{
+      @page {{ margin: 14mm; }}
       body {{ font-size: 11pt; }}
+      body, header, section, .metric, .card, .status-card {{
+        background: #ffffff !important;
+        box-shadow: none !important;
+      }}
       header, main {{ padding: 18px; }}
+      header > *, main {{ max-width: none; }}
+      section {{
+        margin-top: 14px;
+        padding: 12px 0;
+        border: 0;
+        border-top: 1px solid var(--line);
+        border-radius: 0;
+        overflow: visible;
+      }}
+      table {{ min-width: 0; font-size: 9pt; }}
+      th {{ position: static; }}
       .report-nav {{ display: none; }}
       .card, .metric, .status-card {{ break-inside: avoid; }}
+      .metrics, .status-strip, .grid {{ break-inside: avoid; }}
       a {{ color: var(--ink); text-decoration: none; }}
       .print-note {{ display: block; }}
     }}
@@ -195,6 +281,12 @@ def build_source_backed_html_report(
     <span class="eyebrow">静态客户展示报告</span>
     <h1>EventTrip-AgentOS 中文来源报告</h1>
     <p class="subtitle">这个 HTML 页面由已登记的官方、市场和新闻来源生成。没有公开来源支持的机票、酒店、门票和总预算数值不会被伪装成真实报价。</p>
+    <div class="client-summary-strip screenshot-friendly">
+      <span>客户展示版</span>
+      <span>静态 HTML / 可截图</span>
+      <span>打印友好</span>
+      <span>不自动购票</span>
+    </div>
     <div class="metrics">
       <div class="metric"><span>比赛</span><strong>{escape(str(match["name"]))}</strong>{_field_source_badge("match_name", source_attributions)}</div>
       <div class="metric"><span>日期</span><strong>{escape(str(match["date"]))}</strong>{_field_source_badge("match_date", source_attributions)}</div>

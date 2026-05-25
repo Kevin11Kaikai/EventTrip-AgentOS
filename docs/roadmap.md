@@ -38,6 +38,7 @@
 - Phase 8.2: reviewed live/API snapshot display in source-backed HTML reports.
 - Phase 8.3: Chinese HTML forecast charts and conservative web collection policy hardening.
 - Phase 8.4: field-level source attribution in the Chinese source-backed HTML report.
+- Phase 8.5: customer-facing HTML spacing, screenshot, mobile, and print polish.
 
 ## Phase 3 Status
 
@@ -67,12 +68,6 @@ Phase 3 adds deterministic market snapshot tracking without live APIs or scrapin
 - Prefer official APIs or safe search APIs.
 - Keep web scraping deferred.
 - Preserve manual snapshot mode as the default fallback.
-
-### Phase 8.5: Customer HTML Polish
-
-- Improve spacing, print layout, and portfolio screenshots.
-- Keep unsourced live values out of public-facing totals.
-- If a real value cannot be verified, mark it as unknown rather than inventing it.
 
 ### Phase 8.6: Reviewed Source Intake Workflow
 
@@ -130,6 +125,7 @@ Phase 7.0 adds a safe web evidence layer without changing default demo behavior.
 - Phase 8.2 displays only `reviewed_live_data` snapshots in the source-backed HTML live-data table.
 - Phase 8.3 switches the client HTML to Chinese, adds inline SVG cost-pressure forecast charts, adds PIT/SEA timing guidance, and hardens the web collection policy output.
 - Phase 8.4 adds field-level source badges and a `字段级来源标注` audit table to the Chinese HTML report.
+- Phase 8.5 improves customer-facing HTML spacing, screenshot readiness, responsive tables, and print layout without changing source-of-truth values.
 
 ## Later Phase 3 Work
 

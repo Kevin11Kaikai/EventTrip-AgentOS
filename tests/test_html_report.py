@@ -44,6 +44,11 @@ def test_source_backed_html_report_is_static_and_client_readable():
     assert "official_ticket_path" in html
     assert "未找到可靠公开来源支持" in html
     assert "report-nav" in html
+    assert "client-summary-strip" in html
+    assert "screenshot-friendly" in html
+    assert "scroll-behavior: smooth" in html
+    assert "@page" in html
+    assert "overflow-x: auto" in html
     assert "@media print" in html
     assert "claim-match-facts" in html
     assert "claim-secondary-marketplace-stubhub" in html
