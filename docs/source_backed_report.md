@@ -118,6 +118,18 @@ python -m eventtrip.source_intake_cli add --candidate examples\source_candidate.
 
 The workflow validates required fields, supported `source_type`, known `evidence_tags`, citation group coverage, duplicate source IDs, and field-level attribution coverage before a source can be saved. It never fetches URLs or scrapes websites; it only reviews local YAML/JSON metadata supplied by the user. Full details are in `docs/source_intake_workflow.md`.
 
+## Source Registry Review Packet
+
+Phase 8.7 adds an exportable validation packet for pull requests, customer review, or advisor review.
+
+```powershell
+python -m eventtrip.source_review_cli summary --match portugal_dr_congo
+python -m eventtrip.source_review_cli export --match portugal_dr_congo --format md --output examples\source_registry_review_packet.md
+python -m eventtrip.source_review_cli export --match portugal_dr_congo --format json --output examples\source_registry_review_summary.json
+```
+
+The packet summarizes source count, source types, evidence tag counts, citation group coverage, field-level attribution coverage, validation errors, and a human PR review checklist. It does not fetch URLs or scrape pages. Full details are in `docs/source_registry_review_packaging.md`.
+
 ## Latest Report CLI
 
 Print the latest source-backed report path:

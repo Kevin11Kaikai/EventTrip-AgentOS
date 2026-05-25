@@ -141,6 +141,15 @@ python -m eventtrip.source_intake_cli preview --candidate examples\source_candid
 
 The intake workflow checks source tags, citation groups, duplicate IDs, and field-level attribution coverage before any source can be saved.
 
+Phase 8.7 adds an exportable review packet for the source registry:
+
+```powershell
+python -m eventtrip.source_review_cli summary --match portugal_dr_congo
+python -m eventtrip.source_review_cli export --match portugal_dr_congo --format md --output examples\source_registry_review_packet.md
+```
+
+The review packet is useful for PRs, customer review, or advisor review because it summarizes validation status, citation group coverage, source tag counts, field-level attribution coverage, and a human checklist.
+
 ## Expected Decision Output
 
 - Travel plan: Option A: One-night balanced plan
@@ -171,6 +180,7 @@ The intake workflow checks source tags, citation groups, duplicate IDs, and fiel
 - Trend-based ticket timing
 - Safe CLI with dry-run and overwrite protection
 - Reviewed public-source intake validation
+- Source registry review packet for PR/customer/advisor review
 - Deterministic offline tests
 - Optional OhMyGPT report-polishing layer with invariant validation
 

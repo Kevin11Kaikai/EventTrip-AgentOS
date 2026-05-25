@@ -75,6 +75,15 @@ Save only after human review:
 python -m eventtrip.source_intake_cli add --candidate path\to\reviewed_source.yaml --match portugal_dr_congo --save
 ```
 
+After saving or reviewing a registry change, export a review packet:
+
+```powershell
+python -m eventtrip.source_review_cli summary --match portugal_dr_congo
+python -m eventtrip.source_review_cli export --match portugal_dr_congo --format md --output examples\source_registry_review_packet.md
+```
+
+The review packet gives pull request reviewers a compact validation summary, citation group coverage table, field-level attribution table, and checklist. See `docs/source_registry_review_packaging.md`.
+
 ## Supported Source Types
 
 - `official`

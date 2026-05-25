@@ -306,6 +306,23 @@ SourceBackedReportAgent / HTML source badges
 
 The intake layer is metadata-only. It does not fetch URLs, scrape websites, or turn unsupported prices into sourced claims.
 
+Phase 8.7 adds a review packaging layer after intake validation:
+
+```text
+data/source_evidence.yaml
+   |
+   v
+source_review_cli summary / export
+   |
+   v
+Validation summary + citation group coverage + field-level attribution coverage
+   |
+   v
+Markdown/JSON review packet for PR, customer, or advisor review
+```
+
+The review packet is read-only. It does not modify the registry, fetch URLs, or scrape websites. It gives reviewers a compact audit artifact before source-backed reports are shared.
+
 Phase 7.4 groups source-backed citations into reader-facing categories:
 
 - Match facts
@@ -522,6 +539,7 @@ Invariant validation
 - Ticket link tests verify registry validation, official-first ordering, Ticket Link Agent output, MCP link tools, and dashboard rows.
 - Source-backed report tests verify public-source registry validation and ensure the shareable report excludes local placeholder estimates.
 - Source intake tests verify candidate validation, dry-run behavior, duplicate protection, citation group mapping, and field-level attribution coverage.
+- Source review packet tests verify exported validation summaries, citation group coverage, PR checklist rendering, and CLI output.
 - MCP server tests verify wrapper registration and direct mock outputs.
 - MCP client validation tests verify guard behavior and helper parsing.
 - Orchestrator smoke tests verify end-to-end report generation.

@@ -88,6 +88,7 @@ Phase 1 core demo remains compatible with Python 3.9+. Phase 3+ development and 
 - [Web Collection Layer](docs/web_collection.md)
 - [Ticket Link Recommendations](docs/ticket_links.md)
 - [Reviewed Source Intake Workflow](docs/source_intake_workflow.md)
+- [Source Registry Review Packaging](docs/source_registry_review_packaging.md)
 - [Opt-In Live Data Integration](docs/live_data_integration.md)
 - [Release v0.1.0 Draft](docs/release_v0_1_0.md)
 - [Verified MCP client output](examples/mcp_client_validation_output.txt)
@@ -496,6 +497,17 @@ python -m eventtrip.source_intake_cli add --candidate examples\source_candidate.
 ```
 
 The intake CLI checks required fields, source tags, citation group coverage, duplicate `source_id` values, and field-level attribution coverage before any source is saved. It does not fetch URLs or scrape websites. See [Reviewed Source Intake Workflow](docs/source_intake_workflow.md).
+
+### Source Registry Review Packet
+
+Phase 8.7 adds an exportable review packet for PRs, customer review, or advisor review.
+
+```powershell
+python -m eventtrip.source_review_cli summary --match portugal_dr_congo
+python -m eventtrip.source_review_cli export --match portugal_dr_congo --format md --output examples\source_registry_review_packet.md
+```
+
+The packet summarizes validation status, citation group coverage, source tag counts, field-level attribution coverage, and a pull request review checklist. It is metadata-only and does not fetch URLs or scrape websites. See [Source Registry Review Packaging](docs/source_registry_review_packaging.md).
 
 ## Project Health Check
 

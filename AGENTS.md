@@ -48,6 +48,7 @@
 - Public-facing source-backed reports must use `data/source_evidence.yaml` and must not include local planning estimates unless a public source is registered.
 - New public source metadata must go through the reviewed source intake workflow; validate source tags, citation groups, and field-level attribution before saving.
 - Source intake must remain metadata-only by default and must not fetch URLs or scrape pages.
+- Source registry review packets must remain read-only exports; do not make them fetch URLs, scrape pages, or mutate `data/source_evidence.yaml`.
 - Keep deterministic internal reports and source-backed public reports separate.
 - Generated web evidence cache files under `data/web_evidence/` must stay ignored except `.gitkeep`.
 - Keep `docs/web_collection.md` aligned with web collection behavior.
